@@ -18,13 +18,15 @@ class NotificationFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::inRandomOrder()->first();
+        $notifier = User::where('id', '!=', $user->id)->inRandomOrder()->first();
         return [
-            'user_id' => User::factory(),
-            'notifier_id' => User::factory(),
-            'target_id' => Battle::factory(),
-            'type' => $this->faker->randomElement(['new_follower', 'vote_cast']),
-            'message' => $this->faker->sentence(6),
-            'is_read' => $this->faker->boolean(30),
+            'user_id'     => $user->id,
+            'notifier_id' => $notifier->id,
+            'target_id'   => Battle::inRandomOrder()->first()?->id, // nullable in case battles aren't seeded yet
+            'type'        => $this->faker->randomElement(['new_follower', 'vote_cast']),
+            'message'     => $this->faker->sentence(6),
+            'is_read'     => $this->faker->boolean(30),
         ];
     }
 }
