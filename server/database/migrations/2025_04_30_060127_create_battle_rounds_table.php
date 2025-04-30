@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('battle_roundes', function (Blueprint $table) {
+        Schema::create('battle_rounds', function (Blueprint $table) {
             $table->id();
             $table->foreignId('battle_id');
             $table->integer('round_number');
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('battle_roundes');
+        Schema::dropIfExists('battle_rounds');
     }
 };
