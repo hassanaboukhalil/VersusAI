@@ -25,16 +25,17 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_type_id' => UserType::factory(),
+            'user_type_id' => UserType::inRandomOrder()->first()->id,
             'first_name' => $this->faker->firstName(),
             'last_name'  => $this->faker->lastName(),
-            'username'   => $this->faker->userName(),
+            'username' => $this->faker->unique()->userName(),
             'email'      => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password'   => Hash::make('password'),
+            'is_premium' => $this->faker->boolean(50),
             'bio'        => $this->faker->sentence(),
-            'profile_picture' => $this->faker->imageUrl(200, 200),
-            'background_picture' => $this->faker->imageUrl(800, 200),
+            'profile_picture_url' => $this->faker->imageUrl(200, 200),
+            'bg_picture_url' => $this->faker->imageUrl(800, 200),
             'remember_token' => Str::random(10),
         ];
     }
