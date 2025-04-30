@@ -19,7 +19,6 @@ class PlanFactory extends Factory
         return [
             'name' => $this->faker->randomElement(['Free', 'Pro']),
             'price' => $this->faker->randomElement([0, 10]),
-            'description' => $this->faker->sentence(),
         ];
     }
 }
