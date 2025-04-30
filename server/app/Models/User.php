@@ -19,9 +19,15 @@ class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'user_type_id',
+        'first_name',
+        'last_name',
+        'username',
         'email',
         'password',
+        'bio',
+        'profile_picture',
+        'background_picture',
     ];
 
     /**
@@ -46,6 +52,33 @@ class User extends Authenticatable implements JWTSubject
             'password' => 'hashed',
         ];
     }
+
+
+    public function userType()
+    {
+        return $this->belongsTo(UserType::class);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function battles()
+    {
+        return $this->hasMany(Battle::class);
+    }
+
+    public function followers()
+    {
+        return $this->hasMany(Follower::class, 'user_id');
+    }
+
+    public function following()
+    {
+        return $this->hasMany(Follower::class, 'follower_id');
+    }
+
 
     public function getJWTIdentifier()
     {

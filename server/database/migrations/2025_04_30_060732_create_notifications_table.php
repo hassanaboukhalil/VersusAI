@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->foreignId('notifier_id'); // the actor (follower, voter, etc.)
+            $table->integer('target_id')->nullable(); // e.g., battle_id
             $table->string('type');
-            $table->json('data')->nullable();
+            $table->text('message');
             $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
