@@ -14,8 +14,8 @@ class Battle extends Model
         'category_id',
         'title',
         'description',
-        'ai_a_model_id',
-        'ai_b_model_id',
+        'ai_model_1_id',
+        'ai_model_2_id',
         'is_active'
     ];
 
@@ -31,12 +31,12 @@ class Battle extends Model
 
     public function aiA()
     {
-        return $this->belongsTo(AiModel::class, 'ai_a_model_id');
+        return $this->belongsTo(AiModel::class, 'ai_model_1_id');
     }
 
     public function aiB()
     {
-        return $this->belongsTo(AiModel::class, 'ai_b_model_id');
+        return $this->belongsTo(AiModel::class, 'ai_model_2_id');
     }
 
     public function rounds()
