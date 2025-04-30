@@ -19,8 +19,8 @@ class BattleResponseFactory extends Factory
     public function definition(): array
     {
         return [
-            'battle_round_id' => BattleRound::factory(),
-            'ai_model_id' => AiModel::factory(),
+            'battle_round_id' => BattleRound::inRandomOrder()->first()->id,
+            'ai_model_id' => AiModel::inRandomOrder()->first()->id,
             'response_text' => $this->faker->paragraph(3),
         ];
     }
