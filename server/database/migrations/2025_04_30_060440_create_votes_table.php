@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('battle_id');
-            $table->foreignId('voted_ai_model_id')->constrained('ai_models')->onDelete('cascade');
+            $table->foreignId('ai_model_id');
             $table->timestamps();
         });
     }

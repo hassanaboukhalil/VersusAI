@@ -9,7 +9,7 @@ class Vote extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'battle_id', 'voted_ai_model_id'];
+    protected $fillable = ['user_id', 'battle_id', 'ai_model_id'];
 
     public function user()
     {
@@ -23,6 +23,6 @@ class Vote extends Model
 
     public function aiModel()
     {
-        return $this->belongsTo(AiModel::class, 'voted_ai_model_id');
+        return $this->belongsTo(AiModel::class, 'ai_model_id');
     }
 }
