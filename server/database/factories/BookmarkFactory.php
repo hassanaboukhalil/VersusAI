@@ -19,8 +19,8 @@ class BookmarkFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'battle_id' => Battle::factory(),
+            'user_id' => User::inRandomOrder()->first()->id,
+            'battle_id' => Battle::inRandomOrder()->first()->id,
         ];
     }
 }
