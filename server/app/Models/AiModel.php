@@ -15,13 +15,13 @@ class AiModel extends Model
     // get the battles where this AI model was the AI model A
     public function battlesAsA()
     {
-        return $this->hasMany(Battle::class, 'ai_a_model_id');
+        return $this->hasMany(Battle::class, 'ai_model_1_id');
     }
 
     // get the battles where this AI model was the AI model B
     public function battlesAsB()
     {
-        return $this->hasMany(Battle::class, 'ai_b_model_id');
+        return $this->hasMany(Battle::class, 'ai_model_2_id');
     }
 
     public function allBattles()
@@ -37,6 +37,6 @@ class AiModel extends Model
 
     public function votes()
     {
-        return $this->hasMany(Vote::class, 'voted_ai_model_id');
+        return $this->hasMany(Vote::class, 'ai_model_id');
     }
 }

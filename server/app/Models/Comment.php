@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Vote extends Model
+class Comment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'battle_id', 'ai_model_id'];
+    protected $fillable = ['user_id', 'battle_id', 'body'];
 
     public function user()
     {
@@ -19,10 +19,5 @@ class Vote extends Model
     public function battle()
     {
         return $this->belongsTo(Battle::class);
-    }
-
-    public function aiModel()
-    {
-        return $this->belongsTo(AiModel::class, 'ai_model_id');
     }
 }

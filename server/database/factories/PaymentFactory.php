@@ -19,9 +19,9 @@ class PaymentFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'plan_id' => Plan::factory(),
-            'amount' => $this->faker->randomFloat(10),
+            'user_id' => User::inRandomOrder()->first()->id,
+            'plan_id' => Plan::inRandomOrder()->first()->id,
+            'amount' => $this->faker->randomFloat(2, 9.99, 9.99),
             'payment_status' => $this->faker->randomElement(['success', 'pending', 'failed']),
             'transaction_id' => $this->faker->uuid(),
             'paid_at' => now(),

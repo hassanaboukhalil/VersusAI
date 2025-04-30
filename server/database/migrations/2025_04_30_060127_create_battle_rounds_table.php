@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('votes', function (Blueprint $table) {
+        Schema::create('battle_rounds', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
             $table->foreignId('battle_id');
-            $table->foreignId('ai_model_id');
+            $table->integer('round_number');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('votes');
+        Schema::dropIfExists('battle_rounds');
     }
 };

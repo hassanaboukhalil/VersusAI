@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // normal user, Premium user, Admin
+            $table->string('name')->default('user'); // user, admin
             $table->timestamps();
         });
     }

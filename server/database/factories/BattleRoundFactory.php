@@ -18,7 +18,7 @@ class BattleRoundFactory extends Factory
     public function definition(): array
     {
         return [
-            'battle_id' => Battle::factory(),
+            'battle_id' => Battle::inRandomOrder()->first()->id,
             'round_number' => $this->faker->numberBetween(1, 5),
         ];
     }

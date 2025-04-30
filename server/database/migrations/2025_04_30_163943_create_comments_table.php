@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('battle_roundes', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->foreignId('battle_id');
-            $table->integer('round_number');
+            $table->text('body');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('battle_roundes');
+        Schema::dropIfExists('comments');
     }
 };

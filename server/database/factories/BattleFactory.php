@@ -20,13 +20,13 @@ class BattleFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'category_id' => Category::factory(),
+            'user_id' => User::inRandomOrder()->first()->id,
+            'category_id' => Category::inRandomOrder()->first()->id,
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
-            'ai_a_model_id' => AiModel::factory(),
-            'ai_b_model_id' => AiModel::factory(),
-            'is_active' => $this->faker->boolean(80),
+            'ai_model_1_id' => AiModel::inRandomOrder()->first()->id,
+            'ai_model_2_id' => AiModel::inRandomOrder()->first()->id,
+            'is_active' => $this->faker->boolean(50),
         ];
     }
 }

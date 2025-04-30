@@ -7,9 +7,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Bookmark>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Comment>
  */
-class BookmarkFactory extends Factory
+class CommentFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -21,6 +21,7 @@ class BookmarkFactory extends Factory
         return [
             'user_id' => User::inRandomOrder()->first()->id,
             'battle_id' => Battle::inRandomOrder()->first()->id,
+            'body' => $this->faker->sentence(10),
         ];
     }
 }

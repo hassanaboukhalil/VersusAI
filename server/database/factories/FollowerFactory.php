@@ -17,9 +17,11 @@ class FollowerFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::inRandomOrder()->first();
+        $follower = User::where('id', '!=', $user->id)->inRandomOrder()->first();
         return [
-            'user_id' => User::factory(),
-            'follower_id' => User::factory(),
+            'user_id' => $user->id,
+            'follower_id' => $follower->id,
         ];
     }
 }

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('category_id');
-            $table->foreignId('ai_a_model_id');
-            $table->foreignId('ai_b_model_id');
+            $table->foreignId('ai_model_1_id');
+            $table->foreignId('ai_model_2_id');
             $table->string('title');
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);

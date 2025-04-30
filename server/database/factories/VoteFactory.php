@@ -20,9 +20,9 @@ class VoteFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'battle_id' => Battle::factory(),
-            'voted_ai_model_id' => AiModel::factory(),
+            'user_id' => User::inRandomOrder()->first()->id,
+            'battle_id' => Battle::inRandomOrder()->first()->id,
+            'ai_model_id' => AiModel::inRandomOrder()->first()->id,
         ];
     }
 }
