@@ -1,0 +1,196 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+}
+
+@keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translate(-72%, -62%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -40%) scale(1);
+  }
+}
+
+@layer base {
+  :root {
+    /* colors */
+    --color-primary: #DEFE01;
+    --color-secondary: #6B46C1;
+    --color-background: #0A0A0A;
+    --color-dark-white: #161616;
+    --color-light-gray: #9094A9;
+
+    --container-padding-x: 1rem;
+  }
+  :root {
+    --sidebar: #161616;
+    --sidebar-foreground: hsl(240 5.3% 26.1%);
+    --sidebar-primary: hsl(240 5.9% 10%);
+    --sidebar-primary-foreground: hsl(0 0% 98%);
+    --sidebar-accent: hsl(240 4.8% 95.9%);
+    --sidebar-accent-foreground: hsl(240 5.9% 10%);
+    --sidebar-border: hsl(220 13% 91%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  }
+
+  .dark {
+    --sidebar: hsl(240 5.9% 10%);
+    --sidebar-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-primary: hsl(224.3 76.3% 48%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(240 3.7% 15.9%);
+    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-border: hsl(240 3.7% 15.9%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  }
+
+  @layer base {
+  * {
+    /* @apply outline-ring/50; */
+    @apply border-0 m-0 p-0;
+    box-sizing: border-box;
+  }
+  body {
+    /* @apply bg-background text-foreground; */
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+    color: white
+  }
+}
+
+  .bg-primary{
+    background-color: var(--color-primary);
+  }
+  .bg-secondary{
+    background-color: var(--color-secondary);
+  }
+  .bg-background{
+      background-color: var(--color-background);
+  }
+  .bg-dark-white{
+    background-color: var(--color-dark-white);
+  }
+  .bg-light-gray{
+    background-color: var(--color-light-gray);
+  }
+  .text-primary{
+    color: var(--color-primary);
+  }
+  .text-secondary{
+    color: var(--color-secondary);
+  }
+  .text-background{
+      color: var(--color-background);
+  }
+  .text-dark-white{
+    color: var(--color-dark-white);
+  }
+  .text-light-gray{
+    color: var(--color-light-gray);
+  }
+
+  /* * {
+    @apply border-0 m-0 p-0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+    color: white
+  } */
+}
+
+/* ========================================== TAILWIND STYLES */
+@layer utilities {
+  /* ===== ALIGNMENTS */
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  /* ===== text sizes */
+  .h1{
+    @apply text-5xl font-bold lg:text-6xl; /* 60px */
+  }
+  .h2{
+    @apply text-4xl font-bold lg:text-5xl; /* 60px */
+  }
+
+  .body-1{
+    @apply text-xl lg:text-2xl
+  }
+  .body-2{
+    @apply text-xl lg:text-xl
+  }
+  .body-3{
+    @apply text-xl lg:text-lg
+  }
+  .body-4{
+    @apply text-xl lg:text-base
+  }
+  .body-5{
+    @apply text-xl lg:text-sm
+  }
+
+}
+
+/* text sizes */
+/* h1{
+  font-size: 60px;
+}
+h2{
+  font-size: 60px;
+}
+h3{
+  font-size: 60px;
+}
+h4{
+  font-size: 60px;
+} */
+
+.my-container {
+  width: 100%;
+  padding-right: var(--container-padding-x);
+  padding-left: var(--container-padding-x);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (width > 724px) {
+  :root {
+      --container-padding-x: 5.12rem;
+    }
+  }
+@media (width > 1290px) {
+  :root {
+    --container-padding-x: 8rem;
+  }
+}
+
+
+
+/* @layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+} */
