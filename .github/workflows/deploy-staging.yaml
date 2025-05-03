@@ -14,6 +14,24 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, pdo, mysql
+          coverage: none
+
+      - name: Install Laravel Dependencies
+        working-directory: ./server
+        run: composer install --prefer-dist
+
+      - name: Set up Testing Environment
+        working-directory: ./server
+        run: |
+          cp .env.testing .env
+          php artisan key:generate
+          php artisan migrate --force
+
       - name: Run Laravel Tests
         working-directory: ./server
         run: php artisan test
@@ -21,7 +39,7 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: ${{ secrets.DOCKER_USERNAME }} # github secrets
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build Laravel Docker Image
@@ -65,9 +83,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
@@ -75,7 +90,9 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
+            cd /home/${{ secrets.EC2_USER }}/versusai
             docker-compose down
             docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:staging || true
             docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:staging || true
-            docker-compose up -d
+            docker-compose pull
+            docker-compose up -d --remove-orphans
