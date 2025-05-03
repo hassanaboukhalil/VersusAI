@@ -2,7 +2,7 @@
 FROM node:20 AS builder
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /app/versusai-client
 
 # Copy dependency files first to leverage Docker cache
 COPY package*.json ./
@@ -11,7 +11,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copy the rest of the application files into the container
-COPY . .
+COPY ./versusai-client ./
 
 # Build the Next.js app (output goes to `.next`)
 RUN npm run build
@@ -20,10 +20,15 @@ RUN npm run build
 FROM node:20
 
 # Set the working directory in the final container
-WORKDIR /app
+WORKDIR /app/versusai-client
 
-# Copy the entire built app from the builder stage
-COPY --from=builder /app ./
+# Copy Next.js build output
+COPY --from=builder /app/versusai-client/.next .next
+COPY --from=builder /app/versusai-client/public public
+COPY --from=builder /app/versusai-client/package*.json ./
+COPY --from=builder /app/versusai-client/node_modules ./node_modules
+COPY --from=builder /app/versusai-client/next.config.js ./
+
 
 # Install only production dependencies to reduce size
 RUN npm install --omit=dev
