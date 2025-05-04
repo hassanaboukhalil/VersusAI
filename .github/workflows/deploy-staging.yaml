@@ -8,82 +8,93 @@ jobs:
   build-and-push-laravel:
     name: Build & Push Laravel Docker Image
     runs-on: ubuntu-latest
-# on:
-#   push:
-#     branches:
-#       - staging
 
-# jobs:
-#   build-and-push-laravel:
-#     name: Build & Push Laravel Docker Image
-#     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-#     steps:
-#       - name: Checkout Repository
-#         uses: actions/checkout@v3
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, pdo, mysql
+          coverage: none
 
-#       - name: Run Laravel Tests
-#         working-directory: ./server
-#         run: php artisan test
+      - name: Install Laravel Dependencies
+        working-directory: ./server
+        run: composer install --prefer-dist
 
-#       - name: Login to Docker Hub
-#         uses: docker/login-action@v3
-#         with:
-#           username: ${{ secrets.DOCKER_USERNAME }}
-#           password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Set up Testing Environment
+        working-directory: ./server
+        run: |
+          cp .env.testing .env
+          php artisan key:generate
+          php artisan migrate --force
 
-#       - name: Build Laravel Docker Image
-#         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:staging ./server
+      - name: Run Laravel Tests
+        working-directory: ./server
+        run: php artisan test
 
-#       - name: Push Laravel Docker Image
-#         run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:staging
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }} # github secrets
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-#   build-and-push-nextjs:
-#     name: Build & Push Next.js Docker Image
-#     runs-on: ubuntu-latest
+      - name: Build Laravel Docker Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:staging ./server
 
-#     steps:
-#       - name: Checkout Repository
-#         uses: actions/checkout@v3
+      - name: Push Laravel Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:staging
 
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: 20
+  build-and-push-nextjs:
+    name: Build & Push Next.js Docker Image
+    runs-on: ubuntu-latest
 
-#       - name: Install Dependencies
-#         working-directory: ./client
-#         run: npm install
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-#       - name: Login to Docker Hub
-#         uses: docker/login-action@v3
-#         with:
-#           username: ${{ secrets.DOCKER_USERNAME }}
-#           password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
-#       - name: Build Next.js Docker Image
-#         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:staging ./client
+      - name: Install Dependencies
+        working-directory: ./client
+        run: npm install
 
-#       - name: Push Next.js Docker Image
-#         run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:staging
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-#   deploy-to-ec2:
-#     name: Deploy to EC2 (Staging)
-#     needs: [build-and-push-laravel, build-and-push-nextjs]
-#     runs-on: ubuntu-latest
+      - name: Build Next.js Docker Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:staging ./client
 
-#     steps:
-#       - name: Checkout Repository
-#         uses: actions/checkout@v3
+      - name: Push Next.js Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:staging
 
-#       - name: Deploy via SSH
-#         uses: appleboy/ssh-action@v1
-#         with:
-#           host: ${{ secrets.EC2_HOST_STAGING }}
-#           username: ${{ secrets.EC2_USER }}
-#           key: ${{ secrets.EC2_KEY }}
-#           script: |
-#             docker-compose down
-#             docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:staging || true
-#             docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:staging || true
-#             docker-compose up -d
+  deploy-to-ec2:
+    name: Deploy to EC2 (Staging)
+    needs: [build-and-push-laravel, build-and-push-nextjs]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST_STAGING }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd /home/${{ secrets.EC2_USER }}/versusai
+            docker-compose down
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:staging || true
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:staging || true
+            docker-compose pull
+            docker-compose up -d --remove-orphans
