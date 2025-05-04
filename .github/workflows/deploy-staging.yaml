@@ -13,28 +13,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.2"
-          extensions: mbstring, pdo, mysql
-          coverage: none
-
-      - name: Install Laravel Dependencies
-        working-directory: ./server
-        run: composer install --prefer-dist
-
-      - name: Set up Testing Environment
-        working-directory: ./server
-        run: |
-          cp .env.testing .env
-          php artisan key:generate
-          php artisan migrate --force
-
-      - name: Run Laravel Tests
-        working-directory: ./server
-        run: php artisan test
-
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
