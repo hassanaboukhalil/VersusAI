@@ -31,7 +31,19 @@ class AuthService
         if ($token) {
             $user = Auth::user();
             $user->token = $token;
-            return $user;
+            return [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'username' => $user->username,
+                'email' => $user->email,
+                'is_premium' => $user->is_premium,
+                'bio' => $user->bio,
+                'profile_picture_url' => $user->profile_picture_url,
+                'bg_picture_url' => $user->bg_picture_url,
+                'token' => $token
+
+            ];
         }
         return null;
     }
