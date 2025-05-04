@@ -16,6 +16,7 @@ const SignupPage = () => {
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
+        username: '',
         email: '',
         password: '',
     });
@@ -32,11 +33,11 @@ const SignupPage = () => {
 
         try {
             const res = await api.post('/signup', formData);
-            const { token, name, username, email } = res.data;
+            const { token, first_name, username, email } = res.data;
 
             // Save to localStorage
             localStorage.setItem('token', token);
-            localStorage.setItem('user', JSON.stringify({ name, username, email }));
+            localStorage.setItem('user', JSON.stringify({ first_name, username, email }));
 
             router.push('/explore');
         } catch (err: unknown) {
@@ -74,6 +75,14 @@ const SignupPage = () => {
                             required
                         />
                     </div>
+                    <Input
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
+                    />
                     <Input
                         type="email"
                         name="email"
