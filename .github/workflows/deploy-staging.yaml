@@ -1,10 +1,9 @@
-name: Deploy VersusAI to EC2 (Staging)
+# name: Deploy VersusAI to EC2 (Staging)
 
 on:
   push:
     branches:
       - staging
-
 jobs:
   build-and-push-laravel:
     name: Build & Push Laravel Docker Image
