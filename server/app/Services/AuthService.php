@@ -22,7 +22,11 @@ class AuthService
             'password' => Hash::make($request['password']),
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $credentials = [
+            "email" => $request['email'],
+            'password' => $request['password']
+        ];
+
         $token = Auth::attempt($credentials);
         if ($token) {
             $user = Auth::user();
