@@ -13,3 +13,7 @@ export function getUser(): User | null {
 export function setUser(user: User) {
     localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
 }
+
+export function isLoggedIn(): boolean {
+    return !!getUser();
+}
