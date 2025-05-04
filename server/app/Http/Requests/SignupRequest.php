@@ -26,6 +26,7 @@ class SignupRequest extends FormRequest
         return [
             'first_name' => 'required|min:3',
             'last_name' => 'required|min:2',
+            'username' => 'required|min:3',
             'email' => 'required|email',
             'password' => 'required|min:8',
         ];
@@ -36,6 +37,7 @@ class SignupRequest extends FormRequest
         return [
             'first_name.required' => 'First name is required',
             'last_name.required' => 'Last name is required',
+            'username.required' => 'Username is required',
             'email.required' => 'Email address is required.',
             'password.required' => 'Password is required',
         ];
@@ -45,8 +47,7 @@ class SignupRequest extends FormRequest
     {
         throw new HttpResponseException(response()->json([
             'success' => false,
-            'message' => 'Validation failed',
-            'errors' => $validator->errors()
+            'message' => $validator->errors()->first()
         ], 422));
     }
 }
