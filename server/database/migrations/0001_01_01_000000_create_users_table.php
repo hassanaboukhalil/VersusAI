@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->text('bio');
+            $table->text('bio')->nullable();
             $table->boolean('is_premium')->default(false);
             $table->string('profile_picture_url')->nullable();
             $table->string('bg_picture_url')->nullable();
