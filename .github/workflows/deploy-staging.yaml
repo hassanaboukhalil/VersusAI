@@ -63,13 +63,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Upload docker-compose.yml
+      - name: Upload docker-compose.yaml
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST_STAGING }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          source: "docker-compose.yml"
+          source: "docker-compose.yaml"
           target: "/home/${{ secrets.EC2_USER }}/versusai"
 
       - name: Deploy via SSH
