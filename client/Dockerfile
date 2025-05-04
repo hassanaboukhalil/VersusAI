@@ -31,7 +31,7 @@ COPY --from=builder /app/versusai-client/next.config.js ./
 
 
 # Install only production dependencies to reduce size
-RUN npm install --omit=dev
+RUN npm install --omit=dev --ignore-scripts
 
 # Expose port 3000
 EXPOSE 3000
