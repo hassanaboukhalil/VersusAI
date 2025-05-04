@@ -1,0 +1,57 @@
+name: Laravel Tests
+
+on:
+  push:
+    branches:
+      - staging
+  pull_request:
+    branches:
+      - staging
+
+jobs:
+  test:
+    name: Run Laravel Tests
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testing
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, pdo, mysql
+          coverage: none
+
+      - name: Install Laravel Dependencies
+        working-directory: ./server
+        run: composer install --prefer-dist
+
+      - name: Set up Test Environment
+        working-directory: ./server
+        run: |
+          cp .env.testing .env
+          php artisan config:clear
+          php artisan key:generate --env=testing
+          php artisan jwt:secret --force --env=testing
+          php artisan config:cache
+          php artisan migrate --env=testing
+
+      - name: Run Tests
+        working-directory: ./server
+        run: php artisan test
