@@ -17,3 +17,7 @@ export function setUser(user: User) {
 export function isLoggedIn(): boolean {
     return !!getUser();
 }
+
+export function removeUser() {
+    localStorage.removeItem(STORAGE_KEYS.USER);
+}
