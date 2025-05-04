@@ -11,6 +11,7 @@ services:
       - ./server/.env
     depends_on:
       - database
+    command: ./dockerShell.sh
 
   database:
     image: mysql:8.0
