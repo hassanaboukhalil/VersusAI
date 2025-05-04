@@ -21,3 +21,7 @@ export function isLoggedIn(): boolean {
 export function removeUser() {
     localStorage.removeItem(STORAGE_KEYS.USER);
 }
+
+export function getToken(): string | null {
+    return getUser()?.token ?? null;
+}
