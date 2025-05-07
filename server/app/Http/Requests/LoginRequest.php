@@ -2,16 +2,16 @@
 
 namespace App\Http\Requests;
 
+use App\Traits\ResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+    use ResponseTrait;
+
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
