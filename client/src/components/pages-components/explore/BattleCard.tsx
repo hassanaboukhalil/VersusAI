@@ -1,54 +1,48 @@
 import Image from 'next/image';
 import { Button } from '../../ui/button';
-
-interface Battle {
-    id: string;
-    title: string;
-    models: string[];
-    votes: Record<string, number>;
-    type: string;
-    date: string;
-    user: { name: string; avatar: string };
-}
+import { Battle } from '../../../types/battle';
 
 const BattleCard = ({ battle }: { battle: Battle }) => {
     return (
-        <div className="bg-dark-white rounded-lg p-4 text-white border border-white/10">
-            <h3 className="text-primary text-sm font-semibold mb-1">{battle.title}</h3>
-            <p className="text-base font-medium">
-                {battle.models[0]} vs {battle.models[1]}
-            </p>
+        <div className="bg-dark-white rounded-lg p-4 text-white border border-white/10 flex flex-col justify-between h-full">
+            <div>
+                <h3 className="text-primary text-2xl font-semibold">{battle.title}</h3>
+                <p className="text-base font-medium mt-6">
+                    {battle.ai_model_1_name} vs {battle.ai_model_2_name}
+                </p>
 
-            <div className="text-sm text-gray-300 flex justify-between mt-1">
-                <div>
-                    <div>Votes</div>
-                    <div className="text-xs">
-                        {battle.models[0]}: {battle.votes[battle.models[0]]}
-                        <br />
-                        {battle.models[1]}: {battle.votes[battle.models[1]]}
+                <div className="text-sm text-gray-300 flex justify-between mt-4">
+                    <div>
+                        <div className="text-lg">Votes</div>
+                        <div className="text-sm mt-2">
+                            {battle.ai_model_1_name}: {battle.votes_ai_model_1}
+                            <br />
+                            {battle.ai_model_2_name}: {battle.votes_ai_model_2}
+                        </div>
+                    </div>
+                    <div>
+                        <span className="text-primary text-lg">{battle.type}</span>
                     </div>
                 </div>
-                <div>
-                    <div>Battle Type</div>
-                    <span className="text-primary">{battle.type}</span>
+
+                <div className="flex justify-between items-center mt-4">
+                    <div className="flex items-center gap-2">
+                        <Image
+                            src={'/images/no-user-profile-pic.jpeg'}
+                            alt={`${battle.user_first_name} ${battle.user_last_name}`}
+                            width={35}
+                            height={35}
+                            className="rounded-full"
+                        />
+                        <span className="text-lg">
+                            {battle.user_first_name} {battle.user_last_name}
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <div className="flex justify-between items-center mt-3">
-                <div className="flex items-center gap-2">
-                    <Image
-                        src={battle.user.avatar}
-                        alt={battle.user.name}
-                        width={24}
-                        height={24}
-                        className="rounded-full"
-                    />
-                    <span className="text-xs">{battle.user.name}</span>
-                </div>
-                <span className="text-xs text-gray-500">{battle.date}</span>
-            </div>
-
-            <div className="flex justify-end mt-4">
+            <div className="flex w-full justify-between items-end mt-4">
+                <span className="text-sm text-white">{battle.created_at}</span>
                 <Button size="sm" className="bg-primary text-black">
                     View
                 </Button>
@@ -56,4 +50,5 @@ const BattleCard = ({ battle }: { battle: Battle }) => {
         </div>
     );
 };
+
 export default BattleCard;
