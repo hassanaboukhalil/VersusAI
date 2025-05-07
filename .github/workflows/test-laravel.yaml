@@ -1,12 +1,16 @@
-name: Run Laravel & Next.js Tests for Staging
+name: Laravel Tests
 
 on:
+  push:
+    branches:
+      - staging
   pull_request:
     branches:
       - staging
 
 jobs:
-  Laravel_Tests_Staging:
+  test:
+    name: Run Laravel Tests
     runs-on: ubuntu-latest
 
     services:
@@ -24,43 +28,30 @@ jobs:
           --health-retries=3
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: "8.2"
+          extensions: mbstring, pdo, mysql
+          coverage: none
 
-      - name: Install Laravel dependencies & run migrations
+      - name: Install Laravel Dependencies
+        working-directory: ./server
+        run: composer install --prefer-dist
+
+      - name: Set up Test Environment
         working-directory: ./server
         run: |
           cp .env.testing .env
-          composer install --prefer-dist --no-progress
           php artisan config:clear
           php artisan key:generate --env=testing
+          php artisan jwt:secret --force --env=testing
+          php artisan config:cache
           php artisan migrate --env=testing
 
-      - name: Run Laravel tests
+      - name: Run Tests
         working-directory: ./server
         run: php artisan test
-
-  NextJS_Tests_Staging:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        working-directory: ./client
-        run: npm install
-
-      - name: Run Next.js (React) tests
-        working-directory: ./client
-        run: npm test

@@ -8,7 +8,7 @@ import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { AxiosError } from 'axios';
+import { setUser } from '../../../lib/auth';
 
 const SignupPage = () => {
     const router = useRouter();
@@ -16,6 +16,7 @@ const SignupPage = () => {
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
+        username: '',
         email: '',
         password: '',
     });
@@ -32,16 +33,16 @@ const SignupPage = () => {
 
         try {
             const res = await api.post('/signup', formData);
-            const { token, name, username, email } = res.data;
 
-            // Save to localStorage
-            localStorage.setItem('token', token);
-            localStorage.setItem('user', JSON.stringify({ name, username, email }));
-
-            router.push('/explore');
-        } catch (err: unknown) {
-            const error = err as AxiosError;
-            const message = error.response?.data?.message || error.message || 'Signup failed';
+            if (res.data.success) {
+                const user = res.data.data;
+                setUser(user);
+                router.push('/explore');
+            } else {
+                toast.error(res.data.message);
+            }
+        } catch {
+            const message = 'Signup failed';
             console.error('Signup failed:', message);
             toast.error(message);
         }
@@ -74,6 +75,14 @@ const SignupPage = () => {
                             required
                         />
                     </div>
+                    <Input
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
+                    />
                     <Input
                         type="email"
                         name="email"

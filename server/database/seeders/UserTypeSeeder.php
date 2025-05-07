@@ -14,8 +14,8 @@ class UserTypeSeeder extends Seeder
     public function run(): void
     {
         UserType::insert([
-            ['name' => 'user'],
             ['name' => 'admin'],
+            ['name' => 'user'],
         ]);
     }
 }

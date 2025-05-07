@@ -10,15 +10,15 @@ echo "✅ MySQL is ready."
 
 # If .env doesn't exist, create it from example
 if [ ! -f .env ]; then
-  echo "Creating .env from .env.example"
-  cp .env.example .env
-  php artisan key:generate
-  php artisan jwt:secret --force
+#   echo "Creating .env from .env.example"
+#   cp .env.example .env
+#   php artisan key:generate
+#   php artisan jwt:secret --force
 
-  # Inject the values from environment variables into .env
-  echo "Injecting environment variables into .env"
-else
-  echo ".env already exists"
+#   # Inject the values from environment variables into .env
+#   echo "Injecting environment variables into .env"
+# else
+#   echo ".env already exists"
 fi
 
 # Cache config and routes

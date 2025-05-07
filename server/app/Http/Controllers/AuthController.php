@@ -13,7 +13,7 @@ class AuthController extends Controller
             $authService = new AuthService();
             $user = $authService->signup($request);
             if ($user) {
-                return $this->successResponse($user, 201);
+                return $this->successResponse($user);
             }
             return $this->errorResponse("Invalid request", 400);
         } catch (\Exception $e) {
