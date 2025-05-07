@@ -8,7 +8,7 @@ class BattleService
 {
     public function getAllBattles(): array
     {
-        $all_battles = Battle::with('user', 'category', 'ai_model_1', 'ai_model_2', 'votes')->get();
+        $all_battles = Battle::where('is_active', false)->with('user', 'category', 'ai_model_1', 'ai_model_2', 'votes')->get();
 
         $battles = [];
 
