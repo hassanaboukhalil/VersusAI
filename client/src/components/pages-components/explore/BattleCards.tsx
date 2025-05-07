@@ -7,6 +7,7 @@ import api from '../../../lib/axios';
 interface ApiBattle {
     id: number;
     title: string;
+    type: string;
     ai_model_1_name: string;
     ai_model_2_name: string;
     votes_ai_model_1: number;
@@ -46,7 +47,6 @@ const BattleCards = () => {
     if (loading) {
         return (
             <div className="bg-background min-h-screen py-12">
-                <h1 className="text-white text-3xl font-bold mb-8">Explore</h1>
                 <p className="text-center text-gray-400">Loading battles…</p>
             </div>
         );
@@ -65,7 +65,7 @@ const BattleCards = () => {
                             [b.ai_model_1_name]: b.votes_ai_model_1,
                             [b.ai_model_2_name]: b.votes_ai_model_2,
                         },
-                        type: '', // or map a category if available
+                        type: b.type,
                         date: b.created_at,
                         user: {
                             name: `${b.user_first_name} ${b.user_last_name}`,
