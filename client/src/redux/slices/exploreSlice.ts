@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Battle } from '../../types/battle'; // define this to match your API
+import { Battle } from '../../types/battle';
 
 interface ExploreState {
     battles: Battle[];
