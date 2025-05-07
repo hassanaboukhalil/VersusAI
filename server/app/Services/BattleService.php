@@ -27,6 +27,7 @@ class BattleService
             $battles[] = [
                 'id' => $battle->id,
                 'title' => $battle->title,
+                'type' => $battle->category->name,
                 'ai_model_1_id' => $battle->ai_model_1_id,
                 'ai_model_2_id' => $battle->ai_model_2_id,
                 'ai_model_1_name' => $battle->ai_model_1->model_name,
