@@ -43,6 +43,15 @@ const BattleCards = () => {
         fetchBattles();
     }, []);
 
+    if (loading) {
+        return (
+            <div className="bg-background min-h-screen py-12">
+                <h1 className="text-white text-3xl font-bold mb-8">Explore</h1>
+                <p className="text-center text-gray-400">Loading battles…</p>
+            </div>
+        );
+    }
+
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {battles.map((b) => (
