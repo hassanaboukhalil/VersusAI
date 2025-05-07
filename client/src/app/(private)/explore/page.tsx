@@ -3,19 +3,22 @@ import { useEffect } from 'react';
 import Section from '../../../components/layout/Section';
 import BattleCard from '../../../components/pages-components/explore/BattleCard';
 
+interface ApiBattle {
+    id: number;
+    title: string;
+    ai_model_1_name: string;
+    ai_model_2_name: string;
+    votes_ai_model_1: number;
+    votes_ai_model_2: number;
+    user_first_name: string;
+    user_last_name: string;
+    user_profile_pic_url: string;
+    created_at: string;
+}
+
 const page = () => {
-    interface ApiBattle {
-        id: number;
-        title: string;
-        ai_model_1_name: string;
-        ai_model_2_name: string;
-        votes_ai_model_1: number;
-        votes_ai_model_2: number;
-        user_first_name: string;
-        user_last_name: string;
-        user_profile_pic_url: string;
-        created_at: string;
-    }
+    const [battles, setBattles] = useState<ApiBattle[]>([]);
+    const [loading, setLoading] = useState(true);
 
     return (
         <Section className="bg-background min-h-screen py-12">
