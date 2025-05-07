@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import Section from '../../../components/layout/Section';
 import BattleCard from '../../../components/pages-components/explore/BattleCard';
+import api from '../../../lib/axios';
 
 interface ApiBattle {
     id: number;
@@ -19,6 +20,28 @@ interface ApiBattle {
 const page = () => {
     const [battles, setBattles] = useState<ApiBattle[]>([]);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchBattles() {
+            try {
+                const res = await api.get<{
+                    success: boolean;
+                    message: string;
+                    data: ApiBattle[];
+                }>('/battles');
+                if (res.data.success) {
+                    setBattles(res.data.data);
+                } else {
+                    console.error('API error:', res.data.message);
+                }
+            } catch (err) {
+                console.error('Fetch battles failed', err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchBattles();
+    }, []);
 
     return (
         <Section className="bg-background min-h-screen py-12">
