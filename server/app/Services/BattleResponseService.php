@@ -72,7 +72,7 @@ class BattleResponseService
         $prompt = "Write a {$language} program to do the following:\n\n{$task_description}";
 
         if (str_starts_with($ai_model_name, 'meta-llama') || str_starts_with($ai_model_name, 'mixtral') || $ai_model_name == "Groq") {
-            return $response = $this->callGroqChat($prompt, "meta-llama/llama-4-scout-17b-16e-instruct");
+            return $response = $this->callGroqChat($prompt, "deepseek-r1-distill-llama-70b");
         }
 
         if ($ai_model_name === 'deepseek-chat') {
