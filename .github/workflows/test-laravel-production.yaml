@@ -38,3 +38,13 @@ jobs:
       - name: Install Laravel Dependencies
         working-directory: ./server
         run: composer install --prefer-dist
+
+      - name: Set up Test Environment
+        working-directory: ./server
+        run: |
+          cp .env.testing .env
+          php artisan config:clear
+          php artisan key:generate --env=testing
+          php artisan jwt:secret --force --env=testing
+          php artisan config:cache
+          php artisan migrate --env=testing
