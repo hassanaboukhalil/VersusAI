@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Battle;
+use App\Schemas\BattleResponseSchema;
 
 class BattleService
 {
@@ -42,5 +43,18 @@ class BattleService
         }
 
         return $battles;
+    }
+
+
+    public function getBattleResponse($ai_model_name, $battle_type)
+    {
+        $schema = BattleResponseSchema::createPrismSchema(
+            "Text Summarization",
+            "Summarize a text",
+            [
+                "name" => "This name of the task",
+                "description" => "Summarize the text",
+            ]
+        );
     }
 }
