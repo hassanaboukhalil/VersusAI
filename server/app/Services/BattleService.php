@@ -48,7 +48,7 @@ class BattleService
     }
 
 
-    public function getBattleResponse($ai_model_name, $battle_type)
+    public function getBattleResponse() // $ai_model_name, $battle_type
     {
         $schema = BattleResponseSchema::createPrismSchema(
             "Text Summarization",
