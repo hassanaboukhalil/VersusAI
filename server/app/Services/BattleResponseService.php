@@ -92,34 +92,6 @@ class BattleResponseService
         return $response;
     }
 
-
-
-    public function callDeepSeekChat(string $prompt, string $model = 'deepseek-chat'): string
-    {
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY'),
-            'Content-Type'  => 'application/json',
-        ])->post('https://api.deepseek.com/v1/chat/completions', [
-            'model'    => $model,
-            'messages' => [
-                [
-                    'role'    => 'system',
-                    'content' => 'You are a helpful assistant.',
-                ],
-                [
-                    'role'    => 'user',
-                    'content' => $prompt,
-                ],
-            ],
-        ]);
-
-        if ($response->failed()) {
-            throw new \Exception('DeepSeek API call failed: ' . $response->body());
-        }
-
-        return $response->json('choices.0.message.content');
-    }
-
     public function callOpenRouterDeepSeek(string $prompt, string $model): string
     {
         $model = "deepseek/deepseek-prover-v2:free";
