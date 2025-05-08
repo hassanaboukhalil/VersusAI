@@ -23,3 +23,7 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
