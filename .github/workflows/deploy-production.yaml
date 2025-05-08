@@ -1,4 +1,4 @@
-# name: Deploy VersusAI to EC2 (Staging)
+# name: Deploy VersusAI to EC2 (Production)
 
 on:
   push:
@@ -53,4 +53,9 @@ jobs:
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:production ./client
 
       - name: Push Next.js Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:staging
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:production
+
+  deploy-to-ec2:
+    name: Deploy to EC2 (Production)
+    needs: [build-and-push-laravel, build-and-push-nextjs]
+    runs-on: ubuntu-latest
