@@ -22,3 +22,6 @@ jobs:
 
       - name: Build Laravel Docker Image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:production ./server
+
+      - name: Push Laravel Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:production
