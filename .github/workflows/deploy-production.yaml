@@ -29,3 +29,7 @@ jobs:
   build-and-push-nextjs:
     name: Build & Push Next.js Docker Image
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
