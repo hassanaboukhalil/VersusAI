@@ -56,6 +56,10 @@ class BattleResponseService
         return $response->structured;
     }
 
+    public function getCodeGenerationResponse(string $ai_model_name, string $task_description, string $language): array {}
+
+
+
     private function getProviderForModel(string $model): Provider
     {
         return match (true) {
