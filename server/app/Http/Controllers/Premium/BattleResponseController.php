@@ -10,8 +10,18 @@ class BattleResponseController extends Controller
 {
     public function getBattleResponse()
     {
-        $battle_service = new BattleService();
+        try {
+            $battle_service = new BattleService();
 
-        $battle_response = $battle_service->getBattleResponse();
+            $battle_response = $battle_service->getBattleResponse();
+
+            if ($battle_response) {
+                $this->successResponse($battle_response, 'You got the battle response successfully');
+            }
+
+            return $this->errorResponse('Something went wrong', 401);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
     }
 }
