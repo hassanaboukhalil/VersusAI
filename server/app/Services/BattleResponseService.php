@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Schemas\BattleResponseSchema;
+use Illuminate\Support\Facades\Http;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
 
@@ -56,7 +57,7 @@ class BattleResponseService
         return $response->structured;
     }
 
-    public function getCodeGenerationResponse(string $ai_model_name, string $task_description, string $language): array
+    public function getCodeGenerationResponse(string $ai_model_name, string $task_description, string $language)
     {
         $schema = BattleResponseSchema::createPrismSchema(
             "code_generation",
@@ -72,22 +73,61 @@ class BattleResponseService
 
         $prompt = "Write a {$language} program to do the following:\n\n{$task_description}";
 
-        $response = Prism::structured()
-            ->using($provider, $ai_model_name)
-            ->withSchema($schema)
-            ->withPrompt($prompt)
-            ->asStructured();
+        if ($ai_model_name !== 'deepseek-chat') {
+            $response = Prism::structured()
+                ->using($provider, $ai_model_name)
+                ->withSchema($schema)
+                ->withPrompt($prompt)
+                ->asStructured();
+        } else {
+            $response = $this->callDeepSeekChat($prompt, $ai_model_name);
 
-        return $response->structured;
+            return $response;
+        }
+
+        // $response = Prism::structured()
+        //     ->using($provider, $ai_model_name)
+        //     ->withSchema($schema)
+        //     ->withPrompt($prompt)
+        //     ->asStructured();
+
+        // return $response->structured;
     }
 
 
+
+    public function callDeepSeekChat(string $prompt, string $model = 'deepseek-chat'): string
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY'),
+            'Content-Type'  => 'application/json',
+        ])->post('https://api.deepseek.com/v1/chat/completions', [
+            'model'    => $model,
+            'messages' => [
+                [
+                    'role'    => 'system',
+                    'content' => 'You are a helpful assistant.',
+                ],
+                [
+                    'role'    => 'user',
+                    'content' => $prompt,
+                ],
+            ],
+        ]);
+
+        if ($response->failed()) {
+            throw new \Exception('DeepSeek API call failed: ' . $response->body());
+        }
+
+        return $response->json('choices.0.message.content');
+    }
 
     private function getProviderForModel(string $model): Provider
     {
         return match (true) {
             str_starts_with($model, 'gpt-') || str_contains($model, 'chatgpt') || str_contains($model, 'o3-') => Provider::OpenAI,
             str_starts_with($model, 'gemini') => Provider::Gemini,
+            str_starts_with($model, 'deepseek') => Provider::DeepSeek,
             default => throw new \InvalidArgumentException("Unsupported AI model: $model")
         };
     }
