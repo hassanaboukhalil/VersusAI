@@ -25,3 +25,7 @@ jobs:
 
       - name: Push Laravel Docker Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:production
+
+  build-and-push-nextjs:
+    name: Build & Push Next.js Docker Image
+    runs-on: ubuntu-latest
