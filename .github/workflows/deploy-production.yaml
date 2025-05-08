@@ -1,0 +1,6 @@
+# name: Deploy VersusAI to EC2 (Staging)
+
+on:
+  push:
+    branches:
+      - main
