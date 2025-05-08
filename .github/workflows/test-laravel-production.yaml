@@ -34,3 +34,7 @@ jobs:
           php-version: "8.2"
           extensions: mbstring, pdo, mysql
           coverage: none
+
+      - name: Install Laravel Dependencies
+        working-directory: ./server
+        run: composer install --prefer-dist
