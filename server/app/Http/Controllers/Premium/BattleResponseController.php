@@ -13,13 +13,13 @@ class BattleResponseController extends Controller
         try {
             $battle_service = new BattleService();
 
-            $battle_response = $battle_service->getBattleResponse();
+            $data = $battle_service->getBattleResponse();
 
-            if ($battle_response) {
-                $this->successResponse($battle_response, 'You got the battle response successfully');
+            if (isset($battle_response)) {
+                return $this->successResponse($data, 'You got the battle response successfully');
             }
 
-            return $this->errorResponse('Something went wrong', 401);
+            return $this->errorResponse('Something went wrong', 500);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }
