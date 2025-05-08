@@ -33,6 +33,7 @@ trait HandlesAiModelCalls
         return $response->json('choices.0.message.content');
     }
 
+
     public function callOpenRouterDeepSeek(string $prompt, string $model): string
     {
         $model = "deepseek/deepseek-prover-v2:free";
@@ -51,6 +52,29 @@ trait HandlesAiModelCalls
 
         if ($response->failed()) {
             throw new \Exception('OpenRouter API call failed: ' . $response->body());
+        }
+
+        return $response->json('choices.0.message.content');
+    }
+
+
+    public function callGroqChat(string $prompt, string $model = 'meta-llama/llama-4-scout-17b-16e-instruct'): string
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GROQ_API_KEY'),
+            'Content-Type'  => 'application/json',
+        ])->post('https://api.groq.com/openai/v1/chat/completions', [
+            'model'    => $model,
+            'messages' => [
+                [
+                    'role'    => 'user',
+                    'content' => $prompt,
+                ],
+            ],
+        ]);
+
+        if ($response->failed()) {
+            throw new \Exception('Groq API call failed: ' . $response->body());
         }
 
         return $response->json('choices.0.message.content');
