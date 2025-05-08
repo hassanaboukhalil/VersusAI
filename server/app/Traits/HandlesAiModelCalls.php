@@ -32,4 +32,27 @@ trait HandlesAiModelCalls
 
         return $response->json('choices.0.message.content');
     }
+
+    public function callOpenRouterDeepSeek(string $prompt, string $model): string
+    {
+        $model = "deepseek/deepseek-prover-v2:free";
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
+            'Content-Type'  => 'application/json',
+        ])->post('https://openrouter.ai/api/v1/chat/completions', [
+            'model'    => $model,
+            'messages' => [
+                [
+                    'role'    => 'user',
+                    'content' => $prompt,
+                ]
+            ],
+        ]);
+
+        if ($response->failed()) {
+            throw new \Exception('OpenRouter API call failed: ' . $response->body());
+        }
+
+        return $response->json('choices.0.message.content');
+    }
 }
