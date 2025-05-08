@@ -6,7 +6,7 @@ use Prism\Prism\Schema\ObjectSchema;
 use Prism\Prism\Schema\StringSchema;
 
 
-class BattleSchema
+class BattleResponseSchema
 {
 
     public static function createPrismSchema($name, $description, $properties)
