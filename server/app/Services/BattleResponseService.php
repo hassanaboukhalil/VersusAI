@@ -27,6 +27,14 @@ class BattleResponseService
                 ->asStructured();
         }
 
+        if ($ai_model_name === 'gemini-2.0-flash') {
+            $response = Prism::structured()
+                ->using(Provider::Gemini, $ai_model_name)
+                ->withSchema($schema)
+                ->withPrompt($text_to_summarize)
+                ->asStructured();
+        }
+
         return $response->structured;
     }
 
