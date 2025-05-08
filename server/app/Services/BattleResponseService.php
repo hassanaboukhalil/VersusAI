@@ -84,14 +84,6 @@ class BattleResponseService
 
             return $response;
         }
-
-        // $response = Prism::structured()
-        //     ->using($provider, $ai_model_name)
-        //     ->withSchema($schema)
-        //     ->withPrompt($prompt)
-        //     ->asStructured();
-
-        // return $response->structured;
     }
 
 
