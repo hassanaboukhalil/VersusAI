@@ -2,7 +2,34 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\Http;
+
 trait HandlesAiModelCalls
 {
-    //
+    public function callDeepSeekChat(string $prompt, string $model = 'deepseek-chat'): string
+    {
+        // not free
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY'),
+            'Content-Type'  => 'application/json',
+        ])->post('https://api.deepseek.com/v1/chat/completions', [
+            'model'    => $model,
+            'messages' => [
+                [
+                    'role'    => 'system',
+                    'content' => 'You are a helpful assistant.',
+                ],
+                [
+                    'role'    => 'user',
+                    'content' => $prompt,
+                ],
+            ],
+        ]);
+
+        if ($response->failed()) {
+            throw new \Exception('DeepSeek API call failed: ' . $response->body());
+        }
+
+        return $response->json('choices.0.message.content');
+    }
 }
