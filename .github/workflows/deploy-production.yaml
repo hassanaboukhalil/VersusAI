@@ -19,3 +19,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }} # github secrets
           password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build Laravel Docker Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:production ./server
