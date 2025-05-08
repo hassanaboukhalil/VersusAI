@@ -67,6 +67,18 @@ class BattleResponseService
                 "code" => "The generated code",
             ]
         );
+
+        $provider = $this->getProviderForModel($ai_model_name);
+
+        $prompt = "Write a {$language} program to do the following:\n\n{$task_description}";
+
+        $response = Prism::structured()
+            ->using($provider, $ai_model_name)
+            ->withSchema($schema)
+            ->withPrompt($prompt)
+            ->asStructured();
+
+        return $response->structured;
     }
 
 
