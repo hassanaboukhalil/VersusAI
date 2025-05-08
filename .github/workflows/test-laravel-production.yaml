@@ -48,3 +48,7 @@ jobs:
           php artisan jwt:secret --force --env=testing
           php artisan config:cache
           php artisan migrate --env=testing
+
+      - name: Run Tests
+        working-directory: ./server
+        run: php artisan test
