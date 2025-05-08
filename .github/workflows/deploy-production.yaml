@@ -9,3 +9,7 @@ jobs:
   build-and-push-laravel:
     name: Build & Push Laravel Docker Image
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
