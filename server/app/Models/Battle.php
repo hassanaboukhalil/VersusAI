@@ -29,12 +29,12 @@ class Battle extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function aiA()
+    public function ai_model_1()
     {
         return $this->belongsTo(AiModel::class, 'ai_model_1_id');
     }
 
-    public function aiB()
+    public function ai_model_2()
     {
         return $this->belongsTo(AiModel::class, 'ai_model_2_id');
     }
