@@ -17,7 +17,7 @@ class BattleResponseController extends Controller
             // $ai_model_name = 'deepseek-chat';
             // $ai_model_name = 'claude-3-haiku-20240307';
             // $ai_model_name = 'meta-llama/llama-4-scout-17b-16e-instruct';
-            $ai_model_name = 'groq';
+            $ai_model_name = 'Groq';
 
 
             $battle_type = 'Code Generation';
