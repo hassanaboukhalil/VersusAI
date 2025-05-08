@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
 
+
 class BattleResponseService
 {
     public function getTextSummarizationResponse($ai_model_name, $text_to_summarize) // $ai_model_name, $battle_type
@@ -71,12 +72,12 @@ class BattleResponseService
 
         $prompt = "Write a {$language} program to do the following:\n\n{$task_description}";
 
-        if (str_starts_with($ai_model_name, 'meta-llama') || str_starts_with($ai_model_name, 'mixtral') || $ai_model_name == "Groq") {
-            return $response = $this->callGroqChat($prompt, "deepseek-r1-distill-llama-70b");
-        }
+        // if (str_starts_with($ai_model_name, 'meta-llama') || str_starts_with($ai_model_name, 'mixtral') || $ai_model_name == "Groq") {
+        //     return $response = $this->callGroqChat($prompt, "deepseek-r1-distill-llama-70b");
+        // }
 
-        if ($ai_model_name === 'deepseek-chat') {
-            return $response = $this->callDeepSeekChat($prompt, $ai_model_name);
+        if ($ai_model_name === 'deepseek-prover-v2') {
+            return $response = $this->callOpenRouterDeepSeek($prompt, $ai_model_name);
         }
 
         $provider = $this->getProviderForModel($ai_model_name);
@@ -119,6 +120,29 @@ class BattleResponseService
         return $response->json('choices.0.message.content');
     }
 
+    public function callOpenRouterDeepSeek(string $prompt, string $model): string
+    {
+        $model = "deepseek/deepseek-prover-v2:free";
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
+            'Content-Type'  => 'application/json',
+        ])->post('https://openrouter.ai/api/v1/chat/completions', [
+            'model'    => $model,
+            'messages' => [
+                [
+                    'role'    => 'user',
+                    'content' => $prompt,
+                ]
+            ],
+        ]);
+
+        if ($response->failed()) {
+            throw new \Exception('OpenRouter API call failed: ' . $response->body());
+        }
+
+        return $response->json('choices.0.message.content');
+    }
+
 
     public function callGroqChat(string $prompt, string $model = 'meta-llama/llama-4-scout-17b-16e-instruct'): string
     {
@@ -147,8 +171,8 @@ class BattleResponseService
         return match (true) {
             str_starts_with($model, 'gpt-') || str_contains($model, 'chatgpt') || str_contains($model, 'o3-') => Provider::OpenAI,
             str_starts_with($model, 'gemini') => Provider::Gemini,
-            str_starts_with($model, 'deepseek') => Provider::DeepSeek,
-            str_starts_with($model, 'claude') => Provider::Anthropic,
+            // str_starts_with($model, 'deepseek') => Provider::DeepSeek,
+            // str_starts_with($model, 'claude') => Provider::Anthropic,
             default => throw new \InvalidArgumentException("Unsupported AI model: $model")
         };
     }
