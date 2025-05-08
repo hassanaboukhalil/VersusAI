@@ -59,3 +59,7 @@ jobs:
     name: Deploy to EC2 (Production)
     needs: [build-and-push-laravel, build-and-push-nextjs]
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
