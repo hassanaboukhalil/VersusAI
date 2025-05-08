@@ -69,21 +69,26 @@ class BattleResponseService
             ]
         );
 
-        $provider = $this->getProviderForModel($ai_model_name);
-
         $prompt = "Write a {$language} program to do the following:\n\n{$task_description}";
 
-        if ($ai_model_name !== 'deepseek-chat') {
-            $response = Prism::structured()
-                ->using($provider, $ai_model_name)
-                ->withSchema($schema)
-                ->withPrompt($prompt)
-                ->asStructured();
-        } else {
-            $response = $this->callDeepSeekChat($prompt, $ai_model_name);
-
-            return $response;
+        if (str_starts_with($ai_model_name, 'meta-llama') || str_starts_with($ai_model_name, 'mixtral') || $ai_model_name == "Groq") {
+            return $response = $this->callGroqChat($prompt, "meta-llama/llama-4-scout-17b-16e-instruct");
         }
+
+        if ($ai_model_name === 'deepseek-chat') {
+            return $response = $this->callDeepSeekChat($prompt, $ai_model_name);
+        }
+
+        $provider = $this->getProviderForModel($ai_model_name);
+
+        $response = Prism::structured()
+            ->using($provider, $ai_model_name)
+            ->withSchema($schema)
+            ->withPrompt($prompt)
+            ->asStructured();
+
+
+        return $response;
     }
 
 
