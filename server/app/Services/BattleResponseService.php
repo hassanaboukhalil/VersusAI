@@ -19,43 +19,49 @@ class BattleResponseService
             ]
         );
 
-        if ($ai_model_name === 'gpt-4o' || $ai_model_name === 'gpt-4o' || $ai_model_name === 'gpt-4.1' || $ai_model_name === 'chatgpt-4o' || $ai_model_name === 'o3-mini') {
-            $response = Prism::structured()
-                ->using(Provider::OpenAI, $ai_model_name) //'gpt-4o'
-                ->withSchema($schema)
-                ->withPrompt($text_to_summarize)
-                ->asStructured();
-        }
+        $provider = $this->getProviderForModel($ai_model_name);
 
-        if ($ai_model_name === 'gemini-2.0-flash') {
-            $response = Prism::structured()
-                ->using(Provider::Gemini, $ai_model_name)
-                ->withSchema($schema)
-                ->withPrompt($text_to_summarize)
-                ->asStructured();
-        }
+        $response = Prism::structured()
+            ->using($provider, $ai_model_name)
+            ->withSchema($schema)
+            ->withPrompt($text_to_summarize)
+            ->asStructured();
 
         return $response->structured;
     }
 
 
-    // public function getTextSummarizationResponse() // $ai_model_name, $battle_type
-    // {
-    //     $schema = BattleResponseSchema::createPrismSchema(
-    //         "joke",
-    //         "A joke about programming",
-    //         [
-    //             "setup" => "This is the setup of the joke",
-    //             "punchline" => "This is the punchline",
-    //         ]
-    //     );
+    public function getTextTranslationResponse(string $ai_model_name, string $text, string $target_language): array
+    {
+        $schema = BattleResponseSchema::createPrismSchema(
+            "text_translation",
+            "Translate a given text to another language",
+            [
+                "original" => "The original input text",
+                "translated" => "The translated version of the text",
+                "language" => "Target language",
+            ]
+        );
 
-    //     $response = Prism::structured()
-    //         ->using(Provider::OpenAI, 'gpt-4o')
-    //         ->withSchema($schema)
-    //         ->withPrompt('Give me a funny programming joke')
-    //         ->asStructured();
+        $provider = $this->getProviderForModel($ai_model_name);
 
-    //     return $response->structured;
-    // }
+        $prompt = "Translate the following text to {$target_language}:\n\n{$text}";
+
+        $response = Prism::structured()
+            ->using($provider, $ai_model_name)
+            ->withSchema($schema)
+            ->withPrompt($prompt)
+            ->asStructured();
+
+        return $response->structured;
+    }
+
+    private function getProviderForModel(string $model): Provider
+    {
+        return match (true) {
+            str_starts_with($model, 'gpt-') || str_contains($model, 'chatgpt') || str_contains($model, 'o3-') => Provider::OpenAI,
+            str_starts_with($model, 'gemini') => Provider::Gemini,
+            default => throw new \InvalidArgumentException("Unsupported AI model: $model")
+        };
+    }
 }
