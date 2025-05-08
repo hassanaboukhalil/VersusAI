@@ -128,6 +128,7 @@ class BattleResponseService
             str_starts_with($model, 'gpt-') || str_contains($model, 'chatgpt') || str_contains($model, 'o3-') => Provider::OpenAI,
             str_starts_with($model, 'gemini') => Provider::Gemini,
             str_starts_with($model, 'deepseek') => Provider::DeepSeek,
+            str_starts_with($model, 'claude') => Provider::Anthropic,
             default => throw new \InvalidArgumentException("Unsupported AI model: $model")
         };
     }
