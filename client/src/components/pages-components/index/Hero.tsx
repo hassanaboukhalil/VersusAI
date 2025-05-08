@@ -26,7 +26,7 @@ const Hero = () => {
             />
 
             <Spotlight className="-top-40 left-0 md:-top-20 md:left-60" fill="white" />
-            <div className="flex flex-col flex-center gap-8 relative z-10 mx-auto w-full max-w-7xl py-36 lg:py-40">
+            <div className="flex flex-col flex-center gap-8 relative z-10 mx-auto w-full max-w-7xl py-36 lg:py-32 2xl:py-40">
                 <h1 className="h1 w-full lg:w-[75%] leading-normal bg-opacity-50 bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-7xl">
                     Create Challenges and Let AIs Compete with{' '}
                     <span className="text-primary">VersusAI</span>
