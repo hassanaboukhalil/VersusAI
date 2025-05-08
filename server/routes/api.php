@@ -15,7 +15,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(["middleware" => "auth:api"], function () {
         Route::get('/battles', [BattleController::class, 'getAllBattles']);
         Route::group(['prefix' => "premium"], function () {
-            Route::get('/get-battle-response', [BattleResponseController::class, 'getBattleResponse']);
+            Route::post('/get-battle-response', [BattleResponseController::class, 'getBattleResponse']);
         });
     });
 
