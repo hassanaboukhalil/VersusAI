@@ -13,7 +13,13 @@ class BattleResponseController extends Controller
     {
         try {
             // $ai_model_name = 'gpt-4o';
-            $ai_model_name = 'gemini-2.0-flash';
+            // $ai_model_name = 'gemini-2.0-flash';
+            // $ai_model_name = 'deepseek-chat';
+            // $ai_model_name = 'claude-3-haiku-20240307';
+            // $ai_model_name = 'meta-llama/llama-4-scout-17b-16e-instruct';
+            $ai_model_name = 'groq';
+
+
             $battle_type = 'Code Generation';
             $battle_response_service = new BattleResponseService();
 
