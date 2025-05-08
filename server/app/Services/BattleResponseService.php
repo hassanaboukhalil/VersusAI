@@ -56,7 +56,18 @@ class BattleResponseService
         return $response->structured;
     }
 
-    public function getCodeGenerationResponse(string $ai_model_name, string $task_description, string $language): array {}
+    public function getCodeGenerationResponse(string $ai_model_name, string $task_description, string $language): array
+    {
+        $schema = BattleResponseSchema::createPrismSchema(
+            "code_generation",
+            "Generate code in a specific language based on a task description",
+            [
+                "language" => "The programming language used",
+                "task" => "The description of the task",
+                "code" => "The generated code",
+            ]
+        );
+    }
 
 
 
