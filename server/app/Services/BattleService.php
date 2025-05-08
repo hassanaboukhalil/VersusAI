@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Battle;
 use App\Schemas\BattleResponseSchema;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Prism;
 
 class BattleService
 {
@@ -56,5 +58,13 @@ class BattleService
                 "description" => "Summarize the text",
             ]
         );
+
+        $response = Prism::structured()
+            ->using(Provider::OpenAI, 'gpt-4o')
+            ->withSchema($schema)
+            ->withPrompt('Give me a funny programming joke')
+            ->asStructured();
+
+        return $response->structured;
     }
 }
