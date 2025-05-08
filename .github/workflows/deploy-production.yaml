@@ -82,7 +82,7 @@ jobs:
           script: |
             cd /home/${{ secrets.EC2_USER }}/versusai
             docker-compose down
-            docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:staging || true
-            docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:staging || true
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:production || true
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:production || true
             docker-compose pull
             docker-compose up -d --remove-orphans
