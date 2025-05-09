@@ -13,14 +13,14 @@ class BattleResponseController extends Controller
     {
         try {
             // $ai_model_name = 'gpt-4o';
-            // $ai_model_name = 'gemini-2.0-flash';
-            // $ai_model_name = 'deepseek-chat';
+            $ai_model_name = 'gemini-2.0-flash';
+            // $ai_model_name = 'deepseek-prover-v2';
             // $ai_model_name = 'claude-3-haiku-20240307';
             // $ai_model_name = 'meta-llama/llama-4-scout-17b-16e-instruct';
-            $ai_model_name = 'Groq';
+            // $ai_model_name = 'Groq';
 
 
-            $battle_type = 'Code Generation';
+            $battle_type = 'Debate Challenge';
             $battle_response_service = new BattleResponseService();
 
             if ($battle_type === 'Text Summarization') {
@@ -38,6 +38,15 @@ class BattleResponseController extends Controller
                 $task_description = 'Build a REST API endpoint that returns a list of users as JSON.';
                 $language = 'PHP';
                 $data = $battle_response_service->getCodeGenerationResponse($ai_model_name, $task_description, $language);
+            }
+
+            if ($battle_type === "Debate Challenge") {
+
+
+                $debate_topic_with = 'Summer';
+                $debate_topic_against = 'Winter';
+                $opponent_response = null;
+                $data = $battle_response_service->getDebateChallengeResponse($ai_model_name, $debate_topic_with, $debate_topic_against, $opponent_response);
             }
 
             if ($data) {
