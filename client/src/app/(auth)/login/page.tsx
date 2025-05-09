@@ -39,8 +39,8 @@ const SignupPage = () => {
                 toast.error(res.data.message);
             }
         } catch {
-            const message = 'Signup failed';
-            console.error('Signup failed:', message);
+            const message = 'Login failed';
+            console.error('login failed:', message);
             toast.error(message);
         }
     };
