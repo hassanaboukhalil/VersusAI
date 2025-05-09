@@ -59,6 +59,8 @@ trait HandlesAiModelCalls
 
     public function callOpenRouterChat(string $prompt, string $model): string
     {
+        if ($model == "deepseek-prover-v2") $model = "deepseek/deepseek-prover-v2:free";
+
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
             'Content-Type'  => 'application/json',
