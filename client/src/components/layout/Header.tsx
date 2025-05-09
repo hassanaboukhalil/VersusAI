@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import Logo from './Logo';
 import { useEffect, useState } from 'react';
 import { isLoggedIn } from '../../lib/auth';
+import Link from 'next/link';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -33,7 +34,13 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                     <PanelLeft className="w-5 h-5 text-white" />
                 </Button>
             </div>
-            <Button variant="default">Login</Button>
+            {loggedIn ? (
+                <Button className="default">Create Battle</Button>
+            ) : (
+                <Button variant="default">
+                    <Link href="/login">Login</Link>
+                </Button>
+            )}
         </div>
     );
 };
