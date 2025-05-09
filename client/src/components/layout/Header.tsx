@@ -6,6 +6,14 @@ import Logo from './Logo';
 import { useEffect, useState } from 'react';
 import { isLoggedIn } from '../../lib/auth';
 import Link from 'next/link';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '../ui/dialog';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -35,7 +43,21 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                 </Button>
             </div>
             {loggedIn ? (
-                <Button className="default">Create Battle</Button>
+                // <Button className="default">Create Battle</Button>
+                <Dialog>
+                    <DialogTrigger className="bg-[#DEFE01] shadow-xs hover:bg-primary/90 text-[#000000] size-fit leading-0 cursor-pointer h-9 px-4 py-2 has-[>svg]:px-3 rounded-md">
+                        Create Battle
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Are you absolutely sure?</DialogTitle>
+                            <DialogDescription>
+                                This action cannot be undone. This will permanently delete your
+                                account and remove your data from our servers.
+                            </DialogDescription>
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
             ) : (
                 <Button variant="default">
                     <Link href="/login">Login</Link>
