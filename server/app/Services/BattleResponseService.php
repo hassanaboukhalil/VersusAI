@@ -6,10 +6,13 @@ use App\Schemas\BattleResponseSchema;
 use Illuminate\Support\Facades\Http;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
+use App\Traits\HandlesAiModelCalls;
 
 
 class BattleResponseService
 {
+    use HandlesAiModelCalls;
+
     public function getTextSummarizationResponse($ai_model_name, $text_to_summarize) // $ai_model_name, $battle_type
     {
         $schema = BattleResponseSchema::createPrismSchema(
@@ -75,9 +78,14 @@ class BattleResponseService
         //     return $response = $this->callGroqChat($prompt, "deepseek-r1-distill-llama-70b");
         // }
 
-        if ($ai_model_name === 'deepseek-prover-v2') {
-            return $response = $this->callOpenRouterDeepSeek($prompt, $ai_model_name);
+        // if ($ai_model_name === 'deepseek-prover-v2') {
+        //     return $response = $this->callOpenRouterDeepSeek($prompt, $ai_model_name);
+        // }
+
+        if ($this->isOpenRouterModel($ai_model_name)) {
+            return $this->callOpenRouterChat($prompt, $ai_model_name);
         }
+
 
         $provider = $this->getProviderForModel($ai_model_name);
 
@@ -90,6 +98,51 @@ class BattleResponseService
 
         return $response;
     }
+
+
+    public function getDebateChallengeResponse(
+        string $ai_model_name,
+        string $debate_topic_with,
+        string $debate_topic_against,
+        ?string $opponent_response = null
+    ): array {
+        // 1. Build a Prism-compatible schema
+        $schema = BattleResponseSchema::createPrismSchema(
+            "debate_challenge",
+            "Structured response for an AI vs AI debate",
+            [
+                "response" => "Respond to the debate in a single unified paragraph.",
+            ]
+        );
+
+        // 2. Create the prompt
+        $prompt = "You are participating in a competitive AI debate.\n\n"
+            . "You must argue **FOR**: \"$debate_topic_with\"\n"
+            . "You must argue **AGAINST**: \"$debate_topic_against\"\n\n";
+
+        if ($opponent_response) {
+            $prompt .= "Your opponent previously said:\n\"$opponent_response\"\n\n"
+                . "Respond in a short, persuasive **single paragraph** (no more than 4 lines). Stay focused and concise.";
+        } else {
+            $prompt .= "Present your opening statement as a short, impactful **single paragraph** (no more than 4 lines). Be persuasive and focused.";
+        }
+
+        // 3. Handle via OpenRouter or Prism
+        if ($this->isOpenRouterModel($ai_model_name)) {
+            return $this->callOpenRouterChat($prompt, $ai_model_name);
+        }
+
+        $provider = $this->getProviderForModel($ai_model_name);
+
+        $response = Prism::structured()
+            ->using($provider, $ai_model_name)
+            ->withSchema($schema)
+            ->withPrompt($prompt)
+            ->asStructured();
+
+        return $response->structured;
+    }
+
 
     private function getProviderForModel(string $model): Provider
     {
