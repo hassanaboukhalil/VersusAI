@@ -57,6 +57,29 @@ trait HandlesAiModelCalls
         return $response->json('choices.0.message.content');
     }
 
+    public function callOpenRouterChat(string $prompt, string $model): string
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
+            'Content-Type'  => 'application/json',
+            'HTTP-Referer'  => env('OPENROUTER_REFERER', 'https://versusai.local'),
+            'X-Title'       => env('OPENROUTER_TITLE', 'VersusAI'),
+        ])->post('https://openrouter.ai/api/v1/chat/completions', [
+            'model'    => $model,
+            'messages' => [
+                [
+                    'role'    => 'user',
+                    'content' => $prompt,
+                ]
+            ],
+        ]);
+
+        if ($response->failed()) {
+            throw new \Exception('OpenRouter API call failed: ' . $response->body());
+        }
+
+        return $response->json('choices.0.message.content');
+    }
 
     public function callGroqChat(string $prompt, string $model = 'meta-llama/llama-4-scout-17b-16e-instruct'): string
     {
@@ -78,5 +101,11 @@ trait HandlesAiModelCalls
         }
 
         return $response->json('choices.0.message.content');
+    }
+
+
+    private function isOpenRouterModel(string $model): bool
+    {
+        return str_contains($model, ':free') || str_contains($model, 'openrouter/');
     }
 }
