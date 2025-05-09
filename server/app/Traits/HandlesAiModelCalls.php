@@ -106,6 +106,9 @@ trait HandlesAiModelCalls
 
     private function isOpenRouterModel(string $model): bool
     {
-        return str_contains($model, ':free') || str_contains($model, 'openrouter/');
+        return match (true) {
+            str_contains($model, 'deepseek-prover-v2') => true,
+            default => false,
+        };
     }
 }
