@@ -3,6 +3,8 @@
 import { PanelLeft } from 'lucide-react';
 import { Button } from '../ui/button';
 import Logo from './Logo';
+import { useEffect, useState } from 'react';
+import { isLoggedIn } from '../../lib/auth';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -10,6 +12,11 @@ interface HeaderProps {
 }
 
 const Header = ({ className, onToggleSidebar }: HeaderProps) => {
+    const [loggedIn, setLoggedIn] = useState(false);
+    useEffect(() => {
+        // Client-side check (since localStorage is used)
+        setLoggedIn(isLoggedIn());
+    }, []);
     return (
         <div
             className={`bg-background w-full flex justify-between items-center py-6 ${className || ''}`}
