@@ -57,7 +57,7 @@ trait HandlesAiModelCalls
         return $response->json('choices.0.message.content');
     }
 
-    public function callOpenRouterChat(string $prompt, string $model): string
+    public function callOpenRouterChat(string $prompt, string $model)
     {
         if ($model == "deepseek-prover-v2") $model = "deepseek/deepseek-prover-v2:free";
 
