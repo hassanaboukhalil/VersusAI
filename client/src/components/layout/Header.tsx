@@ -32,6 +32,27 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
     const [aiModel1, setAiModel1] = useState('');
     const [aiModel2, setAiModel2] = useState('');
 
+    const handleSubmit = async () => {
+        if (!title || !description || !selectedBattleType || !aiModel1 || !aiModel2) {
+            toast.error('Please fill all fields');
+            return;
+        }
+
+        try {
+            await api.post('/create-battle', {
+                title,
+                description,
+                battle_type_name: selectedBattleType,
+                ai_model_1_name: aiModel1,
+                ai_model_2_name: aiModel2,
+            });
+            toast.success('Battle created successfully!');
+        } catch (err) {
+            toast.error('Failed to create battle');
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
         // Client-side check (since localStorage is used)
         setLoggedIn(isLoggedIn());
