@@ -49,7 +49,7 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                     <DialogTrigger className="bg-[#DEFE01] shadow-xs hover:bg-primary/90 text-[#000000] size-fit leading-0 cursor-pointer h-9 px-4 py-2 has-[>svg]:px-3 rounded-md">
                         Create Battle
                     </DialogTrigger>
-                    <DialogContent className="bg-[#121212] text-white max-w-2xl">
+                    <DialogContent className="bg-[#121212] text-white max-w-2xl max-h-[90%] overflow-y-scroll">
                         <DialogHeader className="mb-4">
                             <DialogTitle className="text-white text-xl text-center">
                                 Create a New AI Battle
@@ -78,19 +78,16 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                                 <div className="flex flex-wrap gap-2">
                                     {[
                                         'Text Summarization',
-                                        'Debate',
+                                        'Debate Challenge',
                                         'Code Generation',
                                         'Text Translation',
-                                        'Managing CSV',
-                                        'General',
                                     ].map((type) => (
-                                        <button
+                                        <Button
                                             key={type}
-                                            type="button"
-                                            className="text-sm border border-[#DEFE01] text-primary rounded px-3 py-1 hover:bg-primary hover:text-black transition"
+                                            className="bg-[#2C2C2C] text-white text-sm border border-[#DEFE01] hover:bg-[#dcfe0198] transition"
                                         >
                                             {type}
-                                        </button>
+                                        </Button>
                                     ))}
                                 </div>
                             </div>
@@ -119,18 +116,18 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                             </div>
 
                             {/* Public toggle */}
-                            <label className="flex items-center gap-2 text-sm">
+                            {/* <label className="flex items-center gap-2 text-sm">
                                 <input type="checkbox" className="accent-[#DEFE01]" />
                                 public battle
-                            </label>
+                            </label> */}
 
                             {/* Start Battle Button */}
-                            <button
-                                type="button"
-                                className="w-full bg-[#DEFE01] text-black font-medium py-2 rounded hover:opacity-90 transition"
+                            <Button
+                                variant="default"
+                                className="w-full hover:opacity-90 transition"
                             >
                                 Start Battle
-                            </button>
+                            </Button>
                         </div>
                     </DialogContent>
                 </Dialog>
