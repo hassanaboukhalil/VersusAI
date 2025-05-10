@@ -17,4 +17,16 @@ class BattleController extends Controller
             'Battles retrieved successfully.'
         );
     }
+
+    public function create()
+    {
+        $battle_service = new BattleService();
+
+        $battle = $battle_service->createBattle();
+
+        return $this->successResponse(
+            $battle,
+            'Battles retrieved successfully.'
+        );
+    }
 }
