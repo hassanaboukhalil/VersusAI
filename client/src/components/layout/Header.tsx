@@ -18,6 +18,7 @@ import { Input } from '../ui/input';
 import { AI_MODELS } from '../../constants/aiModels';
 import api from '../../lib/axios';
 import { toast } from 'sonner';
+import { BATTLE_TYPES } from '../../constants/battleTypes';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -39,7 +40,7 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
         }
 
         try {
-            await api.post('/create-battle', {
+            await api.post('/premium/create-battle', {
                 title,
                 description,
                 battle_type_name: selectedBattleType,
@@ -76,7 +77,7 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
             {loggedIn ? (
                 // <Button className="default">Create Battle</Button>
                 <Dialog>
-                    <DialogTrigger className="bg-[#DEFE01] shadow-xs hover:bg-primary/90 text-[#000000] size-fit leading-0 cursor-pointer h-9 px-4 py-2 has-[>svg]:px-3 rounded-md">
+                    <DialogTrigger className="bg-[#DEFE01] text-black h-9 px-4 py-2 rounded-md">
                         Create Battle
                     </DialogTrigger>
                     <DialogContent className="bg-[#121212] text-white max-w-2xl max-h-[90%] overflow-y-scroll">
@@ -90,59 +91,57 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                         </DialogHeader>
 
                         <div className="space-y-6">
-                            {/* Title Input */}
                             <div>
                                 <label className="text-lg block">Title</label>
                                 <Input
-                                    type="text"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
                                     placeholder="Summarize a text about creating LLM"
                                     className="mt-1"
                                 />
                             </div>
 
-                            {/* Battle Type Buttons */}
                             <div>
                                 <label className="text-lg mb-1 block">Choose the battle type</label>
                                 <div className="flex flex-wrap gap-2">
-                                    {[
-                                        'Text Summarization',
-                                        'Debate Challenge',
-                                        'Code Generation',
-                                        'Text Translation',
-                                    ].map((type) => {
-                                        const isSelected = selectedBattleType === type;
-                                        return (
-                                            <Button
-                                                key={type}
-                                                type="button"
-                                                onClick={() => setSelectedBattleType(type)}
-                                                className={`text-sm transition border ${
-                                                    isSelected
-                                                        ? 'bg-primary text-black border-primary'
-                                                        : 'bg-[#2C2C2C] text-white border-[#DEFE01] hover:bg-[#dcfe0198]'
-                                                }`}
-                                            >
-                                                {type}
-                                            </Button>
-                                        );
-                                    })}
+                                    {BATTLE_TYPES.map((type) => (
+                                        <Button
+                                            key={type}
+                                            type="button"
+                                            onClick={() => setSelectedBattleType(type)}
+                                            className={`text-sm transition border ${
+                                                selectedBattleType === type
+                                                    ? 'bg-primary text-black border-primary'
+                                                    : 'bg-[#2C2C2C] text-white border-[#DEFE01] hover:bg-[#dcfe0198]'
+                                            }`}
+                                        >
+                                            {type}
+                                        </Button>
+                                    ))}
                                 </div>
                             </div>
 
-                            {/* Choose AIs */}
                             <div>
                                 <label className="text-lg mb-1 block">Choose AIs</label>
                                 <div className="flex gap-2">
-                                    <select className="flex-1 rounded bg-white text-black px-2 py-1">
-                                        <option>Select AI Model A</option>
+                                    <select
+                                        value={aiModel1}
+                                        onChange={(e) => setAiModel1(e.target.value)}
+                                        className="flex-1 rounded bg-white text-black px-2 py-1"
+                                    >
+                                        <option value="">Select AI Model A</option>
                                         {AI_MODELS.map((model) => (
                                             <option key={model} value={model}>
                                                 {model}
                                             </option>
                                         ))}
                                     </select>
-                                    <select className="flex-1 rounded bg-white text-black px-2 py-1">
-                                        <option>Select AI Model B</option>
+                                    <select
+                                        value={aiModel2}
+                                        onChange={(e) => setAiModel2(e.target.value)}
+                                        className="flex-1 rounded bg-white text-black px-2 py-1"
+                                    >
+                                        <option value="">Select AI Model B</option>
                                         {AI_MODELS.map((model) => (
                                             <option key={model} value={model}>
                                                 {model}
@@ -152,24 +151,19 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                                 </div>
                             </div>
 
-                            {/* Textarea Prompt */}
                             <div>
                                 <label className="text-lg mb-1 block">Text to Summarize</label>
                                 <textarea
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
                                     rows={6}
                                     className="w-full rounded bg-white text-black px-3 py-2 text-sm"
                                     placeholder="Enter a paragraph to summarize, translate, or debate..."
                                 ></textarea>
                             </div>
 
-                            {/* Public toggle */}
-                            {/* <label className="flex items-center gap-2 text-sm">
-                                <input type="checkbox" className="accent-[#DEFE01]" />
-                                public battle
-                            </label> */}
-
-                            {/* Start Battle Button */}
                             <Button
+                                onClick={handleSubmit}
                                 variant="default"
                                 className="w-full hover:opacity-90 transition"
                             >
