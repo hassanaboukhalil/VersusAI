@@ -98,9 +98,21 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                                 <div className="flex gap-2">
                                     <select className="flex-1 rounded bg-white text-black px-2 py-1">
                                         <option>Select AI Model A</option>
+                                        <option>gpt-4o</option>
+                                        <option>gpt-4.1</option>
+                                        <option>o3-mini</option>
+                                        <option>chatgpt-4o</option>
+                                        <option>deepseek-prover-v2</option>
+                                        <option>gemini-2.0-flash</option>
                                     </select>
                                     <select className="flex-1 rounded bg-white text-black px-2 py-1">
                                         <option>Select AI Model B</option>
+                                        <option>gpt-4o</option>
+                                        <option>gpt-4.1</option>
+                                        <option>o3-mini</option>
+                                        <option>chatgpt-4o</option>
+                                        <option>deepseek-prover-v2</option>
+                                        <option>gemini-2.0-flash</option>
                                     </select>
                                 </div>
                             </div>
