@@ -23,6 +23,7 @@ interface HeaderProps {
 
 const Header = ({ className, onToggleSidebar }: HeaderProps) => {
     const [loggedIn, setLoggedIn] = useState(false);
+    const [selectedBattleType, setSelectedBattleType] = useState('');
     useEffect(() => {
         // Client-side check (since localStorage is used)
         setLoggedIn(isLoggedIn());
@@ -72,23 +73,30 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
 
                             {/* Battle Type Buttons */}
                             <div>
-                                <label className="text-lg mb-1 block">
-                                    Choose the battle title
-                                </label>
+                                <label className="text-lg mb-1 block">Choose the battle type</label>
                                 <div className="flex flex-wrap gap-2">
                                     {[
                                         'Text Summarization',
                                         'Debate Challenge',
                                         'Code Generation',
                                         'Text Translation',
-                                    ].map((type) => (
-                                        <Button
-                                            key={type}
-                                            className="bg-[#2C2C2C] text-white text-sm border border-[#DEFE01] hover:bg-[#dcfe0198] transition"
-                                        >
-                                            {type}
-                                        </Button>
-                                    ))}
+                                    ].map((type) => {
+                                        const isSelected = selectedBattleType === type;
+                                        return (
+                                            <Button
+                                                key={type}
+                                                type="button"
+                                                onClick={() => setSelectedBattleType(type)}
+                                                className={`text-sm transition border ${
+                                                    isSelected
+                                                        ? 'bg-primary text-black border-primary'
+                                                        : 'bg-[#2C2C2C] text-white border-[#DEFE01] hover:bg-[#dcfe0198]'
+                                                }`}
+                                            >
+                                                {type}
+                                            </Button>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
