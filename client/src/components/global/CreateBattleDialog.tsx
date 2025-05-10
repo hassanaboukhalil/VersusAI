@@ -8,6 +8,7 @@ import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../
 import { Input } from '../ui/input';
 import { toast } from 'sonner';
 import api from '../../lib/axios';
+import Select from '../ui/Select';
 
 const CreateBattleDialog = () => {
     const [title, setTitle] = useState('');
@@ -82,30 +83,18 @@ const CreateBattleDialog = () => {
                 <div>
                     <label className="text-lg mb-1 block">Choose AIs</label>
                     <div className="flex gap-2">
-                        <select
+                        <Select
                             value={aiModel1}
-                            onChange={(e) => setAiModel1(e.target.value)}
-                            className="flex-1 rounded bg-white text-black px-2 py-1"
-                        >
-                            <option value="">Select AI Model A</option>
-                            {AI_MODELS.map((model) => (
-                                <option key={model} value={model}>
-                                    {model}
-                                </option>
-                            ))}
-                        </select>
-                        <select
+                            onChange={setAiModel1}
+                            options={AI_MODELS}
+                            placeholder="Select AI Model A"
+                        />
+                        <Select
                             value={aiModel2}
-                            onChange={(e) => setAiModel2(e.target.value)}
-                            className="flex-1 rounded bg-white text-black px-2 py-1"
-                        >
-                            <option value="">Select AI Model B</option>
-                            {AI_MODELS.map((model) => (
-                                <option key={model} value={model}>
-                                    {model}
-                                </option>
-                            ))}
-                        </select>
+                            onChange={setAiModel2}
+                            options={AI_MODELS}
+                            placeholder="Select AI Model B"
+                        />
                     </div>
                 </div>
 
