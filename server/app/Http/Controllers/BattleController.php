@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\BattleService;
+use Illuminate\Http\Request;
 
 class BattleController extends Controller
 {
@@ -18,15 +19,19 @@ class BattleController extends Controller
         );
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $battle_service = new BattleService();
 
-        $battle = $battle_service->createBattle();
+        $battle = $battle_service->createBattle($request);
 
-        return $this->successResponse(
-            $battle,
-            'Battles retrieved successfully.'
-        );
+        if ($battle) {
+            return $this->successResponse(
+                $battle,
+                'Battle created successfully.'
+            );
+        }
+
+        return $this->errorResponse('Something went wrong, try again', 500);
     }
 }
