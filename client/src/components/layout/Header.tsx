@@ -15,6 +15,9 @@ import {
     DialogTrigger,
 } from '../ui/dialog';
 import { Input } from '../ui/input';
+import { AI_MODELS } from '../../constants/aiModels';
+import api from '../../lib/axios';
+import { toast } from 'sonner';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -23,7 +26,12 @@ interface HeaderProps {
 
 const Header = ({ className, onToggleSidebar }: HeaderProps) => {
     const [loggedIn, setLoggedIn] = useState(false);
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const [selectedBattleType, setSelectedBattleType] = useState('');
+    const [aiModel1, setAiModel1] = useState('');
+    const [aiModel2, setAiModel2] = useState('');
+
     useEffect(() => {
         // Client-side check (since localStorage is used)
         setLoggedIn(isLoggedIn());
@@ -106,21 +114,19 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                                 <div className="flex gap-2">
                                     <select className="flex-1 rounded bg-white text-black px-2 py-1">
                                         <option>Select AI Model A</option>
-                                        <option>gpt-4o</option>
-                                        <option>gpt-4.1</option>
-                                        <option>o3-mini</option>
-                                        <option>chatgpt-4o</option>
-                                        <option>deepseek-prover-v2</option>
-                                        <option>gemini-2.0-flash</option>
+                                        {AI_MODELS.map((model) => (
+                                            <option key={model} value={model}>
+                                                {model}
+                                            </option>
+                                        ))}
                                     </select>
                                     <select className="flex-1 rounded bg-white text-black px-2 py-1">
                                         <option>Select AI Model B</option>
-                                        <option>gpt-4o</option>
-                                        <option>gpt-4.1</option>
-                                        <option>o3-mini</option>
-                                        <option>chatgpt-4o</option>
-                                        <option>deepseek-prover-v2</option>
-                                        <option>gemini-2.0-flash</option>
+                                        {AI_MODELS.map((model) => (
+                                            <option key={model} value={model}>
+                                                {model}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
