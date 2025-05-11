@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import api from '../../lib/axios';
 import Select from '../ui/Select';
 import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const [title, setTitle] = useState('');
@@ -19,6 +20,7 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const [selectedBattleType, setSelectedBattleType] = useState('');
     const [aiModel1, setAiModel1] = useState('');
     const [aiModel2, setAiModel2] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const router = useRouter();
     // const dispatch = useDispatch();
@@ -29,6 +31,7 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
             return;
         }
 
+        setLoading(true);
         try {
             const res = await api.post('/premium/create-battle', {
                 title,
@@ -38,37 +41,6 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 ai_model_2_name: aiModel2,
             });
 
-            // const data = res.data.data;
-
-            // const battle = {
-            //     id: data.id,
-            //     title: data.title,
-            //     description: data.description,
-            //     type: data.type,
-            //     ai_models: [
-            //         { name: data.ai_model_1_name, votes: 0 },
-            //         { name: data.ai_model_2_name, votes: 0 },
-            //     ],
-            //     rounds: [
-            //         {
-            //             id: 1,
-            //             responses: [
-            //                 {
-            //                     ai_model_name: data.ai_model_1_name,
-            //                     response_text: data.ai_model_1_response,
-            //                     votes: 0,
-            //                 },
-            //                 {
-            //                     ai_model_name: data.ai_model_2_name,
-            //                     response_text: data.ai_model_2_response,
-            //                     votes: 0,
-            //                 },
-            //             ],
-            //         },
-            //     ],
-            // };
-
-            // dispatch(setCurrentBattle(battle));
             if (res.data.success) {
                 const data = res.data.data;
                 onSuccess();
@@ -79,6 +51,8 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
         } catch (err) {
             toast.error('Failed to create battle');
             console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -156,9 +130,11 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 <Button
                     onClick={handleSubmit}
                     variant="default"
-                    className="w-full hover:opacity-90 transition"
+                    className="w-full hover:opacity-90 transition flex items-center justify-center gap-2"
+                    disabled={loading}
                 >
-                    Start Battle
+                    {loading && <Loader2 className="animate-spin w-4 h-4" />}
+                    {loading ? 'Please wait...' : 'Start Battle'}
                 </Button>
             </div>
         </DialogContent>
