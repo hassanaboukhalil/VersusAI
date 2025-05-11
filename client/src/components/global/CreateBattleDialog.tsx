@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setCurrentBattle } from '../../redux/slices/battleSlice';
+// import { useDispatch } from 'react-redux';
+// import { setCurrentBattle } from '../../redux/slices/battleSlice';
 import { AI_MODELS } from '../../constants/aiModels';
 import { BATTLE_TYPES } from '../../constants/battleTypes';
 import { Button } from '../ui/button';
@@ -21,7 +21,7 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const [aiModel2, setAiModel2] = useState('');
 
     const router = useRouter();
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     const handleSubmit = async () => {
         if (!title || !description || !selectedBattleType || !aiModel1 || !aiModel2) {
@@ -38,39 +38,44 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 ai_model_2_name: aiModel2,
             });
 
-            const data = res.data.data;
+            // const data = res.data.data;
 
-            const battle = {
-                id: data.id,
-                title: data.title,
-                description: data.description,
-                type: data.type,
-                ai_models: [
-                    { name: data.ai_model_1_name, votes: 0 },
-                    { name: data.ai_model_2_name, votes: 0 },
-                ],
-                rounds: [
-                    {
-                        id: 1,
-                        responses: [
-                            {
-                                ai_model_name: data.ai_model_1_name,
-                                response_text: data.ai_model_1_response,
-                                votes: 0,
-                            },
-                            {
-                                ai_model_name: data.ai_model_2_name,
-                                response_text: data.ai_model_2_response,
-                                votes: 0,
-                            },
-                        ],
-                    },
-                ],
-            };
+            // const battle = {
+            //     id: data.id,
+            //     title: data.title,
+            //     description: data.description,
+            //     type: data.type,
+            //     ai_models: [
+            //         { name: data.ai_model_1_name, votes: 0 },
+            //         { name: data.ai_model_2_name, votes: 0 },
+            //     ],
+            //     rounds: [
+            //         {
+            //             id: 1,
+            //             responses: [
+            //                 {
+            //                     ai_model_name: data.ai_model_1_name,
+            //                     response_text: data.ai_model_1_response,
+            //                     votes: 0,
+            //                 },
+            //                 {
+            //                     ai_model_name: data.ai_model_2_name,
+            //                     response_text: data.ai_model_2_response,
+            //                     votes: 0,
+            //                 },
+            //             ],
+            //         },
+            //     ],
+            // };
 
-            dispatch(setCurrentBattle(battle));
-            onSuccess();
-            router.push(`/battles/${data.id}`);
+            // dispatch(setCurrentBattle(battle));
+            if (res.data.success) {
+                const data = res.data.data;
+                onSuccess();
+                router.push(`/battles/${data.id}`);
+            } else {
+                toast.error('Failed to create battle');
+            }
         } catch (err) {
             toast.error('Failed to create battle');
             console.error(err);
