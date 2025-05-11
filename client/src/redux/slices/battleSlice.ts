@@ -1,13 +1,8 @@
-// redux/slices/battleSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Battle {
-    id: number;
-    title: string;
-    description: string;
-    type: string;
-    ai_models: { name: string; votes: number }[];
-    rounds: Round[];
+export interface Response {
+    ai_model_name: string;
+    response_text: string;
 }
 
 export interface Round {
@@ -15,10 +10,26 @@ export interface Round {
     responses: Response[];
 }
 
-export interface Response {
-    ai_model_name: string;
-    response_text: string;
+export interface User {
+    user_first_name: string;
+    user_username: string;
+    user_profile_pic_url: string | null;
+}
+
+export interface AiModel {
+    name: string;
     votes: number;
+}
+
+export interface Battle {
+    id: number;
+    title: string;
+    description: string;
+    type: string;
+    is_active: boolean;
+    ai_models: AiModel[];
+    user: User;
+    rounds: Round[];
 }
 
 interface BattleState {
