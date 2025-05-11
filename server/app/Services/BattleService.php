@@ -105,7 +105,7 @@ class BattleService
             'title' => $battle->title,
             'description' => $battle->description,
             'type' => $battle->category->name,
-            'is_active' => $battle->is_active,
+            'is_active' => $battle->is_active == 0 ? false : true,
             'ai_models' => [
                 [
                     'name' => $battle->ai_model_1->model_name,
