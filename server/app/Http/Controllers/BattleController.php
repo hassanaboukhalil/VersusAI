@@ -46,10 +46,10 @@ class BattleController extends Controller
         return $this->errorResponse('Something went wrong, try again', 500);
     }
 
-    public function get(Request $request)
+    public function get(int $id)
     {
         $battle_service = new BattleService();
-        $battle = $battle_service->getBattle($request);
+        $battle = $battle_service->getBattle($id);
 
         if ($battle) {
             return $this->successResponse($battle);
