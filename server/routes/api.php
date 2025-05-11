@@ -22,6 +22,7 @@ Route::group(['prefix' => 'v1'], function () {
             // Route::post('/get-battle-response', [BattleResponseController::class, 'getBattleResponse']);
             Route::post('/create-round', [BattleRoundController::class, 'create']);
             Route::post('/get-text-summarization', [BattleResponseController::class, 'getTextSummarization']);
+            Route::patch('/battles/{id}/end', [BattleController::class, 'end']);
         });
     });
 
