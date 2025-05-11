@@ -6,6 +6,7 @@ import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
 import Image from 'next/image';
 import Section from '../../../../components/layout/Section';
+import { Star } from 'lucide-react';
 
 const BattleDetailsPage = () => {
     const { id } = useParams();
@@ -22,7 +23,6 @@ const BattleDetailsPage = () => {
                     ai: 'Chatgpt',
                     responseText:
                         'To create an LLM-powered app, start by selecting a strong open-source model like LLaMA or Mistral, To create an LLM-powered app, start by selecting a strong open-source model like LLaMA or Mistral, To create an LLM-powered app, start by selecting a strong open-source model like LLaMA or Mistral',
-                    votes: 122,
                     src: '/images/llms/openai.svg',
                 },
                 {
@@ -108,15 +108,16 @@ const BattleDetailsPage = () => {
                         <h3 className="text-xl font-semibold mb-2">Votes</h3>
                         <div className="flex items-center gap-4 text-right">
                             <Button className="bg-primary text-black">
-                                Vote for {battle.results[0].ai}
+                                <Star />
+                                Vote for Chatgpt
                             </Button>
                             <Button className="bg-primary text-black">
-                                Vote for {battle.results[1].ai}
+                                <Star fill="red" />
+                                Vote for Gemini
                             </Button>
                         </div>
                         <p className="mt-4 text-gray-300">
-                            {battle.results[0].ai}: {battle.results[0].votes} &nbsp;&nbsp;&nbsp;
-                            {battle.results[1].ai}: {battle.results[1].votes}
+                            Chatgpt: 123 &nbsp;&nbsp;&nbsp; Gemini: 134
                         </p>
                     </div>
 
