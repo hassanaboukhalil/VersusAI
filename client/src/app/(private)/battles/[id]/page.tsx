@@ -6,7 +6,7 @@ import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
 import Image from 'next/image';
 import Section from '../../../../components/layout/Section';
-import { Star } from 'lucide-react';
+import { Send, Star } from 'lucide-react';
 
 const BattleDetailsPage = () => {
     const { id } = useParams();
@@ -124,11 +124,13 @@ const BattleDetailsPage = () => {
                     {/* Comments Section */}
                     <div className="mt-8">
                         <h3 className="text-xl font-semibold mb-2">Write a comment</h3>
-                        <Input
-                            placeholder="Write a comment…"
-                            className="mb-4 text-black bg-white"
-                        />
-                        <Button className="bg-primary text-black">Send</Button>
+                        <div className="bg-white relative rounded-md flex items-center">
+                            <Input
+                                placeholder="Write a comment…"
+                                className="text-black bg-white rounded-md m-0 h-[3rem]"
+                            />
+                            <Send color="black" className="absolute right-[8px]" />
+                        </div>
                     </div>
 
                     <div className="mt-6 space-y-4">
