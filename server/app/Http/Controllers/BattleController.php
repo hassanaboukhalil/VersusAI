@@ -57,4 +57,16 @@ class BattleController extends Controller
 
         return $this->errorResponse('Something went wrong, try again', 500);
     }
+
+    public function end($id)
+    {
+        $battle_service = new BattleService();
+        $result = $battle_service->endBattle($id);
+
+        if ($result) {
+            return $this->successResponse(['id' => $id, 'is_active' => false], 'Battle has been ended.');
+        }
+
+        return $this->errorResponse('Battle is already ended or does not exist.', 400);
+    }
 }
