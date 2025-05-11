@@ -16,9 +16,9 @@ interface HeaderProps {
 
 const Header = ({ className, onToggleSidebar }: HeaderProps) => {
     const [loggedIn, setLoggedIn] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     useEffect(() => {
-        // Client-side check (since localStorage is used)
         setLoggedIn(isLoggedIn());
     }, []);
     return (
@@ -38,12 +38,11 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                 </Button>
             </div>
             {loggedIn ? (
-                // <Button className="default">Create Battle</Button>
-                <Dialog>
-                    <DialogTrigger className="bg-[#DEFE01] text-black h-9 px-4 py-2 rounded-md">
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <DialogTrigger className="bg-[#DEFE01] shadow-xs hover:bg-primary/90 text-[#000000] size-fit leading-0 cursor-pointer h-9 px-4 py-2 rounded-md">
                         Create Battle
                     </DialogTrigger>
-                    <CreateBattleDialog />
+                    <CreateBattleDialog onSuccess={() => setIsDialogOpen(false)} />
                 </Dialog>
             ) : (
                 <Button variant="default">
