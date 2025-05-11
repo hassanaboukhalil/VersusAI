@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1'], function () {
     Route::group(["middleware" => "auth:api"], function () {
         Route::get('/battles', [BattleController::class, 'getAllBattles']);
-        Route::post('/get-battle', [BattleController::class, 'get']);
+        Route::get('/get-battle/{id}', [BattleController::class, 'get']);
         Route::group(['prefix' => "premium"], function () {
             Route::post('/create-battle', [BattleController::class, 'create']);
             // Route::post('/get-battle-response', [BattleResponseController::class, 'getBattleResponse']);
