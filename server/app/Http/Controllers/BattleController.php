@@ -38,7 +38,9 @@ class BattleController extends Controller
 
         if ($battle) {
             return $this->successResponse(
-                $battle,
+                [
+                    'id' => $battle['id']
+                ],
                 'Battle created successfully.'
             );
         }
