@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BattleController;
+use App\Http\Controllers\BattleRoundController;
 use App\Http\Controllers\Premium\BattleResponseController;
 use App\Models\Battle;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => "premium"], function () {
             Route::post('/create-battle', [BattleController::class, 'create']);
             // Route::post('/get-battle-response', [BattleResponseController::class, 'getBattleResponse']);
+            Route::post('/create-round', [BattleRoundController::class, 'create']);
             Route::post('/get-text-summarization', [BattleResponseController::class, 'getTextSummarization']);
         });
     });
