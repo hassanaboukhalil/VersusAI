@@ -89,6 +89,17 @@ const BattleDetailsPage = () => {
         }
     };
 
+    const handleEndBattle = async () => {
+        if (!battle) return;
+
+        try {
+            await api.patch(`/premium/battles/${battle.id}/end`);
+            setEnded(true);
+        } catch (error) {
+            console.error('Failed to end battle:', error);
+        }
+    };
+
     if (!battle) {
         return (
             <Section className="bg-background text-white px-6 py-10 mx-auto min-h-screen">
@@ -163,7 +174,7 @@ const BattleDetailsPage = () => {
                             'Give another results'
                         )}
                     </Button>
-                    <Button variant="default" onClick={() => setEnded(true)}>
+                    <Button variant="default" onClick={handleEndBattle}>
                         End Battle
                     </Button>
                 </div>
