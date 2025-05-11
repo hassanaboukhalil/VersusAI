@@ -57,4 +57,19 @@ class BattleRoundService
 
         return [];
     }
+
+    public function handleCreateRound(Request $request): array|null
+    {
+        $battle = Battle::with(['category', 'ai_model_1', 'ai_model_2', 'rounds'])
+            ->findOrFail($request->battle_id);
+
+        if (!$battle->is_active) {
+            return null; // Battle is ended
+        }
+
+        $lastRound = $battle->rounds->sortByDesc('round_number')->first();
+        $newRoundNumber = $lastRound ? $lastRound->round_number + 1 : 1;
+
+        return $this->createRoundAndResponses($battle, $request, $newRoundNumber);
+    }
 }
