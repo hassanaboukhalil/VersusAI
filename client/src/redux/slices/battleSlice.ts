@@ -50,8 +50,13 @@ const battleSlice = createSlice({
         clearCurrentBattle(state) {
             state.currentBattle = null;
         },
+        addRound(state, action: PayloadAction<Round>) {
+            if (state.currentBattle) {
+                state.currentBattle.rounds.push(action.payload);
+            }
+        },
     },
 });
 
-export const { setCurrentBattle, clearCurrentBattle } = battleSlice.actions;
+export const { setCurrentBattle, clearCurrentBattle, addRound } = battleSlice.actions;
 export default battleSlice.reducer;
