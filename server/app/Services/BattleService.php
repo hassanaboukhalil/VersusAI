@@ -72,8 +72,9 @@ class BattleService
         return $round_service->createRoundAndResponses($battle, $request, 1);
     }
 
-    public function getBattle(Request $request): array
+    public function getBattle(int $id): array
     {
+        $battle_id = $id;
         $battle = Battle::with([
             'user:id,first_name,username,profile_picture_url',
             'category:id,name',
@@ -81,7 +82,7 @@ class BattleService
             'ai_model_2:id,model_name',
             'votes',
             'rounds.responses.ai_model:id,model_name'
-        ])->findOrFail($request->id);
+        ])->findOrFail($battle_id);
 
         // Count votes
         $votes_ai_model_1 = $battle->votes->where('ai_model_id', $battle->ai_model_1_id)->count();
