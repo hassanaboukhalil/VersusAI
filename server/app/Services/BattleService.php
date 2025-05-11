@@ -7,6 +7,7 @@ use App\Models\Battle;
 use App\Models\BattleResponse;
 use App\Models\BattleRound;
 use App\Models\Category;
+use App\Models\Vote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -67,7 +68,60 @@ class BattleService
             'description' => $request->description
         ]);
 
-        $roundService = new BattleRoundService();
-        return $roundService->createRoundAndResponses($battle, $request, 1);
+        $round_service = new BattleRoundService();
+        return $round_service->createRoundAndResponses($battle, $request, 1);
+    }
+
+    public function getBattle(Request $request): array
+    {
+        $battle = Battle::with([
+            'user:id,first_name,username,profile_picture_url',
+            'category:id,name',
+            'ai_model_1:id,model_name',
+            'ai_model_2:id,model_name',
+            'votes',
+            'rounds.responses.ai_model:id,model_name'
+        ])->findOrFail($request->id);
+
+        // Count votes
+        $votes_ai_model_1 = $battle->votes->where('ai_model_id', $battle->ai_model_1_id)->count();
+        $votes_ai_model_2 = $battle->votes->where('ai_model_id', $battle->ai_model_2_id)->count();
+
+        // Format rounds with responses
+        $formattedRounds = $battle->rounds->map(function ($round) {
+            return [
+                'id' => $round->id,
+                'responses' => $round->responses->map(function ($response) {
+                    return [
+                        'ai_model_name' => $response->ai_model->model_name,
+                        'response_text' => $response->response_text,
+                    ];
+                })->toArray() // to convert it from collection to array
+            ];
+        });
+
+        return [
+            'id' => $battle->id,
+            'title' => $battle->title,
+            'description' => $battle->description,
+            'type' => $battle->category->name,
+            'is_active' => $battle->is_active,
+            'ai_models' => [
+                [
+                    'name' => $battle->ai_model_1->model_name,
+                    'votes' => $votes_ai_model_1
+                ],
+                [
+                    'name' => $battle->ai_model_2->model_name,
+                    'votes' => $votes_ai_model_2
+                ],
+            ],
+            'user' => [
+                'user_first_name' => $battle->user->first_name,
+                'user_username' => $battle->user->username,
+                'user_profile_pic_url' => $battle->user->profile_picture_url,
+            ],
+            'rounds' => $formattedRounds,
+        ];
     }
 }
