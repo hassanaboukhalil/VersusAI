@@ -125,4 +125,18 @@ class BattleService
             'rounds' => $formattedRounds,
         ];
     }
+
+    public function endBattle(int $battle_id): bool
+    {
+        $battle = Battle::find($battle_id);
+
+        if (!$battle || !$battle->is_active) {
+            return false;
+        }
+
+        $battle->is_active = false;
+        $battle->save();
+
+        return true;
+    }
 }
