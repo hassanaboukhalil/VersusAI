@@ -5,7 +5,7 @@
 <!-- project overview -->
 <img src="./readme/title2.svg"/>
 
-> VersusAI lets users create and explore AI battles across different tasks.
+> VersusAI is a project where users can create and explore battles between different AI models, vote on the best results, and see which AI performs better in different tasks.
 
 <br><br>
 
@@ -21,9 +21,13 @@
 <!-- Project Highlights -->
 <img src="./readme/title4.svg"/>
 
-### Add Title Here
+### Some Features that is included in this project
 
-- List the sexy features.
+- Premium users can create AI battles to compare model performance across tasks.
+
+- All users can vote on AI responses to help identify the best-performing models.
+
+- Only users who subscribe through Stripe can access the battle creation feature.
 
 <br><br>
 
