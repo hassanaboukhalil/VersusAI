@@ -3,6 +3,11 @@
 import { PanelLeft } from 'lucide-react';
 import { Button } from '../ui/button';
 import Logo from './Logo';
+import { useEffect, useState } from 'react';
+import { isLoggedIn } from '../../lib/auth';
+import Link from 'next/link';
+import { Dialog, DialogTrigger } from '../ui/dialog';
+import CreateBattleDialog from '../global/CreateBattleDialog';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -10,6 +15,12 @@ interface HeaderProps {
 }
 
 const Header = ({ className, onToggleSidebar }: HeaderProps) => {
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    useEffect(() => {
+        setLoggedIn(isLoggedIn());
+    }, []);
     return (
         <div
             className={`bg-background w-full flex justify-between items-center py-6 ${className || ''}`}
@@ -26,7 +37,18 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                     <PanelLeft className="w-5 h-5 text-white" />
                 </Button>
             </div>
-            <Button variant="default">Login</Button>
+            {loggedIn ? (
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <DialogTrigger className="bg-[#DEFE01] shadow-xs hover:bg-primary/90 text-[#000000] size-fit leading-0 cursor-pointer h-9 px-4 py-2 rounded-md">
+                        Create Battle
+                    </DialogTrigger>
+                    <CreateBattleDialog onSuccess={() => setIsDialogOpen(false)} />
+                </Dialog>
+            ) : (
+                <Button variant="default">
+                    <Link href="/login">Login</Link>
+                </Button>
+            )}
         </div>
     );
 };

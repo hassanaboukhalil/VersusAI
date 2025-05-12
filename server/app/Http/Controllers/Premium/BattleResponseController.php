@@ -58,4 +58,23 @@ class BattleResponseController extends Controller
             return $this->errorResponse($e->getMessage(), 500);
         }
     }
+
+    public function getTextSummarization(Request $request)
+    {
+        try {
+            $ai_model_name = $request->ai_model_name; // ex: gemini-2.0-flash
+            $text_to_summarize = $request->text_to_summarize;
+            $battle_response_service = new BattleResponseService();
+
+            $data = $battle_response_service->getTextSummarizationResponse($ai_model_name, $text_to_summarize);
+
+            if ($data) {
+                return $this->successResponse($data, 'You got the battle response successfully');
+            }
+
+            return $this->errorResponse('Something went wrong', 500);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
 }

@@ -13,7 +13,7 @@ class BattleRound extends Model
 
     public function battle()
     {
-        return $this->belongsTo(Battle::class);
+        return $this->belongsTo(Battle::class, 'battle_round_id');
     }
 
     public function responses()

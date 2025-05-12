@@ -20,6 +20,11 @@ class BattleResponseSeeder extends Seeder
             // I made that to be able to use ai_model_1_id and ai_model_2_id
             $battle = $round->battle;
 
+            // Safety check to avoid null reference error
+            if (!$battle) {
+                return; // skip this round
+            }
+
             BattleResponse::factory()->create([
                 'battle_round_id' => $round->id,
                 'ai_model_id' => $battle->ai_model_1_id,

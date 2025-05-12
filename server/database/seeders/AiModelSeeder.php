@@ -18,19 +18,37 @@ class AiModelSeeder extends Seeder
         AiModel::insert([
             [
                 'provider_name' => 'OpenAI',
-                'model_name' => 'GPT-4',
+                'model_name' => 'gpt-4o',
                 'logo_url' => $faker->imageUrl(),
                 'votes_count' => $faker->numberBetween(0, 5000),
             ],
             [
-                'provider_name' => 'Anthropic',
-                'model_name' => 'Claude 3',
+                'provider_name' => 'OpenAI',
+                'model_name' => 'gpt-4.1',
+                'logo_url' => $faker->imageUrl(),
+                'votes_count' => $faker->numberBetween(0, 5000),
+            ],
+            [
+                'provider_name' => 'OpenAI',
+                'model_name' => 'o3-mini',
+                'logo_url' => $faker->imageUrl(),
+                'votes_count' => $faker->numberBetween(0, 5000),
+            ],
+            [
+                'provider_name' => 'OpenAI',
+                'model_name' => 'chatgpt-4o',
+                'logo_url' => $faker->imageUrl(),
+                'votes_count' => $faker->numberBetween(0, 5000),
+            ],
+            [
+                'provider_name' => 'DeepSeek',
+                'model_name' => 'deepseek-prover-v2',
                 'logo_url' => $faker->imageUrl(),
                 'votes_count' => $faker->numberBetween(0, 5000),
             ],
             [
                 'provider_name' => 'Google',
-                'model_name' => 'Gemini',
+                'model_name' => 'gemini-2.0-flash',
                 'logo_url' => $faker->imageUrl(),
                 'votes_count' => $faker->numberBetween(0, 5000),
             ],

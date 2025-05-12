@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BattleController;
+use App\Http\Controllers\BattleRoundController;
 use App\Http\Controllers\Premium\BattleResponseController;
+use App\Models\Battle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,8 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1'], function () {
     Route::group(["middleware" => "auth:api"], function () {
         Route::get('/battles', [BattleController::class, 'getAllBattles']);
+        Route::get('/get-battle/{id}', [BattleController::class, 'get']);
         Route::group(['prefix' => "premium"], function () {
-            Route::post('/get-battle-response', [BattleResponseController::class, 'getBattleResponse']);
+            Route::post('/create-battle', [BattleController::class, 'create']);
+            // Route::post('/get-battle-response', [BattleResponseController::class, 'getBattleResponse']);
+            Route::post('/create-round', [BattleRoundController::class, 'create']);
+            Route::post('/get-text-summarization', [BattleResponseController::class, 'getTextSummarization']);
+            Route::patch('/battles/{id}/end', [BattleController::class, 'end']);
         });
     });
 

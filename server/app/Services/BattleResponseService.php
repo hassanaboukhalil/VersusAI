@@ -17,19 +17,25 @@ class BattleResponseService
     {
         $schema = BattleResponseSchema::createPrismSchema(
             "text_summarization",
-            "Summarize a text",
+            "Summarize a given text clearly and concisely",
             [
-                "name" => "Text Summarization",
-                "description" => "Summarize the text",
+                "summary" => "A clear, concise summary of the input text in 3 to 4 lines max.",
             ]
         );
+
+        $prompt = "Summarize the following text in a short, clear paragraph (no more than 3–4 lines):\n\n"
+            . $text_to_summarize;
+
+        if ($this->isOpenRouterModel($ai_model_name)) {
+            return $this->callOpenRouterChat($prompt, $ai_model_name);
+        }
 
         $provider = $this->getProviderForModel($ai_model_name);
 
         $response = Prism::structured()
             ->using($provider, $ai_model_name)
             ->withSchema($schema)
-            ->withPrompt($text_to_summarize)
+            ->withPrompt($prompt)
             ->asStructured();
 
         return $response->structured;
