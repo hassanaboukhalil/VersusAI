@@ -24,6 +24,7 @@ const BattleDetailsPage = () => {
 
     const [ended, setEnded] = useState(false);
     const [loadingRound, setLoadingRound] = useState(false);
+    const [loadingVote, setLoadingVote] = useState(false);
 
     useEffect(() => {
         const fetchBattle = async () => {
