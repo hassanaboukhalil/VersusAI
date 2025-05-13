@@ -71,6 +71,10 @@ const BattleDetailsPage = () => {
                     battle?.type === 'Text Translation' ? battle.target_language : undefined,
                 programming_language:
                     battle?.type === 'Code Generation' ? battle.programming_language : undefined,
+                debate_title_1:
+                    battle?.type === 'Debate Challenge' ? battle.debate_title_1 : undefined,
+                debate_title_2:
+                    battle?.type === 'Debate Challenge' ? battle.debate_title_2 : undefined,
             });
 
             const data = res.data.data;
