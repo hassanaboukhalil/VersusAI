@@ -26,6 +26,7 @@ export interface Battle {
     title: string;
     description: string;
     type: string;
+    target_language?: string;
     is_active: boolean;
     ai_models: AiModel[];
     user: User;
