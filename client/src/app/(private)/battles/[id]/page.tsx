@@ -138,6 +138,24 @@ const BattleDetailsPage = () => {
                     <span className="text-white">{battle.programming_language}</span>
                 </p>
             )}
+            {battle.type === 'Debate Challenge' &&
+                battle.debate_title_1 &&
+                battle.debate_title_2 && (
+                    <div className="flex flex-col gap-2 mb-6">
+                        <div className="flex items-center gap-2">
+                            <span className="text-primary">
+                                AI Model 1 ({battle.ai_models[0].name}) argues for:
+                            </span>
+                            <span className="text-white font-medium">{battle.debate_title_1}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-primary">
+                                AI Model 2 ({battle.ai_models[1].name}) argues for:
+                            </span>
+                            <span className="text-white font-medium">{battle.debate_title_2}</span>
+                        </div>
+                    </div>
+                )}
 
             {/* Battle Rounds */}
             <div className="border border-lime-300 p-4 space-y-8 rounded-md bg-dark-white">
