@@ -39,6 +39,8 @@ const BattleDetailsPage = () => {
                         type: data.type,
                         target_language: data.target_language,
                         programming_language: data.programming_language,
+                        debate_title_1: data.debate_title_1,
+                        debate_title_2: data.debate_title_2,
                         is_active: data.is_active,
                         ai_models: data.ai_models,
                         user: data.user,
