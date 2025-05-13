@@ -33,4 +33,10 @@ trait VoteableTrait
 
         return true;
     }
+
+    // Check if a user has already voted
+    public function hasUserVoted(int $userId): bool
+    {
+        return $this->votes()->where('user_id', $userId)->exists();
+    }
 }
