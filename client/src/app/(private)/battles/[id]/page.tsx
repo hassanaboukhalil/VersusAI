@@ -97,6 +97,8 @@ const BattleDetailsPage = () => {
             const res = await api.post('/premium/create-round', {
                 battle_id: battle?.id,
                 description: battle?.description,
+                target_language:
+                    battle?.type === 'Text Translation' ? battle.target_language : undefined,
             });
 
             const data = res.data.data;
