@@ -11,4 +11,10 @@ class VoteUpdated implements ShouldBroadcast
 
     public array $votes;
     private int $battleId;
+
+    public function __construct(int $battleId, array $votes)
+    {
+        $this->battleId = $battleId;
+        $this->votes = $votes;
+    }
 }
