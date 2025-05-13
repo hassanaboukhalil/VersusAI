@@ -1,26 +1,21 @@
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
-
-export interface BattleVoteData {
-    votes: Record<string, number>;
-}
-
-declare global {
-    interface Window {
-        Echo: Echo<'pusher'>;
-        Pusher: typeof Pusher;
-    }
-}
+let Echo: any = null;
 
 if (typeof window !== 'undefined') {
-    window.Pusher = Pusher;
+    const initializeEcho = async () => {
+        const { default: Pusher } = await import('pusher-js');
+        const { default: LaravelEcho } = await import('laravel-echo');
 
-    window.Echo = new Echo({
-        broadcaster: 'pusher',
-        key: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
-        cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER || 'eu',
-        forceTLS: true,
-    });
+        window.Pusher = Pusher;
+
+        Echo = new LaravelEcho({
+            broadcaster: 'pusher',
+            key: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
+            cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER || 'eu',
+            forceTLS: true,
+        });
+    };
+
+    initializeEcho();
 }
 
-export default window.Echo;
+export default Echo;
