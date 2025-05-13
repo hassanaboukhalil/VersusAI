@@ -110,6 +110,8 @@ class BattleService
             'description' => $battle->description,
             'target_language' => $battle->target_language,
             'programming_language' => $battle->programming_language,
+            'debate_title_1' => $battle->debate_title_1,
+            'debate_title_2' => $battle->debate_title_2,
             'is_active' => $battle->is_active,
             'ai_models' => [
                 [
