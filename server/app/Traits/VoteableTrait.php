@@ -39,4 +39,10 @@ trait VoteableTrait
     {
         return $this->votes()->where('user_id', $userId)->exists();
     }
+
+    // Get votes count by AI model
+    public function getVotesByModel(int $aiModelId): int
+    {
+        return $this->votes()->where('ai_model_id', $aiModelId)->count();
+    }
 }
