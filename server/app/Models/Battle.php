@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Battle extends Model
 {
-    use HasFactory;
+    use HasFactory, VoteableTrait;
 
     protected $fillable = [
         'user_id',
