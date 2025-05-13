@@ -19,9 +19,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/get-battle/{id}', [BattleController::class, 'get']);
         Route::group(['prefix' => "premium"], function () {
             Route::post('/create-battle', [BattleController::class, 'create']);
-            // Route::post('/get-battle-response', [BattleResponseController::class, 'getBattleResponse']);
             Route::post('/create-round', [BattleRoundController::class, 'create']);
-            Route::post('/get-text-summarization', [BattleResponseController::class, 'getTextSummarization']);
+            Route::post('/create-debate-response', [BattleResponseController::class, 'createDebateResponse']);
+            // Route::post('/get-text-summarization', [BattleResponseController::class, 'getTextSummarization']);
             Route::patch('/battles/{id}/end', [BattleController::class, 'end']);
         });
     });

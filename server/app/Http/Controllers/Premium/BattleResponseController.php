@@ -6,9 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Services\BattleResponseService;
 use App\Services\BattleService;
 use Illuminate\Http\Request;
+use App\Models\Battle;
+use App\Models\BattleResponse;
+use App\Models\BattleRound;
+use Illuminate\Http\JsonResponse;
 
 class BattleResponseController extends Controller
 {
+    private BattleResponseService $battleResponseService;
+
+    public function __construct(BattleResponseService $battleResponseService)
+    {
+        $this->battleResponseService = $battleResponseService;
+    }
+
     public function getBattleResponse()
     {
         try {
@@ -59,22 +70,58 @@ class BattleResponseController extends Controller
         }
     }
 
-    public function getTextSummarization(Request $request)
+    public function getTextSummarization(Request $request): JsonResponse
     {
         try {
-            $ai_model_name = $request->ai_model_name; // ex: gemini-2.0-flash
-            $text_to_summarize = $request->text_to_summarize;
-            $battle_response_service = new BattleResponseService();
+            $result = $this->battleResponseService->getTextSummarizationResponse(
+                $request->ai_model_name,
+                $request->text_to_summarize
+            );
 
-            $data = $battle_response_service->getTextSummarizationResponse($ai_model_name, $text_to_summarize);
-
-            if ($data) {
-                return $this->successResponse($data, 'You got the battle response successfully');
-            }
-
-            return $this->errorResponse('Something went wrong', 500);
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get text summarization',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createDebateResponse(Request $request): JsonResponse
+    {
+        $request->validate([
+            'battle_id' => 'required|exists:battles,id',
+            'debate_title_1' => 'required|string',
+            'debate_title_2' => 'required|string',
+            'is_first_response' => 'required|boolean',
+            'opponent_response' => 'nullable|string',
+            'round_id' => 'nullable|exists:battle_rounds,id',
+        ]);
+
+        try {
+            $battle = Battle::with(['ai_model_1', 'ai_model_2'])->findOrFail($request->battle_id);
+
+            $result = $this->battleResponseService->createDebateResponse(
+                $battle,
+                $request->is_first_response,
+                $request->opponent_response,
+                $request->round_id
+            );
+
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create debate response',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 }

@@ -18,6 +18,8 @@ class Battle extends Model
         'description',
         'target_language',
         'programming_language',
+        'debate_title_1',
+        'debate_title_2',
         'is_active'
     ];
 

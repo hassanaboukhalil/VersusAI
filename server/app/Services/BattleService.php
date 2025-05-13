@@ -67,7 +67,9 @@ class BattleService
             'title' => $request->title,
             'description' => $request->description,
             'target_language' => $request->battle_type_name === 'Text Translation' ? $request->target_language : null,
-            'programming_language' => $request->battle_type_name === 'Code Generation' ? $request->programming_language : null
+            'programming_language' => $request->battle_type_name === 'Code Generation' ? $request->programming_language : null,
+            'debate_title_1' => $request->battle_type_name === 'Debate Challenge' ? $request->debate_title_1 : null,
+            'debate_title_2' => $request->battle_type_name === 'Debate Challenge' ? $request->debate_title_2 : null
         ]);
 
         $round_service = new BattleRoundService();
@@ -110,6 +112,8 @@ class BattleService
             'description' => $battle->description,
             'target_language' => $battle->target_language,
             'programming_language' => $battle->programming_language,
+            'debate_title_1' => $battle->debate_title_1,
+            'debate_title_2' => $battle->debate_title_2,
             'is_active' => $battle->is_active,
             'ai_models' => [
                 [

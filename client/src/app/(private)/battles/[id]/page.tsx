@@ -39,6 +39,8 @@ const BattleDetailsPage = () => {
                         type: data.type,
                         target_language: data.target_language,
                         programming_language: data.programming_language,
+                        debate_title_1: data.debate_title_1,
+                        debate_title_2: data.debate_title_2,
                         is_active: data.is_active,
                         ai_models: data.ai_models,
                         user: data.user,
@@ -64,32 +66,94 @@ const BattleDetailsPage = () => {
     const handleCreateRound = async () => {
         setLoadingRound(true);
         try {
-            const res = await api.post('/premium/create-round', {
-                battle_id: battle?.id,
-                description: battle?.description,
-                target_language:
-                    battle?.type === 'Text Translation' ? battle.target_language : undefined,
-                programming_language:
-                    battle?.type === 'Code Generation' ? battle.programming_language : undefined,
-            });
+            if (battle?.type === 'Debate Challenge') {
+                // Get the last response from the rounds
+                const lastRound = battle.rounds[battle.rounds.length - 1];
+                const lastResponse = lastRound?.responses[lastRound.responses.length - 1];
 
-            const data = res.data.data;
+                // For debate challenges, alternate between AI responses
+                if (!lastRound || lastRound.responses.length === 2) {
+                    // Start a new round with first AI
+                    const res = await api.post('/premium/create-debate-response', {
+                        battle_id: battle.id,
+                        debate_title_1: battle.debate_title_1,
+                        debate_title_2: battle.debate_title_2,
+                        is_first_response: true,
+                        opponent_response: lastResponse?.response_text,
+                    });
 
-            const newRound = {
-                id: data.id,
-                responses: [
-                    {
-                        ai_model_name: data.ai_model_1_name,
-                        response_text: data.ai_model_1_response,
-                    },
-                    {
-                        ai_model_name: data.ai_model_2_name,
-                        response_text: data.ai_model_2_response,
-                    },
-                ],
-            };
+                    const data = res.data.data;
+                    const newRound = {
+                        id: data.id,
+                        responses: [
+                            {
+                                ai_model_name: data.ai_model_name,
+                                response_text: data.response_text,
+                            },
+                        ],
+                    };
+                    dispatch(addRound(newRound));
+                } else if (lastRound.responses.length === 1) {
+                    // Add second AI's response to current round
+                    const res = await api.post('/premium/create-debate-response', {
+                        battle_id: battle.id,
+                        debate_title_1: battle.debate_title_1,
+                        debate_title_2: battle.debate_title_2,
+                        is_first_response: false,
+                        opponent_response: lastResponse?.response_text,
+                        round_id: lastRound.id,
+                    });
 
-            dispatch(addRound(newRound));
+                    const data = res.data.data;
+                    const updatedRound = {
+                        ...lastRound,
+                        responses: [
+                            ...lastRound.responses,
+                            {
+                                ai_model_name: data.ai_model_name,
+                                response_text: data.response_text,
+                            },
+                        ],
+                    };
+
+                    dispatch(
+                        setCurrentBattle({
+                            ...battle,
+                            rounds: battle.rounds.map((r) =>
+                                r.id === lastRound.id ? updatedRound : r
+                            ),
+                        })
+                    );
+                }
+            } else {
+                // Handle other battle types as before
+                const res = await api.post('/premium/create-round', {
+                    battle_id: battle?.id,
+                    description: battle?.description,
+                    target_language:
+                        battle?.type === 'Text Translation' ? battle.target_language : undefined,
+                    programming_language:
+                        battle?.type === 'Code Generation'
+                            ? battle.programming_language
+                            : undefined,
+                });
+
+                const data = res.data.data;
+                const newRound = {
+                    id: data.id,
+                    responses: [
+                        {
+                            ai_model_name: data.ai_model_1_name,
+                            response_text: data.ai_model_1_response,
+                        },
+                        {
+                            ai_model_name: data.ai_model_2_name,
+                            response_text: data.ai_model_2_response,
+                        },
+                    ],
+                };
+                dispatch(addRound(newRound));
+            }
         } catch (err) {
             console.error('Failed to create new round:', err);
         } finally {
@@ -138,14 +202,36 @@ const BattleDetailsPage = () => {
                     <span className="text-white">{battle.programming_language}</span>
                 </p>
             )}
+            {battle.type === 'Debate Challenge' &&
+                battle.debate_title_1 &&
+                battle.debate_title_2 && (
+                    <div className="flex flex-col gap-2 mb-6">
+                        <div className="flex items-center gap-2">
+                            <span className="text-primary">
+                                AI Model 1 ({battle.ai_models[0].name}) argues for:
+                            </span>
+                            <span className="text-white font-medium">{battle.debate_title_1}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-primary">
+                                AI Model 2 ({battle.ai_models[1].name}) argues for:
+                            </span>
+                            <span className="text-white font-medium">{battle.debate_title_2}</span>
+                        </div>
+                    </div>
+                )}
 
             {/* Battle Rounds */}
             <div className="border border-lime-300 p-4 space-y-8 rounded-md bg-dark-white">
                 {battle.rounds.map((round, i) => (
                     <div key={`round-${round.id}-${i}`} className="my-8">
-                        <h3 className="text-lg font-semibold">Round {i + 1}</h3>
+                        {battle.type !== 'Debate Challenge' && (
+                            <h3 className="text-lg font-semibold">Round {i + 1}</h3>
+                        )}
 
-                        <div className="flex flex-col gap-4 mt-6">
+                        <div
+                            className={`flex flex-col gap-4 ${battle.type === 'Debate Challenge' ? 'mt-0' : 'mt-6'}`}
+                        >
                             {/* First AI */}
                             {round.responses[0] && (
                                 <div className="flex w-full items-start gap-2">
@@ -225,6 +311,8 @@ const BattleDetailsPage = () => {
                                 <Loader2 className="animate-spin mr-2 h-4 w-4" />
                                 Please wait…
                             </>
+                        ) : battle.type === 'Debate Challenge' ? (
+                            'Continue'
                         ) : (
                             'Give another results'
                         )}
