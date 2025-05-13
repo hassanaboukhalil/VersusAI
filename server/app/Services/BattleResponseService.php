@@ -53,14 +53,20 @@ class BattleResponseService
             ]
         );
 
-
-        $prompt = "Translate the following text to {$target_language}:\n\n{$text}";
+        $prompt = "Translate the following text to {$target_language}. Important: Give me ONLY the direct translation as plain text. Do not include:\n" .
+            "- No triple backticks (```) or single backticks (`)\n" .
+            "- No markdown formatting (no *, **, _, __, #, ##, etc.)\n" .
+            "- No bullet points or numbered lists\n" .
+            "- No quotation marks unless they are part of the original text\n\n" .
+            "Here's the text to translate:\n{$text}";
 
         if ($this->isOpenRouterModel($ai_model_name)) {
             $response = $this->callOpenRouterChat($prompt, $ai_model_name);
+            // Remove any potential formatting characters
+            $cleanResponse = preg_replace('/[`*_#>-]/', '', $response);
             return [
                 'original' => $text,
-                'translated' => $response,
+                'translated' => $cleanResponse,
                 'language' => $target_language
             ];
         }
