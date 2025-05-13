@@ -15,10 +15,43 @@ import api from '../../../../lib/axios';
 import { Skeleton } from '../../../../components/ui/Skeleton';
 import { Loader2 } from 'lucide-react';
 
+interface Response {
+    ai_model_name: string;
+    response_text: string;
+}
+
+interface Round {
+    id: number;
+    responses: Response[];
+}
+
+interface AiModel {
+    name: string;
+    votes: number;
+}
+
+interface User {
+    user_first_name: string;
+    user_username: string;
+    user_profile_pic_url: string;
+}
+
+interface Battle {
+    id: number;
+    title: string;
+    description: string;
+    type: string;
+    target_language?: string;
+    is_active: boolean;
+    ai_models: AiModel[];
+    user: User;
+    rounds: Round[];
+}
+
 const BattleDetailsPage = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
-    const battle = useSelector((state: RootState) => state.battle.currentBattle);
+    const battle = useSelector((state: RootState) => state.battle.currentBattle) as Battle | null;
 
     const [ended, setEnded] = useState(false);
     const [loadingRound, setLoadingRound] = useState(false);
@@ -35,12 +68,13 @@ const BattleDetailsPage = () => {
                         title: data.title,
                         description: data.description,
                         type: data.type,
+                        target_language: data.target_language,
                         is_active: data.is_active,
                         ai_models: data.ai_models,
                         user: data.user,
-                        rounds: data.rounds.map((round: any) => ({
+                        rounds: data.rounds.map((round: Round) => ({
                             id: round.id,
-                            responses: round.responses.map((resp: any) => ({
+                            responses: round.responses.map((resp: Response) => ({
                                 ai_model_name: resp.ai_model_name,
                                 response_text: resp.response_text,
                             })),
@@ -119,6 +153,9 @@ const BattleDetailsPage = () => {
             <h1 className="text-2xl font-bold">{battle.title}</h1>
             <p className="mt-2 text-primary">{battle.type}</p>
             <p className="text-gray-300 mt-6 mb-6">{battle.description}</p>
+            {battle.type === 'Text Translation' && battle.target_language && (
+                <p className="text-primary mb-6">Target Language: {battle.target_language}</p>
+            )}
 
             {/* Battle Rounds */}
             <div className="border border-lime-300 p-4 space-y-8 rounded-md bg-dark-white">
