@@ -130,6 +130,12 @@ const BattleDetailsPage = () => {
                     Target Language: <span className="text-white">{battle.target_language}</span>
                 </p>
             )}
+            {battle.type === 'Code Generation' && battle.programming_language && (
+                <p className="text-primary mb-6">
+                    Programming Language:{' '}
+                    <span className="text-white">{battle.programming_language}</span>
+                </p>
+            )}
 
             {/* Battle Rounds */}
             <div className="border border-lime-300 p-4 space-y-8 rounded-md bg-dark-white">
