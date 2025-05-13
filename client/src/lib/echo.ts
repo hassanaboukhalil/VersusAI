@@ -1,9 +1,13 @@
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
+export interface BattleVoteData {
+    votes: Record<string, number>;
+}
+
 declare global {
     interface Window {
-        Echo: Echo;
+        Echo: Echo<'pusher'>;
         Pusher: typeof Pusher;
     }
 }
