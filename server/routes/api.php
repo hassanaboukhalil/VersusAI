@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BattleController;
 use App\Http\Controllers\BattleRoundController;
 use App\Http\Controllers\Premium\BattleResponseController;
-use App\Http\Controllers\Premium\DebateResponseController;
 use App\Models\Battle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
