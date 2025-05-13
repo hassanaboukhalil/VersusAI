@@ -154,7 +154,9 @@ const BattleDetailsPage = () => {
             <p className="mt-2 text-primary">{battle.type}</p>
             <p className="text-gray-300 mt-6 mb-6">{battle.description}</p>
             {battle.type === 'Text Translation' && battle.target_language && (
-                <p className="text-primary mb-6">Target Language: {battle.target_language}</p>
+                <p className="text-primary mb-6">
+                    Target Language: <span className="text-white">{battle.target_language}</span>
+                </p>
             )}
 
             {/* Battle Rounds */}
