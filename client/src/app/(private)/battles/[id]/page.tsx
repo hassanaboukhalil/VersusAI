@@ -164,7 +164,7 @@ const BattleDetailsPage = () => {
             {/* Battle Rounds */}
             <div className="border border-lime-300 p-4 space-y-8 rounded-md bg-dark-white">
                 {battle.rounds.map((round, i) => (
-                    <div key={round.id} className="my-8">
+                    <div key={`round-${round.id}-${i}`} className="my-8">
                         <h3 className="text-lg font-semibold">Round {i + 1}</h3>
 
                         <div className="flex flex-col gap-4 mt-6">
