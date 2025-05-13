@@ -75,15 +75,18 @@ const BattleDetailsPage = () => {
             if (!Echo || !id || !battle) return;
 
             channel = Echo.private(`battle.${id}`);
-            channel.listen('.vote.updated', (e: { votes: Record<string, number> }) => {
-                const updatedBattle = {
-                    ...battle,
-                    ai_models: battle.ai_models.map((model) => ({
-                        ...model,
-                        votes: e.votes[model.name] || model.votes,
-                    })),
-                };
-                dispatch(setCurrentBattle(updatedBattle));
+            channel.listen('vote.updated', (e: { votes: Record<string, number> }) => {
+                console.log('Received real-time vote update:', e);
+                if (e.votes) {
+                    const updatedBattle = {
+                        ...battle,
+                        ai_models: battle.ai_models.map((model) => ({
+                            ...model,
+                            votes: e.votes[model.model_name] ?? model.votes,
+                        })),
+                    };
+                    dispatch(setCurrentBattle(updatedBattle));
+                }
             });
         };
 
@@ -91,7 +94,7 @@ const BattleDetailsPage = () => {
 
         return () => {
             if (channel) {
-                channel.stopListening('.vote.updated');
+                channel.unsubscribe();
             }
         };
     }, [id, battle, dispatch]);
@@ -212,22 +215,25 @@ const BattleDetailsPage = () => {
         try {
             console.log('Attempting to vote for:', {
                 aiModelName,
-                battle_id: battle.id,
                 available_models: battle.ai_models,
+                battle_id: battle.id,
             });
 
             const result = await voteForAiModel(battle.id.toString(), aiModelName);
             if (result.success) {
-                // Update the votes in the battle state
+                // Update local state immediately with the returned vote counts
                 const updatedBattle = {
                     ...battle,
                     ai_models: battle.ai_models.map((model) => ({
                         ...model,
-                        votes: result.votes[model.name] || model.votes,
+                        votes: result.votes[model.model_name] || model.votes,
                     })),
                 };
                 dispatch(setCurrentBattle(updatedBattle));
                 toast.success('Vote recorded successfully!');
+
+                // Log the updated vote counts
+                console.log('Updated vote counts:', result.votes);
             } else {
                 console.error('Vote failed:', result);
                 toast.error(result.message || 'Failed to record vote');
