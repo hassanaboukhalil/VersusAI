@@ -17,4 +17,20 @@ trait VoteableTrait
     {
         return $this->hasMany(Vote::class);
     }
+
+    // Add a vote to this model
+    public function addVote(int $userId, int $aiModelId): bool
+    {
+        // Check if user has already voted
+        if ($this->hasUserVoted($userId)) {
+            return false;
+        }
+
+        $this->votes()->create([
+            'user_id' => $userId,
+            'ai_model_id' => $aiModelId
+        ]);
+
+        return true;
+    }
 }
