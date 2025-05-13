@@ -106,11 +106,11 @@ class BattleService
         return [
             'id' => $battle->id,
             'title' => $battle->title,
-            'description' => $battle->description,
             'type' => $battle->category->name,
-            'target_language' => $battle->category->name === 'Text Translation' ? $battle->target_language : null,
-            'programming_language' => $battle->category->name === 'Code Generation' ? $battle->programming_language : null,
-            'is_active' => $battle->is_active == 0 ? false : true,
+            'description' => $battle->description,
+            'target_language' => $battle->target_language,
+            'programming_language' => $battle->programming_language,
+            'is_active' => $battle->is_active,
             'ai_models' => [
                 [
                     'name' => $battle->ai_model_1->model_name,
@@ -119,12 +119,12 @@ class BattleService
                 [
                     'name' => $battle->ai_model_2->model_name,
                     'votes' => $votes_ai_model_2
-                ],
+                ]
             ],
             'user' => [
-                'user_first_name' => $battle->user->first_name,
-                'user_username' => $battle->user->username,
-                'user_profile_pic_url' => $battle->user->profile_picture_url,
+                'first_name' => $battle->user->first_name,
+                'username' => $battle->user->username,
+                'profile_picture_url' => $battle->user->profile_picture_url,
             ],
             'rounds' => $formattedRounds,
         ];
