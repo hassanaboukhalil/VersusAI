@@ -4,11 +4,12 @@ namespace App\Services;
 
 use App\Models\Battle;
 use App\Models\Vote;
+use App\Events\VoteUpdated;
 use Illuminate\Support\Facades\Auth;
 
 class VoteService
 {
-    public function vote(Battle $battle, int $aiModelId): array
+    public function vote(Battle $battle, string $aiModel): array
     {
         $userId = Auth::id();
 
@@ -19,13 +20,16 @@ class VoteService
             ];
         }
 
-        $battle->addVote($userId, $aiModelId);
+        $battle->addVote($userId, $aiModel);
 
         // Get updated vote counts for both AI models
         $voteStats = [
-            $battle->ai_models[0]['id'] => $battle->getVotesByModel($battle->ai_models[0]['id']),
-            $battle->ai_models[1]['id'] => $battle->getVotesByModel($battle->ai_models[1]['id'])
+            $battle->ai_models[0]['name'] => $battle->getVotesByModel($battle->ai_models[0]['name']),
+            $battle->ai_models[1]['name'] => $battle->getVotesByModel($battle->ai_models[1]['name'])
         ];
+
+        // Broadcast the vote update
+        broadcast(new VoteUpdated($battle->id, $voteStats))->toOthers();
 
         return [
             'success' => true,
