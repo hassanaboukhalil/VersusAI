@@ -165,40 +165,44 @@ const BattleDetailsPage = () => {
 
                         <div className="flex flex-col gap-4 mt-6">
                             {/* First AI */}
-                            <div className="flex w-full items-start gap-2">
-                                <div className="relative flex items-center">
-                                    <span className="absolute left-[-65px] w-max rotate-[-90deg] text-primary text-[10px]">
-                                        {round.responses[0].ai_model_name}
-                                    </span>
-                                    <Image
-                                        src={getModelImage(round.responses[0].ai_model_name)}
-                                        alt={round.responses[0].ai_model_name}
-                                        width={50}
-                                        height={50}
-                                    />
+                            {round.responses[0] && (
+                                <div className="flex w-full items-start gap-2">
+                                    <div className="relative flex items-center">
+                                        <span className="absolute left-[-65px] w-max rotate-[-90deg] text-primary text-[10px]">
+                                            {round.responses[0].ai_model_name}
+                                        </span>
+                                        <Image
+                                            src={getModelImage(round.responses[0].ai_model_name)}
+                                            alt={round.responses[0].ai_model_name}
+                                            width={50}
+                                            height={50}
+                                        />
+                                    </div>
+                                    <div className="bg-white text-black p-3 rounded text-sm max-w-[85%]">
+                                        {round.responses[0].response_text}
+                                    </div>
                                 </div>
-                                <div className="bg-white text-black p-3 rounded text-sm max-w-[85%]">
-                                    {round.responses[0].response_text}
-                                </div>
-                            </div>
+                            )}
 
                             {/* Second AI */}
-                            <div className="flex w-full items-start justify-start flex-row-reverse gap-2">
-                                <div className="relative flex items-center">
-                                    <span className="absolute right-[-70px] rotate-[90deg] text-primary text-[10px]">
-                                        {round.responses[1].ai_model_name}
-                                    </span>
-                                    <Image
-                                        src={getModelImage(round.responses[1].ai_model_name)}
-                                        alt={round.responses[1].ai_model_name}
-                                        width={50}
-                                        height={50}
-                                    />
+                            {round.responses[1] && (
+                                <div className="flex w-full items-start justify-start flex-row-reverse gap-2">
+                                    <div className="relative flex items-center">
+                                        <span className="absolute right-[-70px] rotate-[90deg] text-primary text-[10px]">
+                                            {round.responses[1].ai_model_name}
+                                        </span>
+                                        <Image
+                                            src={getModelImage(round.responses[1].ai_model_name)}
+                                            alt={round.responses[1].ai_model_name}
+                                            width={50}
+                                            height={50}
+                                        />
+                                    </div>
+                                    <div className="bg-white text-black p-3 rounded text-sm w-[85%]">
+                                        {round.responses[1].response_text}
+                                    </div>
                                 </div>
-                                <div className="bg-white text-black p-3 rounded text-sm w-[85%]">
-                                    {round.responses[1].response_text}
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 ))}
