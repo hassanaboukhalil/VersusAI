@@ -19,6 +19,10 @@ return new class extends Migration
             $table->foreignId('ai_model_2_id');
             $table->string('title');
             $table->text('description')->nullable();
+            $table->string('target_language')->nullable();
+            $table->string('programming_language')->nullable();
+            $table->string('debate_title_1')->nullable();
+            $table->string('debate_title_2')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
