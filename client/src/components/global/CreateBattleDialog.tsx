@@ -137,13 +137,26 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 )}
 
                 <div>
-                    <label className="text-lg mb-1 block">Text to Summarize</label>
+                    <label className="text-lg mb-1 block">
+                        {selectedBattleType === 'Text Summarization' && 'Text to Summarize'}
+                        {selectedBattleType === 'Text Translation' && 'Text to Translate'}
+                        {selectedBattleType === 'Code Generation' && 'Code Task Description'}
+                        {selectedBattleType === 'Debate Challenge' && 'Debate Topic'}
+                    </label>
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         rows={6}
                         className="w-full rounded bg-white text-black px-3 py-2 text-sm"
-                        placeholder="Enter a paragraph to summarize, translate, or debate..."
+                        placeholder={
+                            selectedBattleType === 'Text Summarization'
+                                ? 'Enter a paragraph to summarize...'
+                                : selectedBattleType === 'Text Translation'
+                                  ? 'Enter text to translate...'
+                                  : selectedBattleType === 'Code Generation'
+                                    ? 'Describe what you want the code to do (e.g., "Create a function that sorts an array in ascending order")...'
+                                    : 'Enter the debate topic...'
+                        }
                     ></textarea>
                 </div>
 
