@@ -210,6 +210,12 @@ const BattleDetailsPage = () => {
 
         setLoadingVote(true);
         try {
+            console.log('Attempting to vote for:', {
+                aiModelName,
+                battle_id: battle.id,
+                available_models: battle.ai_models,
+            });
+
             const result = await voteForAiModel(battle.id.toString(), aiModelName);
             if (result.success) {
                 // Update the votes in the battle state
@@ -223,6 +229,7 @@ const BattleDetailsPage = () => {
                 dispatch(setCurrentBattle(updatedBattle));
                 toast.success('Vote recorded successfully!');
             } else {
+                console.error('Vote failed:', result);
                 toast.error(result.message || 'Failed to record vote');
             }
         } catch (error) {
