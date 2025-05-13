@@ -18,6 +18,7 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [selectedBattleType, setSelectedBattleType] = useState('');
+    const [targetLanguage, setTargetLanguage] = useState('');
     const [aiModel1, setAiModel1] = useState('');
     const [aiModel2, setAiModel2] = useState('');
     const [loading, setLoading] = useState(false);
@@ -31,6 +32,11 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
             return;
         }
 
+        if (selectedBattleType === 'Text Translation' && !targetLanguage) {
+            toast.error('Please enter the target language');
+            return;
+        }
+
         setLoading(true);
         try {
             const res = await api.post('/premium/create-battle', {
@@ -39,6 +45,8 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 battle_type_name: selectedBattleType,
                 ai_model_1_name: aiModel1,
                 ai_model_2_name: aiModel2,
+                target_language:
+                    selectedBattleType === 'Text Translation' ? targetLanguage : undefined,
             });
 
             if (res.data.success) {
@@ -63,7 +71,7 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                     Create a New AI Battle
                 </DialogTitle>
                 <DialogDescription className="text-gray-400 text-center">
-                    “Set up a head-to-head challenge between AIs”
+                    Set up a head-to-head challenge between AIs
                 </DialogDescription>
             </DialogHeader>
 
@@ -115,6 +123,18 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                         />
                     </div>
                 </div>
+
+                {selectedBattleType === 'Text Translation' && (
+                    <div>
+                        <label className="text-lg block">Target Language</label>
+                        <Input
+                            value={targetLanguage}
+                            onChange={(e) => setTargetLanguage(e.target.value)}
+                            placeholder="Enter target language (e.g., French)"
+                            className="mt-1"
+                        />
+                    </div>
+                )}
 
                 <div>
                     <label className="text-lg mb-1 block">Text to Summarize</label>
