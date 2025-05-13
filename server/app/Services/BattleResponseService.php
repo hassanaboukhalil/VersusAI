@@ -149,7 +149,10 @@ class BattleResponseService
 
         // 3. Handle via OpenRouter or Prism
         if ($this->isOpenRouterModel($ai_model_name)) {
-            return $this->callOpenRouterChat($prompt, $ai_model_name);
+            $response = $this->callOpenRouterChat($prompt, $ai_model_name);
+            return [
+                'response' => $response
+            ];
         }
 
         $provider = $this->getProviderForModel($ai_model_name);
