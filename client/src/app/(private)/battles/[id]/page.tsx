@@ -15,40 +15,7 @@ import api from '../../../../lib/axios';
 import { Skeleton } from '../../../../components/ui/Skeleton';
 import { Loader2 } from 'lucide-react';
 import CodeResponse from '../../../../components/global/CodeResponse';
-
-interface Response {
-    ai_model_name: string;
-    response_text: string;
-}
-
-interface Round {
-    id: number;
-    responses: Response[];
-}
-
-interface AiModel {
-    name: string;
-    votes: number;
-}
-
-interface User {
-    user_first_name: string;
-    user_username: string;
-    user_profile_pic_url: string;
-}
-
-interface Battle {
-    id: number;
-    title: string;
-    description: string;
-    type: string;
-    target_language?: string;
-    is_active: boolean;
-    ai_models: AiModel[];
-    user: User;
-    rounds: Round[];
-    programming_language?: string;
-}
+import type { Battle, Response, Round } from '../../../../types/battle';
 
 const BattleDetailsPage = () => {
     const { id } = useParams();
@@ -71,6 +38,7 @@ const BattleDetailsPage = () => {
                         description: data.description,
                         type: data.type,
                         target_language: data.target_language,
+                        programming_language: data.programming_language,
                         is_active: data.is_active,
                         ai_models: data.ai_models,
                         user: data.user,
@@ -81,7 +49,6 @@ const BattleDetailsPage = () => {
                                 response_text: resp.response_text,
                             })),
                         })),
-                        programming_language: data.programming_language,
                     })
                 );
 
