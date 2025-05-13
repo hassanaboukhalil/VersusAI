@@ -17,6 +17,7 @@ class Battle extends Model
         'title',
         'description',
         'target_language',
+        'programming_language',
         'is_active'
     ];
 

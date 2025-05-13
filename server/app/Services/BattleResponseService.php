@@ -82,7 +82,7 @@ class BattleResponseService
         return $response->structured;
     }
 
-    public function getCodeGenerationResponse(string $ai_model_name, string $task_description, string $language)
+    public function getCodeGenerationResponse(string $ai_model_name, string $task_description, string $programming_language): array
     {
         $schema = BattleResponseSchema::createPrismSchema(
             "code_generation",
@@ -90,24 +90,23 @@ class BattleResponseService
             [
                 "language" => "The programming language used",
                 "task" => "The description of the task",
-                "code" => "The generated code",
+                "code" => "The generated code solution",
             ]
         );
 
-        $prompt = "Write a {$language} program to do the following:\n\n{$task_description}";
-
-        // if (str_starts_with($ai_model_name, 'meta-llama') || str_starts_with($ai_model_name, 'mixtral') || $ai_model_name == "Groq") {
-        //     return $response = $this->callGroqChat($prompt, "deepseek-r1-distill-llama-70b");
-        // }
-
-        // if ($ai_model_name === 'deepseek-prover-v2') {
-        //     return $response = $this->callOpenRouterDeepSeek($prompt, $ai_model_name);
-        // }
+        $prompt = "Write code in {$programming_language} to accomplish the following task:\n\n{$task_description}\n\n" .
+            "Important: Provide ONLY the code solution without any additional explanations or markdown formatting.";
 
         if ($this->isOpenRouterModel($ai_model_name)) {
-            return $this->callOpenRouterChat($prompt, $ai_model_name);
+            $response = $this->callOpenRouterChat($prompt, $ai_model_name);
+            // Remove any potential code block markers
+            $cleanResponse = trim($response, '`');
+            return [
+                'language' => $programming_language,
+                'task' => $task_description,
+                'code' => $cleanResponse
+            ];
         }
-
 
         $provider = $this->getProviderForModel($ai_model_name);
 
@@ -117,8 +116,7 @@ class BattleResponseService
             ->withPrompt($prompt)
             ->asStructured();
 
-
-        return $response;
+        return $response->structured;
     }
 
 

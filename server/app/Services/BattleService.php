@@ -66,7 +66,8 @@ class BattleService
             'ai_model_2_id' => $ai_model_2->id,
             'title' => $request->title,
             'description' => $request->description,
-            'target_language' => $request->battle_type_name === 'Text Translation' ? $request->target_language : null
+            'target_language' => $request->battle_type_name === 'Text Translation' ? $request->target_language : null,
+            'programming_language' => $request->battle_type_name === 'Code Generation' ? $request->programming_language : null
         ]);
 
         $round_service = new BattleRoundService();
@@ -98,17 +99,18 @@ class BattleService
                         'ai_model_name' => $response->ai_model->model_name,
                         'response_text' => $response->response_text,
                     ];
-                })->toArray() // to convert it from collection to array
+                })->toArray()
             ];
         });
 
         return [
             'id' => $battle->id,
             'title' => $battle->title,
-            'description' => $battle->description,
             'type' => $battle->category->name,
-            'target_language' => $battle->category->name === 'Text Translation' ? $battle->target_language : null,
-            'is_active' => $battle->is_active == 0 ? false : true,
+            'description' => $battle->description,
+            'target_language' => $battle->target_language,
+            'programming_language' => $battle->programming_language,
+            'is_active' => $battle->is_active,
             'ai_models' => [
                 [
                     'name' => $battle->ai_model_1->model_name,
@@ -117,12 +119,12 @@ class BattleService
                 [
                     'name' => $battle->ai_model_2->model_name,
                     'votes' => $votes_ai_model_2
-                ],
+                ]
             ],
             'user' => [
-                'user_first_name' => $battle->user->first_name,
-                'user_username' => $battle->user->username,
-                'user_profile_pic_url' => $battle->user->profile_picture_url,
+                'first_name' => $battle->user->first_name,
+                'username' => $battle->user->username,
+                'profile_picture_url' => $battle->user->profile_picture_url,
             ],
             'rounds' => $formattedRounds,
         ];

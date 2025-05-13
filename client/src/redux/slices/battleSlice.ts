@@ -1,37 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-export interface Response {
-    ai_model_name: string;
-    response_text: string;
-}
-
-export interface Round {
-    id: number;
-    responses: Response[];
-}
-
-export interface User {
-    user_first_name: string;
-    user_username: string;
-    user_profile_pic_url: string | null;
-}
-
-export interface AiModel {
-    name: string;
-    votes: number;
-}
-
-export interface Battle {
-    id: number;
-    title: string;
-    description: string;
-    type: string;
-    target_language?: string;
-    is_active: boolean;
-    ai_models: AiModel[];
-    user: User;
-    rounds: Round[];
-}
+import type { Battle, Round } from '../../types/battle';
 
 interface BattleState {
     currentBattle: Battle | null;

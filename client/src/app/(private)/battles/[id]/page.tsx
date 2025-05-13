@@ -14,39 +14,8 @@ import { addRound, setCurrentBattle } from '../../../../redux/slices/battleSlice
 import api from '../../../../lib/axios';
 import { Skeleton } from '../../../../components/ui/Skeleton';
 import { Loader2 } from 'lucide-react';
-
-interface Response {
-    ai_model_name: string;
-    response_text: string;
-}
-
-interface Round {
-    id: number;
-    responses: Response[];
-}
-
-interface AiModel {
-    name: string;
-    votes: number;
-}
-
-interface User {
-    user_first_name: string;
-    user_username: string;
-    user_profile_pic_url: string;
-}
-
-interface Battle {
-    id: number;
-    title: string;
-    description: string;
-    type: string;
-    target_language?: string;
-    is_active: boolean;
-    ai_models: AiModel[];
-    user: User;
-    rounds: Round[];
-}
+import CodeResponse from '../../../../components/global/CodeResponse';
+import type { Battle, Response, Round } from '../../../../types/battle';
 
 const BattleDetailsPage = () => {
     const { id } = useParams();
@@ -69,6 +38,7 @@ const BattleDetailsPage = () => {
                         description: data.description,
                         type: data.type,
                         target_language: data.target_language,
+                        programming_language: data.programming_language,
                         is_active: data.is_active,
                         ai_models: data.ai_models,
                         user: data.user,
@@ -99,6 +69,8 @@ const BattleDetailsPage = () => {
                 description: battle?.description,
                 target_language:
                     battle?.type === 'Text Translation' ? battle.target_language : undefined,
+                programming_language:
+                    battle?.type === 'Code Generation' ? battle.programming_language : undefined,
             });
 
             const data = res.data.data;
@@ -160,6 +132,12 @@ const BattleDetailsPage = () => {
                     Target Language: <span className="text-white">{battle.target_language}</span>
                 </p>
             )}
+            {battle.type === 'Code Generation' && battle.programming_language && (
+                <p className="text-primary mb-6">
+                    Programming Language:{' '}
+                    <span className="text-white">{battle.programming_language}</span>
+                </p>
+            )}
 
             {/* Battle Rounds */}
             <div className="border border-lime-300 p-4 space-y-8 rounded-md bg-dark-white">
@@ -182,9 +160,20 @@ const BattleDetailsPage = () => {
                                             height={50}
                                         />
                                     </div>
-                                    <div className="bg-white text-black p-3 rounded text-sm max-w-[85%]">
-                                        {round.responses[0].response_text}
-                                    </div>
+                                    {battle.type === 'Code Generation' ? (
+                                        <div className="max-w-[85%] w-full">
+                                            <CodeResponse
+                                                code={round.responses[0].response_text}
+                                                language={
+                                                    battle.programming_language || 'javascript'
+                                                }
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="bg-white text-black p-3 rounded text-sm max-w-[85%]">
+                                            {round.responses[0].response_text}
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
@@ -202,9 +191,20 @@ const BattleDetailsPage = () => {
                                             height={50}
                                         />
                                     </div>
-                                    <div className="bg-white text-black p-3 rounded text-sm w-[85%]">
-                                        {round.responses[1].response_text}
-                                    </div>
+                                    {battle.type === 'Code Generation' ? (
+                                        <div className="w-[85%]">
+                                            <CodeResponse
+                                                code={round.responses[1].response_text}
+                                                language={
+                                                    battle.programming_language || 'javascript'
+                                                }
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="bg-white text-black p-3 rounded text-sm w-[85%]">
+                                            {round.responses[1].response_text}
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
