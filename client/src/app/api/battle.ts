@@ -8,7 +8,7 @@ export const voteForAiModel = async (battleId: string, aiModelName: string) => {
             throw new Error('User not authenticated');
         }
 
-        const response = await api.post(`/v1/battles/vote`, {
+        const response = await api.post(`/battles/vote`, {
             battle_id: battleId,
             ai_model: aiModelName,
             user_id: user.id,
