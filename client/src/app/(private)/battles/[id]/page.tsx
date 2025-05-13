@@ -16,6 +16,8 @@ import { Skeleton } from '../../../../components/ui/Skeleton';
 import { Loader2 } from 'lucide-react';
 import CodeResponse from '../../../../components/global/CodeResponse';
 import type { Battle, Response, Round } from '../../../../types/battle';
+import { voteForAiModel } from '../../../api/battle';
+import { toast } from 'sonner';
 
 const BattleDetailsPage = () => {
     const { id } = useParams();
