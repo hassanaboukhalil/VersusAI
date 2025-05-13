@@ -2,20 +2,78 @@
 
 namespace App\Services;
 
+use App\Models\Battle;
+use App\Models\BattleResponse;
+use App\Models\BattleRound;
 use App\Schemas\BattleResponseSchema;
 use App\Traits\HandlesAiModelCalls;
-use Illuminate\Support\Facades\Http;
-use Prism\Prism\Prism;
+use App\Traits\PromptBuilderTrait;
 use Prism\Prism\Enums\Provider;
-use App\Models\Battle;
-use App\Models\BattleRound;
-use App\Models\BattleResponse;
+use Prism\Prism\Prism;
 
 class BattleResponseService
 {
-    use HandlesAiModelCalls;
+    use HandlesAiModelCalls, PromptBuilderTrait;
 
-    public function getTextSummarizationResponse($ai_model_name, $text_to_summarize) // $ai_model_name, $battle_type
+    public function createDebateResponse(
+        Battle $battle,
+        bool $isFirstResponse,
+        ?string $opponentResponse = null,
+        ?int $roundId = null
+    ): array {
+        if ($isFirstResponse) {
+            // Create new round for first response
+            $lastRound = $battle->rounds()->orderBy('round_number', 'desc')->first();
+            $newRoundNumber = $lastRound ? $lastRound->round_number + 1 : 1;
+
+            $round = BattleRound::create([
+                'battle_id' => $battle->id,
+                'round_number' => $newRoundNumber,
+            ]);
+
+            $response = $this->getDebateChallengeResponse(
+                $battle->ai_model_1->model_name,
+                $battle->debate_title_1,
+                $battle->debate_title_2,
+                $opponentResponse
+            );
+
+            $battleResponse = BattleResponse::create([
+                'battle_round_id' => $round->id,
+                'ai_model_id' => $battle->ai_model_1_id,
+                'response_text' => $response['response'],
+            ]);
+
+            return [
+                'id' => $round->id,
+                'ai_model_name' => $battle->ai_model_1->model_name,
+                'response_text' => $battleResponse->response_text,
+            ];
+        } else {
+            // Add second response to existing round
+            $round = BattleRound::findOrFail($roundId);
+
+            $response = $this->getDebateChallengeResponse(
+                $battle->ai_model_2->model_name,
+                $battle->debate_title_2,
+                $battle->debate_title_1,
+                $opponentResponse
+            );
+
+            $battleResponse = BattleResponse::create([
+                'battle_round_id' => $round->id,
+                'ai_model_id' => $battle->ai_model_2_id,
+                'response_text' => $response['response'],
+            ]);
+
+            return [
+                'ai_model_name' => $battle->ai_model_2->model_name,
+                'response_text' => $battleResponse->response_text,
+            ];
+        }
+    }
+
+    public function getTextSummarizationResponse(string $ai_model_name, string $text_to_summarize): array
     {
         $schema = BattleResponseSchema::createPrismSchema(
             "text_summarization",
@@ -25,15 +83,16 @@ class BattleResponseService
             ]
         );
 
-        $prompt = "Summarize the following text in a short, clear paragraph (no more than 3–4 lines):\n\n"
-            . $text_to_summarize;
+        $prompt = $this->buildSummarizationPrompt($text_to_summarize);
 
         if ($this->isOpenRouterModel($ai_model_name)) {
-            return $this->callOpenRouterChat($prompt, $ai_model_name);
+            $response = $this->callOpenRouterChat($prompt, $ai_model_name);
+            return [
+                'summary' => $response
+            ];
         }
 
         $provider = $this->getProviderForModel($ai_model_name);
-
         $response = Prism::structured()
             ->using($provider, $ai_model_name)
             ->withSchema($schema)
@@ -55,12 +114,7 @@ class BattleResponseService
             ]
         );
 
-        $prompt = "Translate the following text to {$target_language}. Important: Give me ONLY the direct translation as plain text. Do not include:\n" .
-            "- No triple backticks (```) or single backticks (`)\n" .
-            "- No markdown formatting (no *, **, _, __, #, ##, etc.)\n" .
-            "- No bullet points or numbered lists\n" .
-            "- No quotation marks unless they are part of the original text\n\n" .
-            "Here's the text to translate:\n{$text}";
+        $prompt = $this->buildTranslationPrompt($text, $target_language);
 
         if ($this->isOpenRouterModel($ai_model_name)) {
             $response = $this->callOpenRouterChat($prompt, $ai_model_name);
@@ -74,7 +128,6 @@ class BattleResponseService
         }
 
         $provider = $this->getProviderForModel($ai_model_name);
-
         $response = Prism::structured()
             ->using($provider, $ai_model_name)
             ->withSchema($schema)
@@ -96,8 +149,7 @@ class BattleResponseService
             ]
         );
 
-        $prompt = "Write code in {$programming_language} to accomplish the following task:\n\n{$task_description}\n\n" .
-            "Important: Provide ONLY the code solution without any additional explanations or markdown formatting.";
+        $prompt = $this->buildCodeGenerationPrompt($task_description, $programming_language);
 
         if ($this->isOpenRouterModel($ai_model_name)) {
             $response = $this->callOpenRouterChat($prompt, $ai_model_name);
@@ -111,7 +163,6 @@ class BattleResponseService
         }
 
         $provider = $this->getProviderForModel($ai_model_name);
-
         $response = Prism::structured()
             ->using($provider, $ai_model_name)
             ->withSchema($schema)
@@ -121,17 +172,14 @@ class BattleResponseService
         return $response->structured;
     }
 
-
-    public function getDebateChallengeResponse(string $ai_model_name, string $debate_topic, string $opponent_topic, ?string $opponent_response = null)
-    {
+    public function getDebateChallengeResponse(
+        string $ai_model_name,
+        string $debate_topic,
+        string $opponent_topic,
+        ?string $opponent_response = null
+    ): array {
         $prompt = $this->buildDebatePrompt($debate_topic, $opponent_topic, $opponent_response);
 
-        // 1. Handle via Prism
-        if ($this->isPrismModel($ai_model_name)) {
-            return $this->callPrismChat($prompt);
-        }
-
-        // 2. Handle via OpenRouter
         if ($this->isOpenRouterModel($ai_model_name)) {
             $response = $this->callOpenRouterChat($prompt, $ai_model_name);
             return [
@@ -139,22 +187,22 @@ class BattleResponseService
             ];
         }
 
-        // 3. Handle via OpenAI
-        return $this->callOpenAiChat($prompt);
-    }
+        $provider = $this->getProviderForModel($ai_model_name);
+        $schema = BattleResponseSchema::createPrismSchema(
+            "debate_challenge",
+            "Structured response for an AI vs AI debate",
+            [
+                "response" => "Respond to the debate in a single unified paragraph.",
+            ]
+        );
 
-    private function buildDebatePrompt(string $debate_topic, string $opponent_topic, ?string $opponent_response): string
-    {
-        if ($opponent_response === null) {
-            return "You are participating in a debate. Your position is: \"{$debate_topic}\". " .
-                "You are debating against: \"{$opponent_topic}\". " .
-                "Present a concise opening argument in 2-3 sentences. Be persuasive and focused.";
-        }
+        $response = Prism::structured()
+            ->using($provider, $ai_model_name)
+            ->withSchema($schema)
+            ->withPrompt($prompt)
+            ->asStructured();
 
-        return "You are participating in a debate. Your position is: \"{$debate_topic}\". " .
-            "Your opponent argued: \"{$opponent_response}\"\n\n" .
-            "Respond to their argument in 2-3 sentences, defending your position and addressing their key points. " .
-            "Be concise and impactful.";
+        return $response->structured;
     }
 
     private function isOpenRouterModel(string $model): bool
@@ -173,112 +221,5 @@ class BattleResponseService
             $this->isOpenRouterModel($model) => throw new \InvalidArgumentException("Model should be handled by OpenRouter before reaching provider selection"),
             default => throw new \InvalidArgumentException("Unsupported AI model: $model")
         };
-    }
-
-    private function isPrismModel(string $model): bool
-    {
-        return str_contains($model, 'prism');
-    }
-
-    private function callPrismChat(string $prompt)
-    {
-        $schema = BattleResponseSchema::createPrismSchema(
-            "debate_challenge",
-            "Structured response for an AI vs AI debate",
-            [
-                "response" => "Respond to the debate in a single unified paragraph.",
-            ]
-        );
-
-        $response = Prism::structured()
-            ->using('prism', env('PRISM_API_KEY'))
-            ->withSchema($schema)
-            ->withPrompt($prompt)
-            ->asStructured();
-
-        return $response->structured;
-    }
-
-    private function callOpenAiChat(string $prompt)
-    {
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
-            'Content-Type' => 'application/json',
-        ])->post('https://api.openai.com/v1/chat/completions', [
-            'model' => 'gpt-4-turbo-preview',
-            'messages' => [
-                ['role' => 'system', 'content' => 'You are a skilled debater participating in an AI debate competition.'],
-                ['role' => 'user', 'content' => $prompt]
-            ],
-            'temperature' => 0.7,
-            'max_tokens' => 500,
-        ]);
-
-        if ($response->failed()) {
-            throw new \Exception('OpenAI API request failed: ' . $response->body());
-        }
-
-        $data = $response->json();
-        return [
-            'response' => $data['choices'][0]['message']['content']
-        ];
-    }
-
-    public function createDebateResponse(Battle $battle, ?string $opponent_response = null, ?int $round_id = null)
-    {
-        if ($round_id === null) {
-            // Create new round for first response
-            $lastRound = $battle->rounds()->orderBy('round_number', 'desc')->first();
-            $newRoundNumber = $lastRound ? $lastRound->round_number + 1 : 1;
-
-            $round = BattleRound::create([
-                'battle_id' => $battle->id,
-                'round_number' => $newRoundNumber,
-            ]);
-
-            $response = $this->getDebateChallengeResponse(
-                $battle->ai_model_1->model_name,
-                $battle->debate_title_1,
-                $battle->debate_title_2,
-                $opponent_response
-            );
-
-            $response_text = is_array($response) ? $response['response'] : $response;
-
-            $battleResponse = BattleResponse::create([
-                'battle_round_id' => $round->id,
-                'ai_model_id' => $battle->ai_model_1_id,
-                'response_text' => $response_text,
-            ]);
-
-            return [
-                'id' => $round->id,
-                'ai_model_name' => $battle->ai_model_1->model_name,
-                'response_text' => $battleResponse->response_text,
-            ];
-        } else {
-            // Add second response to existing round
-            $round = BattleRound::findOrFail($round_id);
-
-            $response = $this->getDebateChallengeResponse(
-                $battle->ai_model_2->model_name,
-                $battle->debate_title_2,
-                $battle->debate_title_1,
-                $opponent_response
-            );
-
-            $response_text = is_array($response) ? $response['response'] : $response;
-
-            $battleResponse = BattleResponse::create([
-                'battle_round_id' => $round->id,
-                'ai_model_id' => $battle->ai_model_2_id,
-                'response_text' => $response_text,
-            ]);
-
-            return [
-                'ai_model_name' => $battle->ai_model_2->model_name,
-                'response_text' => $battleResponse->response_text,
-            ];
-        }
     }
 }
