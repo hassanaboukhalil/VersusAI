@@ -17,7 +17,7 @@ import { Loader2 } from 'lucide-react';
 const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [selectedBattleType, setSelectedBattleType] = useState('');
+    const [selectedBattleType, setSelectedBattleType] = useState('Text Summarization');
     const [targetLanguage, setTargetLanguage] = useState('');
     const [aiModel1, setAiModel1] = useState('');
     const [aiModel2, setAiModel2] = useState('');
