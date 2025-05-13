@@ -21,6 +21,8 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const [selectedBattleType, setSelectedBattleType] = useState('Text Summarization');
     const [targetLanguage, setTargetLanguage] = useState('');
     const [programmingLanguage, setProgrammingLanguage] = useState('');
+    const [debateTitle1, setDebateTitle1] = useState('');
+    const [debateTitle2, setDebateTitle2] = useState('');
     const [aiModel1, setAiModel1] = useState('');
     const [aiModel2, setAiModel2] = useState('');
     const [loading, setLoading] = useState(false);
@@ -37,15 +39,20 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
             case 'Code Generation':
                 return 'e.g., Create a sorting algorithm implementation';
             case 'Debate Challenge':
-                return 'e.g., Debate: AI impact on future jobs';
+                return 'e.g., AI Models Debate: Summer vs Winter';
             default:
                 return 'Enter battle title';
         }
     };
 
     const handleSubmit = async () => {
-        if (!title || !description || !selectedBattleType || !aiModel1 || !aiModel2) {
-            toast.error('Please fill all fields');
+        if (!title || !selectedBattleType || !aiModel1 || !aiModel2) {
+            toast.error('Please fill all required fields');
+            return;
+        }
+
+        if (selectedBattleType !== 'Debate Challenge' && !description) {
+            toast.error('Please enter the description');
             return;
         }
 
@@ -59,11 +66,19 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
             return;
         }
 
+        if (selectedBattleType === 'Debate Challenge' && (!debateTitle1 || !debateTitle2)) {
+            toast.error('Please enter both debate topics');
+            return;
+        }
+
         setLoading(true);
         try {
             const res = await api.post('/premium/create-battle', {
                 title,
-                description,
+                description:
+                    selectedBattleType === 'Debate Challenge'
+                        ? `${debateTitle1} vs ${debateTitle2}`
+                        : description,
                 battle_type_name: selectedBattleType,
                 ai_model_1_name: aiModel1,
                 ai_model_2_name: aiModel2,
@@ -71,6 +86,10 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                     selectedBattleType === 'Text Translation' ? targetLanguage : undefined,
                 programming_language:
                     selectedBattleType === 'Code Generation' ? programmingLanguage : undefined,
+                debate_title_1:
+                    selectedBattleType === 'Debate Challenge' ? debateTitle1 : undefined,
+                debate_title_2:
+                    selectedBattleType === 'Debate Challenge' ? debateTitle2 : undefined,
             });
 
             if (res.data.success) {
@@ -172,29 +191,51 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                     </div>
                 )}
 
-                <div>
-                    <label className="text-lg mb-1 block">
-                        {selectedBattleType === 'Text Summarization' && 'Text to Summarize'}
-                        {selectedBattleType === 'Text Translation' && 'Text to Translate'}
-                        {selectedBattleType === 'Code Generation' && 'Code Task Description'}
-                        {selectedBattleType === 'Debate Challenge' && 'Debate Topic'}
-                    </label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        rows={6}
-                        className="w-full rounded bg-white text-black px-3 py-2 text-sm"
-                        placeholder={
-                            selectedBattleType === 'Text Summarization'
-                                ? 'Enter a paragraph to summarize...'
-                                : selectedBattleType === 'Text Translation'
-                                  ? 'Enter text to translate...'
-                                  : selectedBattleType === 'Code Generation'
-                                    ? 'Describe what you want the code to do (e.g., "Create a function that sorts an array in ascending order")...'
-                                    : 'Enter the debate topic...'
-                        }
-                    ></textarea>
-                </div>
+                {selectedBattleType === 'Debate Challenge' && (
+                    <div className="space-y-4">
+                        <div>
+                            <label className="text-lg block">First Debate Topic</label>
+                            <Input
+                                value={debateTitle1}
+                                onChange={(e) => setDebateTitle1(e.target.value)}
+                                placeholder="Enter first topic (e.g., Summer)"
+                                className="mt-1"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-lg block">Second Debate Topic</label>
+                            <Input
+                                value={debateTitle2}
+                                onChange={(e) => setDebateTitle2(e.target.value)}
+                                placeholder="Enter second topic (e.g., Winter)"
+                                className="mt-1"
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {selectedBattleType !== 'Debate Challenge' && (
+                    <div>
+                        <label className="text-lg mb-1 block">
+                            {selectedBattleType === 'Text Summarization' && 'Text to Summarize'}
+                            {selectedBattleType === 'Text Translation' && 'Text to Translate'}
+                            {selectedBattleType === 'Code Generation' && 'Code Task Description'}
+                        </label>
+                        <textarea
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            rows={6}
+                            className="w-full rounded bg-white text-black px-3 py-2 text-sm"
+                            placeholder={
+                                selectedBattleType === 'Text Summarization'
+                                    ? 'Enter a paragraph to summarize...'
+                                    : selectedBattleType === 'Text Translation'
+                                      ? 'Enter text to translate...'
+                                      : 'Describe what you want the code to do (e.g., "Create a function that sorts an array in ascending order")...'
+                            }
+                        ></textarea>
+                    </div>
+                )}
 
                 <Button
                     onClick={handleSubmit}
