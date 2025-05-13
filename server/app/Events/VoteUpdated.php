@@ -17,4 +17,11 @@ class VoteUpdated implements ShouldBroadcast
         $this->battleId = $battleId;
         $this->votes = $votes;
     }
+
+    public function broadcastOn(): array
+    {
+        return [
+            new PrivateChannel('battle.' . $this->battleId),
+        ];
+    }
 }
