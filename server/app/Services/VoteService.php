@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Battle;
 use App\Models\Vote;
 use App\Events\VoteUpdated;
+use App\Models\AiModel;
 use Illuminate\Support\Facades\Auth;
 
 class VoteService
@@ -20,22 +21,25 @@ class VoteService
             ];
         }
 
-        // Find the AI model ID from the battle's ai_models array
-        $aiModelData = collect($battle->ai_models)->firstWhere('name', $aiModel);
-        if (!$aiModelData) {
+
+        $voted_ai_model_id = AiModel::where('model_name', $aiModel)->first()->id;
+
+
+        if (!$voted_ai_model_id) {
             return [
                 'success' => false,
                 'message' => 'Invalid AI model name'
             ];
         }
 
-        $battle->addVote($userId, $aiModelData['id']);
+        $battle->addVote($userId, $voted_ai_model_id);
 
         // Get updated vote counts for both AI models
         $voteStats = [];
-        foreach ($battle->ai_models as $model) {
-            $voteStats[$model['name']] = $battle->getVotesByModel($model['id']);
-        }
+        $model1 = $battle->ai_model_1;
+        $model2 = $battle->ai_model_2;
+        $voteStats[$model1->name] = $battle->getVotesByModel($model1->id);
+        $voteStats[$model2->name] = $battle->getVotesByModel($model2->id);
 
         // Broadcast the vote update
         broadcast(new VoteUpdated($battle->id, $voteStats))->toOthers();
