@@ -66,36 +66,94 @@ const BattleDetailsPage = () => {
     const handleCreateRound = async () => {
         setLoadingRound(true);
         try {
-            const res = await api.post('/premium/create-round', {
-                battle_id: battle?.id,
-                description: battle?.description,
-                target_language:
-                    battle?.type === 'Text Translation' ? battle.target_language : undefined,
-                programming_language:
-                    battle?.type === 'Code Generation' ? battle.programming_language : undefined,
-                debate_title_1:
-                    battle?.type === 'Debate Challenge' ? battle.debate_title_1 : undefined,
-                debate_title_2:
-                    battle?.type === 'Debate Challenge' ? battle.debate_title_2 : undefined,
-            });
+            if (battle?.type === 'Debate Challenge') {
+                // Get the last response from the rounds
+                const lastRound = battle.rounds[battle.rounds.length - 1];
+                const lastResponse = lastRound?.responses[lastRound.responses.length - 1];
 
-            const data = res.data.data;
+                // For debate challenges, alternate between AI responses
+                if (!lastRound || lastRound.responses.length === 2) {
+                    // Start a new round with first AI
+                    const res = await api.post('/premium/create-debate-response', {
+                        battle_id: battle.id,
+                        debate_title_1: battle.debate_title_1,
+                        debate_title_2: battle.debate_title_2,
+                        is_first_response: true,
+                        opponent_response: lastResponse?.response_text,
+                    });
 
-            const newRound = {
-                id: data.id,
-                responses: [
-                    {
-                        ai_model_name: data.ai_model_1_name,
-                        response_text: data.ai_model_1_response,
-                    },
-                    {
-                        ai_model_name: data.ai_model_2_name,
-                        response_text: data.ai_model_2_response,
-                    },
-                ],
-            };
+                    const data = res.data.data;
+                    const newRound = {
+                        id: data.id,
+                        responses: [
+                            {
+                                ai_model_name: data.ai_model_name,
+                                response_text: data.response_text,
+                            },
+                        ],
+                    };
+                    dispatch(addRound(newRound));
+                } else if (lastRound.responses.length === 1) {
+                    // Add second AI's response to current round
+                    const res = await api.post('/premium/create-debate-response', {
+                        battle_id: battle.id,
+                        debate_title_1: battle.debate_title_1,
+                        debate_title_2: battle.debate_title_2,
+                        is_first_response: false,
+                        opponent_response: lastResponse?.response_text,
+                        round_id: lastRound.id,
+                    });
 
-            dispatch(addRound(newRound));
+                    const data = res.data.data;
+                    const updatedRound = {
+                        ...lastRound,
+                        responses: [
+                            ...lastRound.responses,
+                            {
+                                ai_model_name: data.ai_model_name,
+                                response_text: data.response_text,
+                            },
+                        ],
+                    };
+
+                    dispatch(
+                        setCurrentBattle({
+                            ...battle,
+                            rounds: battle.rounds.map((r) =>
+                                r.id === lastRound.id ? updatedRound : r
+                            ),
+                        })
+                    );
+                }
+            } else {
+                // Handle other battle types as before
+                const res = await api.post('/premium/create-round', {
+                    battle_id: battle?.id,
+                    description: battle?.description,
+                    target_language:
+                        battle?.type === 'Text Translation' ? battle.target_language : undefined,
+                    programming_language:
+                        battle?.type === 'Code Generation'
+                            ? battle.programming_language
+                            : undefined,
+                });
+
+                const data = res.data.data;
+                const newRound = {
+                    id: data.id,
+                    responses: [
+                        {
+                            ai_model_name: data.ai_model_1_name,
+                            response_text: data.ai_model_1_response,
+                        },
+                        {
+                            ai_model_name: data.ai_model_2_name,
+                            response_text: data.ai_model_2_response,
+                        },
+                    ],
+                };
+                dispatch(addRound(newRound));
+            }
         } catch (err) {
             console.error('Failed to create new round:', err);
         } finally {
@@ -253,6 +311,8 @@ const BattleDetailsPage = () => {
                                 <Loader2 className="animate-spin mr-2 h-4 w-4" />
                                 Please wait…
                             </>
+                        ) : battle.type === 'Debate Challenge' ? (
+                            'Continue'
                         ) : (
                             'Give another results'
                         )}
