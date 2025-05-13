@@ -13,7 +13,7 @@ if (typeof window !== 'undefined') {
 
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: process.env.NEXT_PUBLIC_PUSHER_APP_KEY || 'your_pusher_key',
+        key: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
         cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER || 'eu',
         forceTLS: true,
     });
