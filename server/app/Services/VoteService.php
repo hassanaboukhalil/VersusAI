@@ -21,25 +21,33 @@ class VoteService
             ];
         }
 
+        // Get the AI model ID based on the model_name
+        $aiModelObj = AiModel::where('model_name', $aiModel)->first();
 
-        $voted_ai_model_id = AiModel::where('model_name', $aiModel)->first()->id;
-
-
-        if (!$voted_ai_model_id) {
+        if (!$aiModelObj) {
             return [
                 'success' => false,
                 'message' => 'Invalid AI model name'
             ];
         }
 
-        $battle->addVote($userId, $voted_ai_model_id);
+        $voted_ai_model_id = $aiModelObj->id;
+
+        $success = $battle->addVote($userId, $voted_ai_model_id);
+
+        if (!$success) {
+            return [
+                'success' => false,
+                'message' => 'Failed to record vote'
+            ];
+        }
 
         // Get updated vote counts for both AI models
         $voteStats = [];
         $model1 = $battle->ai_model_1;
         $model2 = $battle->ai_model_2;
-        $voteStats[$model1->name] = $battle->getVotesByModel($model1->id);
-        $voteStats[$model2->name] = $battle->getVotesByModel($model2->id);
+        $voteStats[$model1->model_name] = $battle->getVotesByModel($model1->id);
+        $voteStats[$model2->model_name] = $battle->getVotesByModel($model2->id);
 
         // Broadcast the vote update
         broadcast(new VoteUpdated($battle->id, $voteStats))->toOthers();
