@@ -187,7 +187,7 @@ const BattleDetailsPage = () => {
                     ...battle,
                     ai_models: battle.ai_models.map((model) => ({
                         ...model,
-                        votes: result.votes[model.id] || model.votes,
+                        votes: result.votes[model.name] || model.votes,
                     })),
                 };
                 dispatch(setCurrentBattle(updatedBattle));
@@ -362,7 +362,7 @@ const BattleDetailsPage = () => {
                                 <Button
                                     key={model.id}
                                     className="bg-primary text-black"
-                                    onClick={() => handleVote(model.id)}
+                                    onClick={() => handleVote(model.name)}
                                     disabled={loadingVote}
                                 >
                                     {loadingVote ? (
