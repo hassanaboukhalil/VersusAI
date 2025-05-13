@@ -66,7 +66,8 @@ class BattleService
             'ai_model_2_id' => $ai_model_2->id,
             'title' => $request->title,
             'description' => $request->description,
-            'target_language' => $request->battle_type_name === 'Text Translation' ? $request->target_language : null
+            'target_language' => $request->battle_type_name === 'Text Translation' ? $request->target_language : null,
+            'programming_language' => $request->battle_type_name === 'Code Generation' ? $request->programming_language : null
         ]);
 
         $round_service = new BattleRoundService();
@@ -98,7 +99,7 @@ class BattleService
                         'ai_model_name' => $response->ai_model->model_name,
                         'response_text' => $response->response_text,
                     ];
-                })->toArray() // to convert it from collection to array
+                })->toArray()
             ];
         });
 
@@ -108,6 +109,7 @@ class BattleService
             'description' => $battle->description,
             'type' => $battle->category->name,
             'target_language' => $battle->category->name === 'Text Translation' ? $battle->target_language : null,
+            'programming_language' => $battle->category->name === 'Code Generation' ? $battle->programming_language : null,
             'is_active' => $battle->is_active == 0 ? false : true,
             'ai_models' => [
                 [
