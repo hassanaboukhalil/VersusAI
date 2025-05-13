@@ -173,6 +173,34 @@ const BattleDetailsPage = () => {
         }
     };
 
+    const handleVote = async (aiModelId: number) => {
+        if (!battle || loadingVote) return;
+
+        setLoadingVote(true);
+        try {
+            const result = await voteForAiModel(battle.id.toString(), aiModelId);
+            if (result.success) {
+                // Update the votes in the battle state
+                const updatedBattle = {
+                    ...battle,
+                    ai_models: battle.ai_models.map((model) => ({
+                        ...model,
+                        votes: result.votes[model.id] || model.votes,
+                    })),
+                };
+                dispatch(setCurrentBattle(updatedBattle));
+                toast.success('Vote recorded successfully!');
+            } else {
+                toast.error(result.message || 'Failed to record vote');
+            }
+        } catch (error) {
+            console.error('Failed to vote:', error);
+            toast.error('Failed to record vote. Please try again.');
+        } finally {
+            setLoadingVote(false);
+        }
+    };
+
     if (!battle) {
         return (
             <Section className="bg-background text-white px-6 py-10 mx-auto min-h-screen">
