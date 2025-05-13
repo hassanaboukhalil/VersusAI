@@ -18,6 +18,7 @@ import CodeResponse from '../../../../components/global/CodeResponse';
 import type { Battle, Response, Round } from '../../../../types/battle';
 import { voteForAiModel } from '../../../api/battle';
 import { toast } from 'sonner';
+import '../../../../lib/echo';
 
 const BattleDetailsPage = () => {
     const { id } = useParams();
@@ -64,7 +65,31 @@ const BattleDetailsPage = () => {
         };
 
         if (id) fetchBattle();
-    }, [id, dispatch]);
+
+        // Subscribe to vote updates
+        if (typeof window !== 'undefined' && window.Echo && id) {
+            window.Echo.private(`battle.${id}`).listen(
+                '.vote.updated',
+                (e: { votes: { [key: string]: number } }) => {
+                    if (battle) {
+                        const updatedBattle = {
+                            ...battle,
+                            ai_models: battle.ai_models.map((model) => ({
+                                ...model,
+                                votes: e.votes[model.name] || model.votes,
+                            })),
+                        };
+                        dispatch(setCurrentBattle(updatedBattle));
+                    }
+                }
+            );
+
+            // Cleanup subscription on unmount
+            return () => {
+                window.Echo.leave(`battle.${id}`);
+            };
+        }
+    }, [id, dispatch, battle]);
 
     const handleCreateRound = async () => {
         setLoadingRound(true);
@@ -175,12 +200,12 @@ const BattleDetailsPage = () => {
         }
     };
 
-    const handleVote = async (aiModelId: number) => {
+    const handleVote = async (aiModelName: string) => {
         if (!battle || loadingVote) return;
 
         setLoadingVote(true);
         try {
-            const result = await voteForAiModel(battle.id.toString(), aiModelId);
+            const result = await voteForAiModel(battle.id.toString(), aiModelName);
             if (result.success) {
                 // Update the votes in the battle state
                 const updatedBattle = {
@@ -360,7 +385,7 @@ const BattleDetailsPage = () => {
                         <div className="flex items-center gap-4 text-right">
                             {battle?.ai_models.map((model) => (
                                 <Button
-                                    key={model.id}
+                                    key={model.name}
                                     className="bg-primary text-black"
                                     onClick={() => handleVote(model.name)}
                                     disabled={loadingVote}
