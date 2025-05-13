@@ -57,7 +57,12 @@ class BattleResponseService
         $prompt = "Translate the following text to {$target_language}:\n\n{$text}";
 
         if ($this->isOpenRouterModel($ai_model_name)) {
-            return $this->callOpenRouterChat($prompt, $ai_model_name);
+            $response = $this->callOpenRouterChat($prompt, $ai_model_name);
+            return [
+                'original' => $text,
+                'translated' => $response,
+                'language' => $target_language
+            ];
         }
 
         $provider = $this->getProviderForModel($ai_model_name);
