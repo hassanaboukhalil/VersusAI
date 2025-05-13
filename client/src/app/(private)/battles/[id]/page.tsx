@@ -358,17 +358,26 @@ const BattleDetailsPage = () => {
                     <div className="mt-6">
                         <h3 className="text-xl font-semibold mb-2">Votes</h3>
                         <div className="flex items-center gap-4 text-right">
-                            {battle.ai_models.map((model) => (
-                                <Button key={model.name} className="bg-primary text-black">
-                                    <Star className="mr-1" />
+                            {battle?.ai_models.map((model) => (
+                                <Button
+                                    key={model.id}
+                                    className="bg-primary text-black"
+                                    onClick={() => handleVote(model.id)}
+                                    disabled={loadingVote}
+                                >
+                                    {loadingVote ? (
+                                        <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                                    ) : (
+                                        <Star className="mr-1" />
+                                    )}
                                     Vote for {model.name}
                                 </Button>
                             ))}
                         </div>
                         <p className="mt-4 text-gray-300">
-                            {battle.ai_models[0].name}: {battle.ai_models[0].votes}{' '}
+                            {battle?.ai_models[0].name}: {battle?.ai_models[0].votes || 0}
                             &nbsp;&nbsp;&nbsp;
-                            {battle.ai_models[1].name}: {battle.ai_models[1].votes}
+                            {battle?.ai_models[1].name}: {battle?.ai_models[1].votes || 0}
                         </p>
                     </div>
 
@@ -383,7 +392,6 @@ const BattleDetailsPage = () => {
                             <Send color="black" className="absolute right-[8px]" />
                         </div>
                     </div>
-
                     {/* Static Comment */}
                     <div className="mt-6 space-y-4">
                         <div>
