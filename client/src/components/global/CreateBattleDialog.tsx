@@ -28,6 +28,21 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const router = useRouter();
     // const dispatch = useDispatch();
 
+    const getTitlePlaceholder = () => {
+        switch (selectedBattleType) {
+            case 'Text Summarization':
+                return 'e.g., Summarize an article about AI advancements';
+            case 'Text Translation':
+                return 'e.g., Translate a technical document to French';
+            case 'Code Generation':
+                return 'e.g., Create a sorting algorithm implementation';
+            case 'Debate Challenge':
+                return 'e.g., Debate: AI impact on future jobs';
+            default:
+                return 'Enter battle title';
+        }
+    };
+
     const handleSubmit = async () => {
         if (!title || !description || !selectedBattleType || !aiModel1 || !aiModel2) {
             toast.error('Please fill all fields');
@@ -90,7 +105,7 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                     <Input
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Summarize a text about creating LLM"
+                        placeholder={getTitlePlaceholder()}
                         className="mt-1"
                     />
                 </div>
