@@ -15,10 +15,43 @@ import api from '../../../../lib/axios';
 import { Skeleton } from '../../../../components/ui/Skeleton';
 import { Loader2 } from 'lucide-react';
 
+interface Response {
+    ai_model_name: string;
+    response_text: string;
+}
+
+interface Round {
+    id: number;
+    responses: Response[];
+}
+
+interface AiModel {
+    name: string;
+    votes: number;
+}
+
+interface User {
+    user_first_name: string;
+    user_username: string;
+    user_profile_pic_url: string;
+}
+
+interface Battle {
+    id: number;
+    title: string;
+    description: string;
+    type: string;
+    target_language?: string;
+    is_active: boolean;
+    ai_models: AiModel[];
+    user: User;
+    rounds: Round[];
+}
+
 const BattleDetailsPage = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
-    const battle = useSelector((state: RootState) => state.battle.currentBattle);
+    const battle = useSelector((state: RootState) => state.battle.currentBattle) as Battle | null;
 
     const [ended, setEnded] = useState(false);
     const [loadingRound, setLoadingRound] = useState(false);
@@ -35,12 +68,13 @@ const BattleDetailsPage = () => {
                         title: data.title,
                         description: data.description,
                         type: data.type,
+                        target_language: data.target_language,
                         is_active: data.is_active,
                         ai_models: data.ai_models,
                         user: data.user,
-                        rounds: data.rounds.map((round: any) => ({
+                        rounds: data.rounds.map((round: Round) => ({
                             id: round.id,
-                            responses: round.responses.map((resp: any) => ({
+                            responses: round.responses.map((resp: Response) => ({
                                 ai_model_name: resp.ai_model_name,
                                 response_text: resp.response_text,
                             })),
@@ -63,6 +97,8 @@ const BattleDetailsPage = () => {
             const res = await api.post('/premium/create-round', {
                 battle_id: battle?.id,
                 description: battle?.description,
+                target_language:
+                    battle?.type === 'Text Translation' ? battle.target_language : undefined,
             });
 
             const data = res.data.data;
@@ -119,49 +155,58 @@ const BattleDetailsPage = () => {
             <h1 className="text-2xl font-bold">{battle.title}</h1>
             <p className="mt-2 text-primary">{battle.type}</p>
             <p className="text-gray-300 mt-6 mb-6">{battle.description}</p>
+            {battle.type === 'Text Translation' && battle.target_language && (
+                <p className="text-primary mb-6">
+                    Target Language: <span className="text-white">{battle.target_language}</span>
+                </p>
+            )}
 
             {/* Battle Rounds */}
             <div className="border border-lime-300 p-4 space-y-8 rounded-md bg-dark-white">
                 {battle.rounds.map((round, i) => (
-                    <div key={round.id} className="my-8">
+                    <div key={`round-${round.id}-${i}`} className="my-8">
                         <h3 className="text-lg font-semibold">Round {i + 1}</h3>
 
                         <div className="flex flex-col gap-4 mt-6">
                             {/* First AI */}
-                            <div className="flex w-full items-start gap-2">
-                                <div className="relative flex items-center">
-                                    <span className="absolute left-[-65px] w-max rotate-[-90deg] text-primary text-[10px]">
-                                        {round.responses[0].ai_model_name}
-                                    </span>
-                                    <Image
-                                        src={getModelImage(round.responses[0].ai_model_name)}
-                                        alt={round.responses[0].ai_model_name}
-                                        width={50}
-                                        height={50}
-                                    />
+                            {round.responses[0] && (
+                                <div className="flex w-full items-start gap-2">
+                                    <div className="relative flex items-center">
+                                        <span className="absolute left-[-65px] w-max rotate-[-90deg] text-primary text-[10px]">
+                                            {round.responses[0].ai_model_name}
+                                        </span>
+                                        <Image
+                                            src={getModelImage(round.responses[0].ai_model_name)}
+                                            alt={round.responses[0].ai_model_name}
+                                            width={50}
+                                            height={50}
+                                        />
+                                    </div>
+                                    <div className="bg-white text-black p-3 rounded text-sm max-w-[85%]">
+                                        {round.responses[0].response_text}
+                                    </div>
                                 </div>
-                                <div className="bg-white text-black p-3 rounded text-sm max-w-[85%]">
-                                    {round.responses[0].response_text}
-                                </div>
-                            </div>
+                            )}
 
                             {/* Second AI */}
-                            <div className="flex w-full items-start justify-start flex-row-reverse gap-2">
-                                <div className="relative flex items-center">
-                                    <span className="absolute right-[-70px] rotate-[90deg] text-primary text-[10px]">
-                                        {round.responses[1].ai_model_name}
-                                    </span>
-                                    <Image
-                                        src={getModelImage(round.responses[1].ai_model_name)}
-                                        alt={round.responses[1].ai_model_name}
-                                        width={50}
-                                        height={50}
-                                    />
+                            {round.responses[1] && (
+                                <div className="flex w-full items-start justify-start flex-row-reverse gap-2">
+                                    <div className="relative flex items-center">
+                                        <span className="absolute right-[-70px] rotate-[90deg] text-primary text-[10px]">
+                                            {round.responses[1].ai_model_name}
+                                        </span>
+                                        <Image
+                                            src={getModelImage(round.responses[1].ai_model_name)}
+                                            alt={round.responses[1].ai_model_name}
+                                            width={50}
+                                            height={50}
+                                        />
+                                    </div>
+                                    <div className="bg-white text-black p-3 rounded text-sm w-[85%]">
+                                        {round.responses[1].response_text}
+                                    </div>
                                 </div>
-                                <div className="bg-white text-black p-3 rounded text-sm w-[85%]">
-                                    {round.responses[1].response_text}
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 ))}

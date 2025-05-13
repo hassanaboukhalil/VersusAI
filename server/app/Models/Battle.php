@@ -12,10 +12,11 @@ class Battle extends Model
     protected $fillable = [
         'user_id',
         'category_id',
-        'title',
-        'description',
         'ai_model_1_id',
         'ai_model_2_id',
+        'title',
+        'description',
+        'target_language',
         'is_active'
     ];
 

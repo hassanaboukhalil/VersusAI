@@ -65,7 +65,8 @@ class BattleService
             'ai_model_1_id' => $ai_model_1->id,
             'ai_model_2_id' => $ai_model_2->id,
             'title' => $request->title,
-            'description' => $request->description
+            'description' => $request->description,
+            'target_language' => $request->battle_type_name === 'Text Translation' ? $request->target_language : null
         ]);
 
         $round_service = new BattleRoundService();
@@ -106,6 +107,7 @@ class BattleService
             'title' => $battle->title,
             'description' => $battle->description,
             'type' => $battle->category->name,
+            'target_language' => $battle->category->name === 'Text Translation' ? $battle->target_language : null,
             'is_active' => $battle->is_active == 0 ? false : true,
             'ai_models' => [
                 [
