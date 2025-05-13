@@ -18,7 +18,7 @@ import CodeResponse from '../../../../components/global/CodeResponse';
 import type { Battle, Response, Round } from '../../../../types/battle';
 import { voteForAiModel } from '../../../api/battle';
 import { toast } from 'sonner';
-import '../../../../lib/echo';
+import Echo from '../../../../lib/echo';
 
 const BattleDetailsPage = () => {
     const { id } = useParams();
@@ -65,31 +65,36 @@ const BattleDetailsPage = () => {
         };
 
         if (id) fetchBattle();
+    }, [id, dispatch]);
 
-        // Subscribe to vote updates
-        if (typeof window !== 'undefined' && window.Echo && id) {
-            window.Echo.private(`battle.${id}`).listen(
-                '.vote.updated',
-                (e: { votes: { [key: string]: number } }) => {
-                    if (battle) {
-                        const updatedBattle = {
-                            ...battle,
-                            ai_models: battle.ai_models.map((model) => ({
-                                ...model,
-                                votes: e.votes[model.name] || model.votes,
-                            })),
-                        };
-                        dispatch(setCurrentBattle(updatedBattle));
-                    }
-                }
-            );
+    // Set up Echo subscription
+    useEffect(() => {
+        let channel: any;
 
-            // Cleanup subscription on unmount
-            return () => {
-                window.Echo.leave(`battle.${id}`);
-            };
-        }
-    }, [id, dispatch, battle]);
+        const setupEchoSubscription = async () => {
+            if (!Echo || !id || !battle) return;
+
+            channel = Echo.private(`battle.${id}`);
+            channel.listen('.vote.updated', (e: { votes: Record<string, number> }) => {
+                const updatedBattle = {
+                    ...battle,
+                    ai_models: battle.ai_models.map((model) => ({
+                        ...model,
+                        votes: e.votes[model.name] || model.votes,
+                    })),
+                };
+                dispatch(setCurrentBattle(updatedBattle));
+            });
+        };
+
+        setupEchoSubscription();
+
+        return () => {
+            if (channel) {
+                channel.stopListening('.vote.updated');
+            }
+        };
+    }, [id, battle, dispatch]);
 
     const handleCreateRound = async () => {
         setLoadingRound(true);
