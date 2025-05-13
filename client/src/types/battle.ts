@@ -31,6 +31,8 @@ export interface Battle {
     type: string;
     target_language?: string;
     programming_language?: string;
+    debate_title_1?: string;
+    debate_title_2?: string;
     is_active: boolean;
     ai_models: AiModel[];
     user: User;
