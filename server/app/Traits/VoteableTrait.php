@@ -11,4 +11,10 @@ trait VoteableTrait
     {
         return $this->votes()->count();
     }
+
+    // Get the votes relationship
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
+    }
 }
