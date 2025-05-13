@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\BattleResponseService;
 use App\Services\BattleService;
 use Illuminate\Http\Request;
+use App\Models\Battle;
 
 class BattleResponseController extends Controller
 {
@@ -75,6 +76,24 @@ class BattleResponseController extends Controller
             return $this->errorResponse('Something went wrong', 500);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
+    public function createDebateResponse(Request $request)
+    {
+        try {
+            $battle = Battle::with(['ai_model_1', 'ai_model_2'])->findOrFail($request->battle_id);
+            $battle_response_service = new BattleResponseService();
+
+            $result = $battle_response_service->createDebateResponse(
+                $battle,
+                $request->opponent_response,
+                $request->round_id
+            );
+
+            return $this->successResponse($result);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to create debate response: ' . $e->getMessage(), 500);
         }
     }
 }
