@@ -67,7 +67,9 @@ class BattleService
             'title' => $request->title,
             'description' => $request->description,
             'target_language' => $request->battle_type_name === 'Text Translation' ? $request->target_language : null,
-            'programming_language' => $request->battle_type_name === 'Code Generation' ? $request->programming_language : null
+            'programming_language' => $request->battle_type_name === 'Code Generation' ? $request->programming_language : null,
+            'debate_title_1' => $request->battle_type_name === 'Debate Challenge' ? $request->debate_title_1 : null,
+            'debate_title_2' => $request->battle_type_name === 'Debate Challenge' ? $request->debate_title_2 : null
         ]);
 
         $round_service = new BattleRoundService();
