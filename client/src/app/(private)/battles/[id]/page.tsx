@@ -14,6 +14,7 @@ import { addRound, setCurrentBattle } from '../../../../redux/slices/battleSlice
 import api from '../../../../lib/axios';
 import { Skeleton } from '../../../../components/ui/Skeleton';
 import { Loader2 } from 'lucide-react';
+import CodeResponse from '../../../../components/global/CodeResponse';
 
 interface Response {
     ai_model_name: string;
@@ -46,6 +47,7 @@ interface Battle {
     ai_models: AiModel[];
     user: User;
     rounds: Round[];
+    programming_language?: string;
 }
 
 const BattleDetailsPage = () => {
@@ -79,6 +81,7 @@ const BattleDetailsPage = () => {
                                 response_text: resp.response_text,
                             })),
                         })),
+                        programming_language: data.programming_language,
                     })
                 );
 
@@ -182,9 +185,20 @@ const BattleDetailsPage = () => {
                                             height={50}
                                         />
                                     </div>
-                                    <div className="bg-white text-black p-3 rounded text-sm max-w-[85%]">
-                                        {round.responses[0].response_text}
-                                    </div>
+                                    {battle.type === 'Code Generation' ? (
+                                        <div className="max-w-[85%] w-full">
+                                            <CodeResponse
+                                                code={round.responses[0].response_text}
+                                                language={
+                                                    battle.programming_language || 'javascript'
+                                                }
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="bg-white text-black p-3 rounded text-sm max-w-[85%]">
+                                            {round.responses[0].response_text}
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
@@ -202,9 +216,20 @@ const BattleDetailsPage = () => {
                                             height={50}
                                         />
                                     </div>
-                                    <div className="bg-white text-black p-3 rounded text-sm w-[85%]">
-                                        {round.responses[1].response_text}
-                                    </div>
+                                    {battle.type === 'Code Generation' ? (
+                                        <div className="w-[85%]">
+                                            <CodeResponse
+                                                code={round.responses[1].response_text}
+                                                language={
+                                                    battle.programming_language || 'javascript'
+                                                }
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="bg-white text-black p-3 rounded text-sm w-[85%]">
+                                            {round.responses[1].response_text}
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
