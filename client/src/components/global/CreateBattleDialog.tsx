@@ -13,12 +13,14 @@ import api from '../../lib/axios';
 import Select from '../ui/Select';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
+import { PROGRAMMING_LANGUAGES } from '../../constants/programmingLanguages';
 
 const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [selectedBattleType, setSelectedBattleType] = useState('Text Summarization');
     const [targetLanguage, setTargetLanguage] = useState('');
+    const [programmingLanguage, setProgrammingLanguage] = useState('');
     const [aiModel1, setAiModel1] = useState('');
     const [aiModel2, setAiModel2] = useState('');
     const [loading, setLoading] = useState(false);
@@ -37,6 +39,11 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
             return;
         }
 
+        if (selectedBattleType === 'Code Generation' && !programmingLanguage) {
+            toast.error('Please select a programming language');
+            return;
+        }
+
         setLoading(true);
         try {
             const res = await api.post('/premium/create-battle', {
@@ -47,6 +54,8 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 ai_model_2_name: aiModel2,
                 target_language:
                     selectedBattleType === 'Text Translation' ? targetLanguage : undefined,
+                programming_language:
+                    selectedBattleType === 'Code Generation' ? programmingLanguage : undefined,
             });
 
             if (res.data.success) {
@@ -132,6 +141,18 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                             onChange={(e) => setTargetLanguage(e.target.value)}
                             placeholder="Enter target language (e.g., French)"
                             className="mt-1"
+                        />
+                    </div>
+                )}
+
+                {selectedBattleType === 'Code Generation' && (
+                    <div>
+                        <label className="text-lg block">Programming Language</label>
+                        <Select
+                            value={programmingLanguage}
+                            onChange={setProgrammingLanguage}
+                            options={PROGRAMMING_LANGUAGES}
+                            placeholder="Select a programming language"
                         />
                     </div>
                 )}
