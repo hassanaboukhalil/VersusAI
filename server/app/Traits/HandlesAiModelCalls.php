@@ -59,7 +59,13 @@ trait HandlesAiModelCalls
 
     public function callOpenRouterChat(string $prompt, string $model)
     {
-        if ($model == "deepseek-prover-v2") $model = "deepseek/deepseek-prover-v2:free";
+        $model = match (true) {
+            $model === 'deepseek-prover-v2' => 'deepseek/deepseek-prover-v2:free',
+            str_contains($model, 'meta-llama') => $model,
+            str_contains($model, 'mixtral') => $model,
+            $model === 'Groq' => 'meta-llama/llama-4-scout-17b-16e-instruct',
+            default => throw new \Exception("Unsupported OpenRouter model: $model")
+        };
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
@@ -110,6 +116,9 @@ trait HandlesAiModelCalls
     {
         return match (true) {
             str_contains($model, 'deepseek-prover-v2') => true,
+            str_contains($model, 'meta-llama') => true,
+            str_contains($model, 'mixtral') => true,
+            $model === 'Groq' => true,
             default => false,
         };
     }
