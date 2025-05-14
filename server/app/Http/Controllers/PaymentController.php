@@ -57,7 +57,7 @@ class PaymentController extends Controller
                     'product_data' => [
                         'name' => 'VersusAI Premium Plan',
                     ],
-                    'unit_amount' => 1000, // $10.00 in cents
+                    'unit_amount' => 1000,
                 ],
                 'quantity' => 1,
             ]],
@@ -66,7 +66,10 @@ class PaymentController extends Controller
             'cancel_url' => url('/payment-cancel'),
         ]);
 
-        return response()->json(['url' => $session->url]);
+        return response()->json([
+            'url' => $session->url,
+            'id' => $session->id
+        ]);
     }
 
     public function paymentSuccess(Request $request)
