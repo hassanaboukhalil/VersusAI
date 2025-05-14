@@ -1,11 +1,11 @@
-import { PRICING_PLANS } from '../../../constants/pricing';
 import Section from '../../../components/layout/Section';
-import { PricingCard } from '../../global/PricingCard';
+import { PRICING_PLANS } from '../../../constants/pricing';
+import { PricingCard } from '../../../components/global/PricingCard';
 
-const Pricing = () => {
+const page = () => {
     return (
-        <Section className="py-16 text-white mt-52" id="pricing">
-            <h2 className="h2 font-bold text-center">Pricing Tiers</h2>
+        <Section className="bg-background min-h-screen py-12">
+            <h2 className="h2 font-bold text-center">Upgrade your account</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto w-fit mt-16">
                 {PRICING_PLANS.map((plan) => (
                     <PricingCard key={plan.name} plan={plan} />
@@ -14,5 +14,4 @@ const Pricing = () => {
         </Section>
     );
 };
-
-export default Pricing;
+export default page;

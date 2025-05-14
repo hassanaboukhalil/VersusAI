@@ -7,7 +7,7 @@ export const PRICING_PLANS = [
         cta: 'Get Started',
     },
     {
-        name: 'Pro',
+        name: 'Premium',
         price: 9.99,
         features: [
             'Explore battles',
