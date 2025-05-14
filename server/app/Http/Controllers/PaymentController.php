@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -101,6 +102,10 @@ class PaymentController extends Controller
             'payment_status' => 'success',
             'transaction_id' => $paymentIntent->id,
             'paid_at' => Carbon::createFromTimestamp($paymentIntent->created),
+        ]);
+
+        User::where('id', Auth::id())->update([
+            'is_premium' => true,
         ]);
 
         return response()->json(['message' => 'Payment recorded successfully.']);
