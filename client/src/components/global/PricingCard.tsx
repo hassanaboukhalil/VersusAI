@@ -1,5 +1,8 @@
+'use client';
+
 import { Check, X } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useEffect, useState } from 'react';
 import { getUser } from '../../lib/auth';
 
 export interface PricingPlan {
@@ -15,9 +18,23 @@ interface PricingCardProps {
 }
 
 export const PricingCard = ({ plan }: PricingCardProps) => {
-    const user = getUser();
-    const isPremium = user?.is_premium || false;
-    const buttonText = isPremium ? 'Your current plan' : plan.cta;
+    const [isPremium, setIsPremium] = useState(false);
+    const [buttonText, setButtonText] = useState(plan.cta);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        const user = getUser();
+        const userIsPremium = user?.is_premium || false;
+        setIsPremium(userIsPremium);
+
+        if (userIsPremium && plan.name === 'Pro') {
+            setButtonText('Your current plan');
+        } else {
+            setButtonText(plan.cta);
+        }
+
+        setIsLoaded(true);
+    }, [plan.name, plan.cta]);
 
     return (
         <div className="bg-dark-white rounded-xl p-6 flex flex-col items-start shadow-md border border-white/10 w-72">
@@ -28,8 +45,8 @@ export const PricingCard = ({ plan }: PricingCardProps) => {
             </div>
             <Button
                 variant="default"
-                className={`px-6 py-2 mt-4 mb-6 w-full ${isPremium ? 'bg-green-600' : 'bg-primary'}`}
-                disabled={isPremium}
+                className={`px-6 py-2 mt-4 mb-6 w-full ${isLoaded && isPremium && plan.name === 'Pro' ? 'bg-green-600' : 'bg-primary'}`}
+                disabled={isLoaded && isPremium && plan.name === 'Pro'}
             >
                 {buttonText}
             </Button>
