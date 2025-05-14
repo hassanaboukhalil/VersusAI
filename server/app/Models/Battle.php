@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\VoteableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Battle extends Model
 {
-    use HasFactory;
+    use HasFactory, VoteableTrait;
 
     protected $fillable = [
         'user_id',

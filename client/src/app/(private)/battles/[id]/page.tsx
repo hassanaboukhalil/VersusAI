@@ -16,6 +16,10 @@ import { Skeleton } from '../../../../components/ui/Skeleton';
 import { Loader2 } from 'lucide-react';
 import CodeResponse from '../../../../components/global/CodeResponse';
 import type { Battle, Response, Round } from '../../../../types/battle';
+import { voteForAiModel, unvoteFromBattle } from '../../../api/battle';
+import { getUser } from '../../../../lib/auth';
+import { toast } from 'sonner';
+import Echo from '../../../../lib/echo';
 
 const BattleDetailsPage = () => {
     const { id } = useParams();
@@ -24,6 +28,9 @@ const BattleDetailsPage = () => {
 
     const [ended, setEnded] = useState(false);
     const [loadingRound, setLoadingRound] = useState(false);
+    const [loadingVote, setLoadingVote] = useState(false);
+    const [hasVoted, setHasVoted] = useState(false);
+    const [votedModel, setVotedModel] = useState<string>('');
 
     useEffect(() => {
         const fetchBattle = async () => {
@@ -55,6 +62,22 @@ const BattleDetailsPage = () => {
                 );
 
                 setEnded(!data.is_active);
+
+                // Check if user has voted on this battle
+                const userId = getUser()?.id;
+                if (userId) {
+                    api.get(`/battles/${data.id}/user-vote?user_id=${userId}`)
+                        .then((res) => {
+                            setHasVoted(res.data.data.hasVoted || false);
+                            // Set the voted model name if the user has voted
+                            if (res.data.data.hasVoted) {
+                                setVotedModel(res.data.data.votedModel || '');
+                            }
+                        })
+                        .catch((err) => {
+                            console.error('Failed to check vote status:', err);
+                        });
+                }
             } catch (err) {
                 console.error('Failed to fetch battle:', err);
             }
@@ -62,6 +85,69 @@ const BattleDetailsPage = () => {
 
         if (id) fetchBattle();
     }, [id, dispatch]);
+
+    // Set up Echo subscription
+    useEffect(() => {
+        let channel: typeof Echo;
+
+        const setupEchoSubscription = async () => {
+            if (!Echo || !id || !battle) return;
+
+            try {
+                console.log('Setting up Echo subscription for battle ID:', id);
+
+                // Use a public channel
+                channel = Echo.channel(`battle.${id}`);
+
+                console.log('Subscribed to channel:', `battle.${id}`);
+
+                // Listen for the exact event name without any prefix
+                channel.listen(
+                    'vote.updated',
+                    (data: {
+                        votes?: Record<string, number>;
+                        data?: { votes?: Record<string, number> };
+                    }) => {
+                        console.log('Vote update received (raw):', data);
+
+                        // Extract vote data, handling different possible structures
+                        const voteData = data.votes || data.data?.votes || {};
+                        console.log('Vote data extracted:', voteData);
+
+                        if (Object.keys(voteData).length > 0) {
+                            const updatedBattle = {
+                                ...battle,
+                                ai_models: battle.ai_models.map((model) => ({
+                                    ...model,
+                                    votes: voteData[model.name] ?? model.votes,
+                                })),
+                            };
+
+                            console.log('Updating battle state with:', updatedBattle.ai_models);
+                            dispatch(setCurrentBattle(updatedBattle));
+                        } else {
+                            console.warn('No vote data found in the event:', data);
+                        }
+                    }
+                );
+            } catch (error) {
+                console.error('Echo subscription error:', error);
+            }
+        };
+
+        setupEchoSubscription();
+
+        return () => {
+            if (channel) {
+                try {
+                    console.log('Unsubscribing from channel');
+                    channel.unsubscribe();
+                } catch (error) {
+                    console.error('Failed to unsubscribe:', error);
+                }
+            }
+        };
+    }, [id, battle, dispatch]);
 
     const handleCreateRound = async () => {
         setLoadingRound(true);
@@ -169,6 +255,80 @@ const BattleDetailsPage = () => {
             setEnded(true);
         } catch (error) {
             console.error('Failed to end battle:', error);
+        }
+    };
+
+    const handleVote = async (aiModelName: string) => {
+        if (!battle || loadingVote) return;
+
+        setLoadingVote(true);
+        try {
+            console.log('Attempting to vote for:', {
+                aiModelName,
+                available_models: battle.ai_models,
+                battle_id: battle.id,
+            });
+
+            const result = await voteForAiModel(battle.id.toString(), aiModelName);
+            console.log('Vote response:', result);
+
+            if (result.success) {
+                // Update local state immediately with the returned vote counts
+                const updatedBattle = {
+                    ...battle,
+                    ai_models: battle.ai_models.map((model) => ({
+                        ...model,
+                        votes: result.data.votes[model.name] || 0,
+                    })),
+                };
+                console.log('Updating battle state with:', updatedBattle);
+                dispatch(setCurrentBattle(updatedBattle));
+                setHasVoted(true);
+                setVotedModel(aiModelName);
+                toast.success(result.message || 'Vote recorded successfully!');
+            } else {
+                console.error('Vote failed:', result);
+                toast.error(result.message || 'Failed to record vote');
+            }
+        } catch (error) {
+            console.error('Failed to vote:', error);
+            toast.error('Failed to record vote. Please try again.');
+        } finally {
+            setLoadingVote(false);
+        }
+    };
+
+    const handleUnvote = async () => {
+        if (!battle || loadingVote) return;
+
+        setLoadingVote(true);
+        try {
+            const result = await unvoteFromBattle(battle.id.toString());
+            console.log('Unvote response:', result);
+
+            if (result.success) {
+                // Update local state with the returned vote counts
+                const updatedBattle = {
+                    ...battle,
+                    ai_models: battle.ai_models.map((model) => ({
+                        ...model,
+                        votes: result.data.votes[model.name] || 0,
+                    })),
+                };
+                console.log('Updating battle state after unvote:', updatedBattle);
+                dispatch(setCurrentBattle(updatedBattle));
+                setHasVoted(false);
+                setVotedModel('');
+                toast.success(result.message || 'Vote removed successfully!');
+            } else {
+                console.error('Unvote failed:', result);
+                toast.error(result.message || 'Failed to remove vote');
+            }
+        } catch (error) {
+            console.error('Failed to unvote:', error);
+            toast.error('Failed to remove vote. Please try again.');
+        } finally {
+            setLoadingVote(false);
         }
     };
 
@@ -327,17 +487,40 @@ const BattleDetailsPage = () => {
                     <div className="mt-6">
                         <h3 className="text-xl font-semibold mb-2">Votes</h3>
                         <div className="flex items-center gap-4 text-right">
-                            {battle.ai_models.map((model) => (
-                                <Button key={model.name} className="bg-primary text-black">
-                                    <Star className="mr-1" />
-                                    Vote for {model.name}
+                            {hasVoted ? (
+                                <Button
+                                    className="bg-red-500 text-white hover:bg-red-600"
+                                    onClick={handleUnvote}
+                                    disabled={loadingVote}
+                                >
+                                    {loadingVote ? (
+                                        <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                                    ) : (
+                                        <>Removing Vote {votedModel && `for ${votedModel}`}</>
+                                    )}
                                 </Button>
-                            ))}
+                            ) : (
+                                battle?.ai_models.map((model) => (
+                                    <Button
+                                        key={model.name}
+                                        className="bg-primary text-black"
+                                        onClick={() => handleVote(model.name)}
+                                        disabled={loadingVote}
+                                    >
+                                        {loadingVote ? (
+                                            <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                                        ) : (
+                                            <Star className="mr-1" />
+                                        )}
+                                        Vote for {model.name}
+                                    </Button>
+                                ))
+                            )}
                         </div>
                         <p className="mt-4 text-gray-300">
-                            {battle.ai_models[0].name}: {battle.ai_models[0].votes}{' '}
+                            {battle?.ai_models[0].name}: {battle?.ai_models[0].votes || 0}
                             &nbsp;&nbsp;&nbsp;
-                            {battle.ai_models[1].name}: {battle.ai_models[1].votes}
+                            {battle?.ai_models[1].name}: {battle?.ai_models[1].votes || 0}
                         </p>
                     </div>
 
@@ -352,7 +535,6 @@ const BattleDetailsPage = () => {
                             <Send color="black" className="absolute right-[8px]" />
                         </div>
                     </div>
-
                     {/* Static Comment */}
                     <div className="mt-6 space-y-4">
                         <div>
