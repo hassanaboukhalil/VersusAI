@@ -1,17 +1,17 @@
 'use client';
 
-import { loadStripe } from '@stripe/stripe-js';
+// import { loadStripe } from '@stripe/stripe-js';
 import api from '../../../lib/axios';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { Button } from '../../ui/button';
 import { useState } from 'react';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+// const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
 const CheckoutButton = () => {
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
+    // const router = useRouter();
 
     const handleClick = async () => {
         setLoading(true);
@@ -27,8 +27,8 @@ const CheckoutButton = () => {
                 toast.error('something went wrong');
             }
         } catch (error) {
-            const message = 'Login failed';
-            console.error('login failed:', error);
+            const message = 'something went wrong';
+            console.error('something went wrong:', error);
             toast.error(message);
         } finally {
             setLoading(false);
