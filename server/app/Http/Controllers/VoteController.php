@@ -64,11 +64,13 @@ class VoteController extends Controller
             ]);
 
             $battle = Battle::findOrFail($battleId);
-            $hasVoted = $battle->hasUserVoted($request->user_id);
+            $result = $this->voteService->getUserVote($battle, $request->user_id);
 
-            return $this->successResponse([
-                'hasVoted' => $hasVoted,
-            ]);
+            if ($result['success']) {
+                return $this->successResponse($result['data'], $result['message']);
+            }
+
+            return $this->errorResponse($result['message'], 400);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }
