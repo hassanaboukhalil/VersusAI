@@ -64,8 +64,10 @@ class PaymentController extends Controller
             'customer_email' => Auth::user()->email,
             // 'success_url' => url('http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}'),
             // 'cancel_url' => url('http://localhost:3000/payment-cancel'),
-            'success_url' => url(env('APP_URL') . '/payment-success?session_id={CHECKOUT_SESSION_ID}'),
-            'cancel_url' => url(env('APP_URL') . '/payment-cancel'),
+            // 'success_url' => url(env('FRONTEND_URL') . '/payment-success?session_id={CHECKOUT_SESSION_ID}'),
+            // 'cancel_url' => url(env('FRONTEND_URL') . '/payment-cancel'),
+            'success_url' => env('FRONTEND_URL') . '/payment-success?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => env('FRONTEND_URL') . '/payment-cancel',
         ]);
 
         return response()->json([
