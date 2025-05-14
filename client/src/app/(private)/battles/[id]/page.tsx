@@ -496,9 +496,8 @@ const BattleDetailsPage = () => {
                                     {loadingVote ? (
                                         <Loader2 className="animate-spin mr-2 h-4 w-4" />
                                     ) : (
-                                        <Star className="mr-1" />
+                                        <>Removing Vote {votedModel && `for ${votedModel}`}</>
                                     )}
-                                    Remove Vote {votedModel && `for ${votedModel}`}
                                 </Button>
                             ) : (
                                 battle?.ai_models.map((model) => (
