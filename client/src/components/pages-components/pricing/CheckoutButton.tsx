@@ -19,12 +19,12 @@ const CheckoutButton = () => {
         try {
             const res = await api.post('/pay');
 
-            if (res.data.success) {
-                const data = res.data.data;
-                router.push('/explore');
-                toast.success('Login successful');
+            if (res.data.url) {
+                const data = res.data;
+                window.location.href = data.url;
+                // toast.('please wait');
             } else {
-                toast.error(res.data.message);
+                toast.error('something went wrong');
             }
         } catch (error) {
             const message = 'Login failed';
@@ -40,7 +40,7 @@ const CheckoutButton = () => {
             type="submit"
             className="w-full bg-primary text-black hover:opacity-90"
             isLoading={loading}
-            loadingText="Logging in..."
+            loadingText="Please wait..."
             onClick={handleClick}
         >
             Subscribe Now
