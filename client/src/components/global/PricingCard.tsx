@@ -1,5 +1,6 @@
 import { Check, X } from 'lucide-react';
 import { Button } from '../ui/button';
+import { getUser } from '../../lib/auth';
 
 export interface PricingPlan {
     name: string;
@@ -14,6 +15,10 @@ interface PricingCardProps {
 }
 
 export const PricingCard = ({ plan }: PricingCardProps) => {
+    const user = getUser();
+    const isPremium = user?.is_premium || false;
+    const buttonText = isPremium ? 'Your current plan' : plan.cta;
+
     return (
         <div className="bg-dark-white rounded-xl p-6 flex flex-col items-start shadow-md border border-white/10 w-72">
             <h3 className="text-3xl text-primary font-semibold">{plan.name}</h3>
@@ -21,8 +26,12 @@ export const PricingCard = ({ plan }: PricingCardProps) => {
                 ${plan.price}
                 <span className="text-lg font-medium text-gray-400">/Month</span>
             </div>
-            <Button variant="default" className="bg-primary px-6 py-2 mt-4 mb-6 w-full">
-                {plan.cta}
+            <Button
+                variant="default"
+                className={`px-6 py-2 mt-4 mb-6 w-full ${isPremium ? 'bg-green-600' : 'bg-primary'}`}
+                disabled={isPremium}
+            >
+                {buttonText}
             </Button>
             <ul className="space-y-3 w-full my-6">
                 {plan.features.map((feature) => (
