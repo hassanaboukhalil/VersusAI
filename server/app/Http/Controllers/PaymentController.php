@@ -37,11 +37,11 @@ class PaymentController extends Controller
     {
         $response = $this->createCheckoutSession($request);
 
-        if ($response->status() == 200) {
+        if ($response->status() !== 200) {
             return response()->json(['error' => 'Failed to create checkout session'], $response->status());
         }
 
-        return response()->json($response);
+        return $response;
     }
 
     public function createCheckoutSession(Request $request)
