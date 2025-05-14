@@ -56,10 +56,12 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                         <CreateBattleDialog onSuccess={() => setIsDialogOpen(false)} />
                     </Dialog>
                 ) : (
-                    <Button variant="default">
-                        <Lock className="w-4 h-4 mr-2" />
-                        Create Battle
-                    </Button>
+                    <Link href="/pricing">
+                        <Button variant="default">
+                            <Lock className="w-4 h-4 mr-2" />
+                            Create Battle
+                        </Button>
+                    </Link>
                 )
             ) : (
                 <Button variant="default">
