@@ -13,11 +13,11 @@ export interface PricingPlan {
     excludedFeatures: string[];
 }
 
-interface PricingCardProps {
+interface PricingCardPremiumps {
     plan: PricingPlan;
 }
 
-export const PricingCard = ({ plan }: PricingCardProps) => {
+export const PricingCard = ({ plan }: PricingCardPremiumps) => {
     const [isPremium, setIsPremium] = useState(false);
     const [buttonText, setButtonText] = useState(plan.cta);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -27,7 +27,7 @@ export const PricingCard = ({ plan }: PricingCardProps) => {
         const userIsPremium = user?.is_premium || false;
         setIsPremium(userIsPremium);
 
-        if (userIsPremium && plan.name === 'Pro') {
+        if (userIsPremium && plan.name === 'Premium') {
             setButtonText('Your current plan');
         } else {
             setButtonText(plan.cta);
@@ -45,8 +45,8 @@ export const PricingCard = ({ plan }: PricingCardProps) => {
             </div>
             <Button
                 variant="default"
-                className={`px-6 py-2 mt-4 mb-6 w-full ${isLoaded && isPremium && plan.name === 'Pro' ? 'bg-green-600' : 'bg-primary'}`}
-                disabled={isLoaded && isPremium && plan.name === 'Pro'}
+                className={`px-6 py-2 mt-4 mb-6 w-full ${isLoaded && isPremium && plan.name === 'Premium' ? 'bg-green-600' : 'bg-primary'}`}
+                disabled={isLoaded && isPremium && plan.name === 'Premium'}
             >
                 {buttonText}
             </Button>
