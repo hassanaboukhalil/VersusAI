@@ -87,69 +87,6 @@ const BattleDetailsPage = () => {
         if (id) fetchBattle();
     }, [id, dispatch]);
 
-    // Set up Echo subscription
-    // useEffect(() => {
-    //     let channel: typeof Echo;
-
-    //     const setupEchoSubscription = async () => {
-    //         if (!Echo || !id || !battle) return;
-
-    //         try {
-    //             console.log('Setting up Echo subscription for battle ID:', id);
-
-    //             // Use a public channel
-    //             channel = Echo.channel(`battle.${id}`);
-
-    //             console.log('Subscribed to channel:', `battle.${id}`);
-
-    //             // Listen for the exact event name without any prefix
-    //             channel.listen(
-    //                 'vote.updated',
-    //                 (data: {
-    //                     votes?: Record<string, number>;
-    //                     data?: { votes?: Record<string, number> };
-    //                 }) => {
-    //                     console.log('Vote update received (raw):', data);
-
-    //                     // Extract vote data, handling different possible structures
-    //                     const voteData = data.votes || data.data?.votes || {};
-    //                     console.log('Vote data extracted:', voteData);
-
-    //                     if (Object.keys(voteData).length > 0) {
-    //                         const updatedBattle = {
-    //                             ...battle,
-    //                             ai_models: battle.ai_models.map((model) => ({
-    //                                 ...model,
-    //                                 votes: voteData[model.name] ?? model.votes,
-    //                             })),
-    //                         };
-
-    //                         console.log('Updating battle state with:', updatedBattle.ai_models);
-    //                         dispatch(setCurrentBattle(updatedBattle));
-    //                     } else {
-    //                         console.warn('No vote data found in the event:', data);
-    //                     }
-    //                 }
-    //             );
-    //         } catch (error) {
-    //             console.error('Echo subscription error:', error);
-    //         }
-    //     };
-
-    //     setupEchoSubscription();
-
-    //     return () => {
-    //         if (channel) {
-    //             try {
-    //                 console.log('Unsubscribing from channel');
-    //                 channel.unsubscribe();
-    //             } catch (error) {
-    //                 console.error('Failed to unsubscribe:', error);
-    //             }
-    //         }
-    //     };
-    // }, [id, battle, dispatch]);
-
     useEffect(() => {
         if (!battle?.id) return;
 
@@ -312,6 +249,7 @@ const BattleDetailsPage = () => {
                 console.log('Updating battle state with:', updatedBattle);
                 dispatch(setCurrentBattle(updatedBattle));
 
+                // emiting an event to the socket server after user votes
                 socket.emit('vote', {
                     battleId: battle.id,
                     modelName: aiModelName,
