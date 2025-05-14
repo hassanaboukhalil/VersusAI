@@ -30,6 +30,7 @@ const BattleDetailsPage = () => {
     const [loadingRound, setLoadingRound] = useState(false);
     const [loadingVote, setLoadingVote] = useState(false);
     const [hasVoted, setHasVoted] = useState(false);
+    const [votedModel, setVotedModel] = useState<string>('');
 
     useEffect(() => {
         const fetchBattle = async () => {
@@ -67,7 +68,11 @@ const BattleDetailsPage = () => {
                 if (userId) {
                     api.get(`/battles/${data.id}/user-vote?user_id=${userId}`)
                         .then((res) => {
-                            setHasVoted(res.data.hasVoted || false);
+                            setHasVoted(res.data.data.hasVoted || false);
+                            // Set the voted model name if the user has voted
+                            if (res.data.data.hasVoted) {
+                                setVotedModel(res.data.data.votedModel || '');
+                            }
                         })
                         .catch((err) => {
                             console.error('Failed to check vote status:', err);
@@ -279,6 +284,7 @@ const BattleDetailsPage = () => {
                 console.log('Updating battle state with:', updatedBattle);
                 dispatch(setCurrentBattle(updatedBattle));
                 setHasVoted(true);
+                setVotedModel(aiModelName);
                 toast.success(result.message || 'Vote recorded successfully!');
             } else {
                 console.error('Vote failed:', result);
@@ -312,6 +318,7 @@ const BattleDetailsPage = () => {
                 console.log('Updating battle state after unvote:', updatedBattle);
                 dispatch(setCurrentBattle(updatedBattle));
                 setHasVoted(false);
+                setVotedModel('');
                 toast.success(result.message || 'Vote removed successfully!');
             } else {
                 console.error('Unvote failed:', result);
@@ -491,7 +498,7 @@ const BattleDetailsPage = () => {
                                     ) : (
                                         <Star className="mr-1" />
                                     )}
-                                    Remove Vote
+                                    Remove Vote {votedModel && `for ${votedModel}`}
                                 </Button>
                             ) : (
                                 battle?.ai_models.map((model) => (
