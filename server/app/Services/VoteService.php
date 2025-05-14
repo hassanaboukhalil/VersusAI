@@ -18,7 +18,8 @@ class VoteService
         if ($battle->hasUserVoted($userId)) {
             return [
                 'success' => false,
-                'message' => 'User has already voted in this battle'
+                'message' => 'User has already voted in this battle',
+                'data' => null
             ];
         }
 
@@ -28,7 +29,8 @@ class VoteService
         if (!$aiModelObj) {
             return [
                 'success' => false,
-                'message' => 'Invalid AI model name'
+                'message' => 'Invalid AI model name',
+                'data' => null
             ];
         }
 
@@ -39,7 +41,8 @@ class VoteService
         if (!$success) {
             return [
                 'success' => false,
-                'message' => 'Failed to record vote'
+                'message' => 'Failed to record vote',
+                'data' => null
             ];
         }
 
@@ -62,7 +65,56 @@ class VoteService
         return [
             'success' => true,
             'message' => 'Vote recorded successfully',
-            'votes' => $voteStats
+            'data' => [
+                'votes' => $voteStats
+            ]
+        ];
+    }
+
+    public function unvote(Battle $battle): array
+    {
+        $userId = Auth::id();
+
+        if (!$battle->hasUserVoted($userId)) {
+            return [
+                'success' => false,
+                'message' => 'User has not voted in this battle',
+                'data' => null
+            ];
+        }
+
+        $success = $battle->removeVote($userId);
+
+        if (!$success) {
+            return [
+                'success' => false,
+                'message' => 'Failed to remove vote',
+                'data' => null
+            ];
+        }
+
+        // Get updated vote counts for both AI models
+        $voteStats = [];
+        $model1 = $battle->ai_model_1;
+        $model2 = $battle->ai_model_2;
+        $voteStats[$model1->model_name] = $battle->getVotesByModel($model1->id);
+        $voteStats[$model2->model_name] = $battle->getVotesByModel($model2->id);
+
+        // Log vote stats for debugging
+        Log::info('Broadcasting vote update after unvote', [
+            'battle_id' => $battle->id,
+            'vote_stats' => $voteStats
+        ]);
+
+        // Broadcast the vote update
+        broadcast(new VoteUpdated($battle->id, $voteStats));
+
+        return [
+            'success' => true,
+            'message' => 'Vote removed successfully',
+            'data' => [
+                'votes' => $voteStats
+            ]
         ];
     }
 }
