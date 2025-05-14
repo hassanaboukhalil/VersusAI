@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import api from '../../../lib/axios';
 import Logo from '../../../components/layout/Logo';
 import Section from '../../../components/layout/Section';
+import { setPremium } from '../../../lib/auth';
 
 const PaymentSuccessPage = () => {
     const searchParams = useSearchParams();
@@ -28,6 +29,7 @@ const PaymentSuccessPage = () => {
 
                 if (res.data.message) {
                     setStatus('✅ Payment successful and recorded.');
+                    setPremium(true);
                     router.push('/explore');
                 } else {
                     setStatus('⚠️ Could not verify payment.');
