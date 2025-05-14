@@ -117,4 +117,27 @@ class VoteService
             ]
         ];
     }
+
+    public function getUserVote(Battle $battle, int $userId): array
+    {
+        $hasVoted = $battle->hasUserVoted($userId);
+
+        $votedModel = null;
+        if ($hasVoted) {
+            $vote = $battle->getUserVote($userId);
+            if ($vote) {
+                $aiModel = \App\Models\AiModel::find($vote->ai_model_id);
+                $votedModel = $aiModel ? $aiModel->model_name : null;
+            }
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Vote status retrieved successfully',
+            'data' => [
+                'hasVoted' => $hasVoted,
+                'votedModel' => $votedModel
+            ]
+        ];
+    }
 }
