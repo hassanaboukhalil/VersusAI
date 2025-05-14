@@ -19,7 +19,7 @@ import type { Battle, Response, Round } from '../../../../types/battle';
 import { voteForAiModel, unvoteFromBattle } from '../../../api/battle';
 import { getUser } from '../../../../lib/auth';
 import { toast } from 'sonner';
-import Echo from '../../../../lib/echo';
+// import Echo from '../../../../lib/echo';
 
 const BattleDetailsPage = () => {
     const { id } = useParams();
@@ -87,67 +87,67 @@ const BattleDetailsPage = () => {
     }, [id, dispatch]);
 
     // Set up Echo subscription
-    useEffect(() => {
-        let channel: typeof Echo;
+    // useEffect(() => {
+    //     let channel: typeof Echo;
 
-        const setupEchoSubscription = async () => {
-            if (!Echo || !id || !battle) return;
+    //     const setupEchoSubscription = async () => {
+    //         if (!Echo || !id || !battle) return;
 
-            try {
-                console.log('Setting up Echo subscription for battle ID:', id);
+    //         try {
+    //             console.log('Setting up Echo subscription for battle ID:', id);
 
-                // Use a public channel
-                channel = Echo.channel(`battle.${id}`);
+    //             // Use a public channel
+    //             channel = Echo.channel(`battle.${id}`);
 
-                console.log('Subscribed to channel:', `battle.${id}`);
+    //             console.log('Subscribed to channel:', `battle.${id}`);
 
-                // Listen for the exact event name without any prefix
-                channel.listen(
-                    'vote.updated',
-                    (data: {
-                        votes?: Record<string, number>;
-                        data?: { votes?: Record<string, number> };
-                    }) => {
-                        console.log('Vote update received (raw):', data);
+    //             // Listen for the exact event name without any prefix
+    //             channel.listen(
+    //                 'vote.updated',
+    //                 (data: {
+    //                     votes?: Record<string, number>;
+    //                     data?: { votes?: Record<string, number> };
+    //                 }) => {
+    //                     console.log('Vote update received (raw):', data);
 
-                        // Extract vote data, handling different possible structures
-                        const voteData = data.votes || data.data?.votes || {};
-                        console.log('Vote data extracted:', voteData);
+    //                     // Extract vote data, handling different possible structures
+    //                     const voteData = data.votes || data.data?.votes || {};
+    //                     console.log('Vote data extracted:', voteData);
 
-                        if (Object.keys(voteData).length > 0) {
-                            const updatedBattle = {
-                                ...battle,
-                                ai_models: battle.ai_models.map((model) => ({
-                                    ...model,
-                                    votes: voteData[model.name] ?? model.votes,
-                                })),
-                            };
+    //                     if (Object.keys(voteData).length > 0) {
+    //                         const updatedBattle = {
+    //                             ...battle,
+    //                             ai_models: battle.ai_models.map((model) => ({
+    //                                 ...model,
+    //                                 votes: voteData[model.name] ?? model.votes,
+    //                             })),
+    //                         };
 
-                            console.log('Updating battle state with:', updatedBattle.ai_models);
-                            dispatch(setCurrentBattle(updatedBattle));
-                        } else {
-                            console.warn('No vote data found in the event:', data);
-                        }
-                    }
-                );
-            } catch (error) {
-                console.error('Echo subscription error:', error);
-            }
-        };
+    //                         console.log('Updating battle state with:', updatedBattle.ai_models);
+    //                         dispatch(setCurrentBattle(updatedBattle));
+    //                     } else {
+    //                         console.warn('No vote data found in the event:', data);
+    //                     }
+    //                 }
+    //             );
+    //         } catch (error) {
+    //             console.error('Echo subscription error:', error);
+    //         }
+    //     };
 
-        setupEchoSubscription();
+    //     setupEchoSubscription();
 
-        return () => {
-            if (channel) {
-                try {
-                    console.log('Unsubscribing from channel');
-                    channel.unsubscribe();
-                } catch (error) {
-                    console.error('Failed to unsubscribe:', error);
-                }
-            }
-        };
-    }, [id, battle, dispatch]);
+    //     return () => {
+    //         if (channel) {
+    //             try {
+    //                 console.log('Unsubscribing from channel');
+    //                 channel.unsubscribe();
+    //             } catch (error) {
+    //                 console.error('Failed to unsubscribe:', error);
+    //             }
+    //         }
+    //     };
+    // }, [id, battle, dispatch]);
 
     const handleCreateRound = async () => {
         setLoadingRound(true);
@@ -486,7 +486,7 @@ const BattleDetailsPage = () => {
                     {/* Votes */}
                     <div className="mt-6">
                         <h3 className="text-xl font-semibold mb-2">Votes</h3>
-                        <div className="flex items-center gap-4 text-right">
+                        <div className="flex items-center gap-4 text-right w-full">
                             {hasVoted ? (
                                 <Button
                                     className="bg-red-500 text-white hover:bg-red-600"
@@ -501,17 +501,27 @@ const BattleDetailsPage = () => {
                                 </Button>
                             ) : (
                                 battle?.ai_models.map((model) => (
+                                    // <Button
+                                    //     key={model.name}
+                                    //     className="bg-primary text-black"
+                                    //     onClick={() => handleVote(model.name)}
+                                    //     disabled={loadingVote}
+                                    // >
+                                    //     {loadingVote ? (
+                                    //         <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                                    //     ) : (
+                                    //         <Star className="mr-1" />
+                                    //     )}
+                                    //     Vote for {model.name}
+                                    // </Button>
                                     <Button
                                         key={model.name}
-                                        className="bg-primary text-black"
+                                        type="submit"
+                                        className="bg-primary text-black hover:opacity-90"
+                                        isLoading={loadingVote}
+                                        loadingText="Please wait..."
                                         onClick={() => handleVote(model.name)}
-                                        disabled={loadingVote}
                                     >
-                                        {loadingVote ? (
-                                            <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                                        ) : (
-                                            <Star className="mr-1" />
-                                        )}
                                         Vote for {model.name}
                                     </Button>
                                 ))
