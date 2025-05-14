@@ -18,3 +18,20 @@ export const voteForAiModel = async (battleId: string, aiModelName: string) => {
         throw error;
     }
 };
+
+export const unvoteFromBattle = async (battleId: string) => {
+    try {
+        const user = getUser();
+        if (!user) {
+            throw new Error('User not authenticated');
+        }
+
+        const response = await api.post(`/battles/unvote`, {
+            battle_id: battleId,
+            user_id: user.id,
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
