@@ -17,14 +17,60 @@ class VoteController extends Controller
 
     public function vote(Request $request)
     {
-        $request->validate([
-            'battle_id' => 'required|exists:battles,id',
-            'ai_model' => 'required|string',
-        ]);
+        try {
+            $request->validate([
+                'battle_id' => 'required|exists:battles,id',
+                'ai_model' => 'required|string',
+            ]);
 
-        $battle = Battle::findOrFail($request->battle_id);
-        $result = $this->voteService->vote($battle, $request->ai_model);
+            $battle = Battle::findOrFail($request->battle_id);
+            $result = $this->voteService->vote($battle, $request->ai_model);
 
-        return response()->json($result);
+            if ($result['success']) {
+                return $this->successResponse($result['data'], $result['message']);
+            }
+
+            return $this->errorResponse($result['message'], 400);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
+    public function unvote(Request $request)
+    {
+        try {
+            $request->validate([
+                'battle_id' => 'required|exists:battles,id',
+            ]);
+
+            $battle = Battle::findOrFail($request->battle_id);
+            $result = $this->voteService->unvote($battle);
+
+            if ($result['success']) {
+                return $this->successResponse($result['data'], $result['message']);
+            }
+
+            return $this->errorResponse($result['message'], 400);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
+    public function getUserVote(Request $request, $battleId)
+    {
+        try {
+            $request->validate([
+                'user_id' => 'required|exists:users,id',
+            ]);
+
+            $battle = Battle::findOrFail($battleId);
+            $hasVoted = $battle->hasUserVoted($request->user_id);
+
+            return $this->successResponse([
+                'hasVoted' => $hasVoted,
+            ]);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
     }
 }
