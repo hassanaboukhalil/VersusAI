@@ -5,7 +5,7 @@ import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
 import Image from 'next/image';
 import Section from '../../../../components/layout/Section';
-import { Send, Star } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
 import { getModelImage } from '../../../../utils/getModelImage';
