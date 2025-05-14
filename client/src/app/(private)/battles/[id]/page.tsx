@@ -74,27 +74,46 @@ const BattleDetailsPage = () => {
         const setupEchoSubscription = async () => {
             if (!Echo || !id || !battle) return;
 
-            channel = Echo.private(`battle.${id}`);
-            channel.listen('vote.updated', (e: { votes: Record<string, number> }) => {
-                console.log('Received real-time vote update:', e);
-                if (e.votes && battle) {
-                    const updatedBattle = {
-                        ...battle,
-                        ai_models: battle.ai_models.map((model) => ({
-                            ...model,
-                            votes: e.votes[model.name] ?? model.votes,
-                        })),
-                    };
-                    dispatch(setCurrentBattle(updatedBattle));
-                }
-            });
+            try {
+                console.log('Setting up Echo subscription for battle ID:', id);
+
+                // Use a public channel
+                channel = Echo.channel(`battle.${id}`);
+
+                console.log('Subscribed to channel:', `battle.${id}`);
+
+                // Remove the dot prefix from event name since we're using broadcastAs()
+                channel.listen('vote.updated', (data: any) => {
+                    console.log('Vote update received:', data);
+
+                    if (data && data.votes) {
+                        const updatedBattle = {
+                            ...battle,
+                            ai_models: battle.ai_models.map((model) => ({
+                                ...model,
+                                votes: data.votes[model.name] ?? model.votes,
+                            })),
+                        };
+
+                        console.log('Updating battle state with:', updatedBattle.ai_models);
+                        dispatch(setCurrentBattle(updatedBattle));
+                    }
+                });
+            } catch (error) {
+                console.error('Echo subscription error:', error);
+            }
         };
 
         setupEchoSubscription();
 
         return () => {
             if (channel) {
-                channel.unsubscribe();
+                try {
+                    console.log('Unsubscribing from channel');
+                    channel.unsubscribe();
+                } catch (error) {
+                    console.error('Failed to unsubscribe:', error);
+                }
             }
         };
     }, [id, battle, dispatch]);
