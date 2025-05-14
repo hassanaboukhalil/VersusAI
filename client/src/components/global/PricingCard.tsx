@@ -4,6 +4,7 @@ import { Check, X } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useEffect, useState } from 'react';
 import { getUser } from '../../lib/auth';
+import CheckoutButton from '../pages-components/pricing/CheckoutButton';
 
 export interface PricingPlan {
     name: string;
@@ -43,13 +44,14 @@ export const PricingCard = ({ plan }: PricingCardPremiumps) => {
                 ${plan.price}
                 <span className="text-lg font-medium text-gray-400">/Month</span>
             </div>
-            <Button
+            {/* <Button
                 variant="default"
                 className={`px-6 py-2 mt-4 mb-6 w-full ${isLoaded && isPremium && plan.name === 'Premium' ? 'bg-green-600' : 'bg-primary'}`}
                 disabled={isLoaded && isPremium && plan.name === 'Premium'}
             >
                 {buttonText}
-            </Button>
+            </Button> */}
+            <CheckoutButton />
             <ul className="space-y-3 w-full my-6">
                 {plan.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-6 text-sm">
