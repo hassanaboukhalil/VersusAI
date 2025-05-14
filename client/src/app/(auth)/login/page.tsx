@@ -14,6 +14,7 @@ const LoginPage = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirectPath = searchParams.get('redirect') || '/explore';
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         email: '',
@@ -30,6 +31,8 @@ const LoginPage = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        setLoading(true);
+
         try {
             const res = await api.post('/login', formData);
 
@@ -45,6 +48,8 @@ const LoginPage = () => {
             const message = 'Login failed';
             console.error('login failed:', error);
             toast.error(message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -76,7 +81,15 @@ const LoginPage = () => {
                         onChange={handleChange}
                         required
                     />
-                    <Button type="submit" className="w-full bg-primary text-black hover:opacity-90">
+                    {/* <Button type="submit" className="w-full bg-primary text-black hover:opacity-90">
+                        Login
+                    </Button> */}
+                    <Button
+                        type="submit"
+                        className="w-full bg-primary text-black hover:opacity-90"
+                        isLoading={loading}
+                        loadingText="Logging in..."
+                    >
                         Login
                     </Button>
                 </form>
