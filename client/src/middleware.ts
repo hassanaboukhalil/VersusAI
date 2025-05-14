@@ -20,7 +20,10 @@ export function middleware(request: NextRequest) {
 
     // If it's a private path and the user is not logged in, redirect to login
     if (isPrivatePath && !isLoggedIn) {
-        return NextResponse.redirect(new URL('/login', request.url));
+        // Store the original URL to redirect back after login
+        const url = new URL('/login', request.url);
+        url.searchParams.set('redirect', request.nextUrl.pathname);
+        return NextResponse.redirect(url);
     }
 
     // Otherwise, continue with the request
