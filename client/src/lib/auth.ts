@@ -28,6 +28,17 @@ export function isLoggedIn(): boolean {
     return !!getUser();
 }
 
+export function setPremium(isPremium: boolean) {
+    if (typeof window === 'undefined') return;
+
+    const user = getUser();
+    if (!user) return;
+
+    user.is_premium = isPremium;
+    setUser(user);
+    return isPremium;
+}
+
 export function removeUser() {
     if (typeof window === 'undefined') return; // Server-side guard
 
