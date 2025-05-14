@@ -311,6 +311,13 @@ const BattleDetailsPage = () => {
                 };
                 console.log('Updating battle state with:', updatedBattle);
                 dispatch(setCurrentBattle(updatedBattle));
+
+                socket.emit('vote', {
+                    battleId: battle.id,
+                    modelName: aiModelName,
+                    totalVotes: result.data.votes[aiModelName] || 0,
+                });
+
                 setHasVoted(true);
                 setVotedModel(aiModelName);
                 toast.success(result.message || 'Vote recorded successfully!');
