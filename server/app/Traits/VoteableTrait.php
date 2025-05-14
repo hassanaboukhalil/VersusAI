@@ -45,4 +45,22 @@ trait VoteableTrait
     {
         return $this->votes()->where('ai_model_id', $aiModelId)->count();
     }
+
+    // Remove a user's vote
+    public function removeVote(int $userId): bool
+    {
+        $vote = $this->votes()->where('user_id', $userId)->first();
+
+        if (!$vote) {
+            return false;
+        }
+
+        return $vote->delete();
+    }
+
+    // Get a user's vote
+    public function getUserVote(int $userId): ?Vote
+    {
+        return $this->votes()->where('user_id', $userId)->first();
+    }
 }
