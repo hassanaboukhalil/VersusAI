@@ -19,6 +19,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/battles', [BattleController::class, 'getAllBattles']);
         Route::get('/get-battle/{id}', [BattleController::class, 'get']);
         Route::post('/battles/vote', [VoteController::class, 'vote']);
+        Route::post('/battles/unvote', [VoteController::class, 'unvote']);
+        Route::get('/battles/{battleId}/user-vote', [VoteController::class, 'getUserVote']);
 
         Route::group(['prefix' => "premium"], function () {
             Route::post('/create-battle', [BattleController::class, 'create']);
