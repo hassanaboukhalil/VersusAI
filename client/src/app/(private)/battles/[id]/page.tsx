@@ -19,6 +19,7 @@ import type { Battle, Response, Round } from '../../../../types/battle';
 import { voteForAiModel, unvoteFromBattle } from '../../../api/battle';
 import { getUser } from '../../../../lib/auth';
 import { toast } from 'sonner';
+import socket from '../../../../lib/socket';
 // import Echo from '../../../../lib/echo';
 
 const BattleDetailsPage = () => {
@@ -148,6 +149,26 @@ const BattleDetailsPage = () => {
     //         }
     //     };
     // }, [id, battle, dispatch]);
+
+    useEffect(() => {
+        if (!battle?.id) return;
+
+        const channelName = `vote_update_${battle.id}`;
+
+        socket.on(channelName, (data: { modelId: string; votes: number }) => {
+            const updatedBattle = {
+                ...battle,
+                ai_models: battle.ai_models.map((model) =>
+                    model.name === data.modelId ? { ...model, votes: data.votes } : model
+                ),
+            };
+            dispatch(setCurrentBattle(updatedBattle));
+        });
+
+        return () => {
+            socket.off(channelName);
+        };
+    }, [battle?.id, battle, dispatch]);
 
     const handleCreateRound = async () => {
         setLoadingRound(true);
