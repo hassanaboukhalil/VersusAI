@@ -155,13 +155,20 @@ const BattleDetailsPage = () => {
 
         const channelName = `vote_update_${battle.id}`;
 
-        socket.on(channelName, (data: { modelId: string; votes: number }) => {
+        socket.on(channelName, (data: { modelName: string; totalVotes: number }) => {
+            if (!data?.modelName || typeof data.totalVotes !== 'number') {
+                console.warn('Invalid vote data received:', data);
+                return;
+            }
+
             const updatedBattle = {
                 ...battle,
                 ai_models: battle.ai_models.map((model) =>
-                    model.name === data.modelId ? { ...model, votes: data.votes } : model
+                    model.name === data.modelName ? { ...model, votes: data.totalVotes } : model
                 ),
             };
+
+            console.log('Updating battle state with:', updatedBattle.ai_models);
             dispatch(setCurrentBattle(updatedBattle));
         });
 
