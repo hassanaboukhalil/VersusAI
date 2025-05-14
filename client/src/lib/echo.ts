@@ -17,18 +17,28 @@ if (typeof window !== 'undefined') {
 
             window.Pusher = Pusher;
 
+            // Configure Echo to use local Pusher server
             Echo = new LaravelEcho({
                 broadcaster: 'pusher',
                 key: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
-                cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER || 'eu',
-                forceTLS: true,
-                wsHost: window.location.hostname,
-                wsPort: 6001,
+                wsHost: process.env.NEXT_PUBLIC_PUSHER_HOST || '127.0.0.1',
+                wsPort: process.env.NEXT_PUBLIC_PUSHER_PORT
+                    ? parseInt(process.env.NEXT_PUBLIC_PUSHER_PORT, 10)
+                    : 6001,
+                wssPort: process.env.NEXT_PUBLIC_PUSHER_PORT
+                    ? parseInt(process.env.NEXT_PUBLIC_PUSHER_PORT, 10)
+                    : 6001,
+                forceTLS: false,
+                encrypted: false,
                 disableStats: true,
-                enabledTransports: ['ws', 'wss'],
+                enabledTransports: ['ws'],
             });
 
-            console.log('Echo initialized with key:', process.env.NEXT_PUBLIC_PUSHER_APP_KEY);
+            console.log(
+                'Echo initialized with local server at:',
+                process.env.NEXT_PUBLIC_PUSHER_HOST || '127.0.0.1',
+                process.env.NEXT_PUBLIC_PUSHER_PORT || 6001
+            );
         } catch (error) {
             console.error('Failed to initialize Echo:', error);
         }
