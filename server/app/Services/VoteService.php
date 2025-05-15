@@ -19,6 +19,11 @@ class VoteService
         $this->notificationService = new NotificationService();
     }
 
+    public function __construct()
+    {
+        $this->notificationService = new NotificationService();
+    }
+
     public function vote(Battle $battle, string $aiModel): array
     {
         $userId = Auth::id();
@@ -31,7 +36,6 @@ class VoteService
             ];
         }
 
-        // Get the AI model ID based on the model_name
         $aiModelObj = AiModel::where('model_name', $aiModel)->first();
 
         if (!$aiModelObj) {
@@ -54,14 +58,23 @@ class VoteService
             ];
         }
 
-        // Get updated vote counts for both AI models
-        $voteStats = [];
-        $model1 = $battle->ai_model_1;
-        $model2 = $battle->ai_model_2;
-        $voteStats[$model1->model_name] = $battle->getVotesByModel($model1->id);
-        $voteStats[$model2->model_name] = $battle->getVotesByModel($model2->id);
+        // Get updated vote counts
+        $voteStats = [
+            $battle->ai_model_1->model_name => $battle->getVotesByModel($battle->ai_model_1_id),
+            $battle->ai_model_2->model_name => $battle->getVotesByModel($battle->ai_model_2_id),
+        ];
 
-        // Broadcast the vote update
+        // Send notification to the battle owner if the voter is not the owner
+        if ($battle->user_id !== $userId) {
+            $this->notificationService->create(
+                userId: $battle->user_id,
+                notifierId: $userId,
+                type: 'vote',
+                message: 'Someone voted on your battle.',
+                targetId: $battle->id
+            );
+        }
+
         // broadcast(new VoteUpdated($battle->id, $voteStats));
 
         return [
