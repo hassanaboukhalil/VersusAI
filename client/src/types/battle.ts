@@ -13,6 +13,7 @@ export interface Round {
 // User information
 export interface User {
     first_name: string;
+    last_name: string;
     username: string;
     profile_picture_url: string | null;
 }
