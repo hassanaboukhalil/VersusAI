@@ -507,6 +507,13 @@ const BattleDetailsPage = () => {
                         </p>
                     </div>
 
+                    <div className="mt-8">
+                        <p className="text-gray-300">
+                            Created by {battle?.user.first_name}{' '}
+                            {battle?.user.last_name ? battle?.user.last_name : ''}
+                        </p>
+                    </div>
+
                     {/* Comment Box */}
                     <div className="mt-8">
                         <h3 className="text-xl font-semibold mb-2">Write a comment</h3>
