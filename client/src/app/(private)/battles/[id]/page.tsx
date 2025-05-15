@@ -355,28 +355,29 @@ const BattleDetailsPage = () => {
                 )}
 
             {/* Battle Rounds */}
-            <div className="border border-lime-300 p-4 space-y-8 rounded-md bg-dark-white">
+            <div className="border border-lime-300 p-6 space-y-10 rounded-xl bg-white/5 shadow-md">
                 {battle.rounds.map((round, i) => (
-                    <div key={`round-${round.id}-${i}`} className="my-8">
+                    <div key={`round-${round.id}-${i}`} className="space-y-6">
                         {battle.type !== 'Debate Challenge' && (
-                            <h3 className="text-lg font-semibold">Round {i + 1}</h3>
+                            <h3 className="text-xl font-bold text-lime-300">⚔️ Round {i + 1}</h3>
                         )}
 
                         <div
-                            className={`flex flex-col gap-4 ${battle.type === 'Debate Challenge' ? 'mt-0' : 'mt-6'}`}
+                            className={`flex flex-col gap-6 ${battle.type === 'Debate Challenge' ? 'mt-0' : 'mt-4'}`}
                         >
                             {/* First AI */}
                             {round.responses[0] && (
-                                <div className="flex w-full items-start gap-2">
-                                    <div className="relative flex items-center">
-                                        <span className="absolute left-[-65px] w-max rotate-[-90deg] text-primary text-[10px]">
+                                <div className="flex w-full items-start gap-4">
+                                    <div className="flex flex-col items-center gap-1">
+                                        <div className="text-xs text-center text-lime-200 bg-lime-800/20 px-2 py-1 rounded-full">
                                             {round.responses[0].ai_model_name}
-                                        </span>
+                                        </div>
                                         <Image
                                             src={getModelImage(round.responses[0].ai_model_name)}
                                             alt={round.responses[0].ai_model_name}
-                                            width={50}
-                                            height={50}
+                                            width={48}
+                                            height={48}
+                                            className="rounded-full border border-lime-300 shadow"
                                         />
                                     </div>
                                     {battle.type === 'Code Generation' ? (
@@ -389,7 +390,7 @@ const BattleDetailsPage = () => {
                                             />
                                         </div>
                                     ) : (
-                                        <div className="bg-white text-black p-3 rounded text-sm max-w-[85%]">
+                                        <div className="bg-white text-black p-4 rounded-lg text-sm max-w-[85%] shadow">
                                             {round.responses[0].response_text}
                                         </div>
                                     )}
@@ -398,18 +399,7 @@ const BattleDetailsPage = () => {
 
                             {/* Second AI */}
                             {round.responses[1] && (
-                                <div className="flex w-full items-start justify-start flex-row-reverse gap-2">
-                                    <div className="relative flex items-center">
-                                        <span className="absolute right-[-70px] rotate-[90deg] text-primary text-[10px]">
-                                            {round.responses[1].ai_model_name}
-                                        </span>
-                                        <Image
-                                            src={getModelImage(round.responses[1].ai_model_name)}
-                                            alt={round.responses[1].ai_model_name}
-                                            width={50}
-                                            height={50}
-                                        />
-                                    </div>
+                                <div className="flex w-full items-start justify-end gap-4">
                                     {battle.type === 'Code Generation' ? (
                                         <div className="w-[85%]">
                                             <CodeResponse
@@ -420,10 +410,22 @@ const BattleDetailsPage = () => {
                                             />
                                         </div>
                                     ) : (
-                                        <div className="bg-white text-black p-3 rounded text-sm w-[85%]">
+                                        <div className="bg-white text-black p-4 rounded-lg text-sm w-[85%] shadow">
                                             {round.responses[1].response_text}
                                         </div>
                                     )}
+                                    <div className="flex flex-col items-center gap-1">
+                                        <div className="text-xs text-center text-indigo-200 bg-indigo-800/20 px-2 py-1 rounded-full">
+                                            {round.responses[1].ai_model_name}
+                                        </div>
+                                        <Image
+                                            src={getModelImage(round.responses[1].ai_model_name)}
+                                            alt={round.responses[1].ai_model_name}
+                                            width={48}
+                                            height={48}
+                                            className="rounded-full border border-indigo-300 shadow"
+                                        />
+                                    </div>
                                 </div>
                             )}
                         </div>
