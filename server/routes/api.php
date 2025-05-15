@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BattleController;
 use App\Http\Controllers\BattleRoundController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Premium\BattleResponseController;
 use App\Http\Controllers\VoteController;
@@ -23,7 +24,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/battles/unvote', [VoteController::class, 'unvote']);
         Route::get('/battles/{battleId}/user-vote', [VoteController::class, 'getUserVote']);
         Route::post('/pay', [PaymentController::class, 'pay']);
+        Route::get('/notifications', [NotificationController::class, 'getNotifications']);
 
+        // Premium Routes
         Route::group(['prefix' => "premium"], function () {
             Route::post('/create-battle', [BattleController::class, 'create']);
             Route::post('/create-round', [BattleRoundController::class, 'create']);
