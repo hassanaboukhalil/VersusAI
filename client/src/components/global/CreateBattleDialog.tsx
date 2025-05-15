@@ -102,7 +102,6 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
         } catch (err) {
             toast.error('Failed to create battle');
             console.error(err);
-        } finally {
             setLoading(false);
         }
     };
