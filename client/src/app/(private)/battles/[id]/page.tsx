@@ -532,23 +532,24 @@ const BattleDetailsPage = () => {
                             <Send color="black" className="absolute right-[8px]" />
                         </div>
                     </div>
+
                     {/* Static Comment */}
                     <div className="mt-6 space-y-4">
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
+                        <div className="bg-white/5 p-4 rounded-md border border-gray-600 shadow">
+                            <div className="flex items-center gap-3 mb-2">
                                 <Image
                                     src={
                                         battle?.user.profile_picture_url ||
                                         '/images/no-user-profile-pic.jpeg'
                                     }
                                     alt={`${battle?.user.first_name} ${battle?.user.last_name}`}
-                                    width={32}
-                                    height={32}
-                                    className="rounded-full"
+                                    width={36}
+                                    height={36}
+                                    className="rounded-full border border-white"
                                 />
-                                <span className="font-semibold">Jorge Katto</span>
+                                <span className="font-semibold text-white">Jorge Katto</span>
                             </div>
-                            <p className="text-gray-400 text-sm">I liked the debate.</p>
+                            <p className="text-sm text-gray-300">I liked the debate.</p>
                         </div>
                     </div>
                 </>
