@@ -31,4 +31,13 @@ class NotificationService
             ->orderByDesc('created_at')
             ->get();
     }
+
+    // Get unread notifications only
+    public function getUnreadForUser(int $userId)
+    {
+        return Notification::where('user_id', $userId)
+            ->where('is_read', false)
+            ->orderByDesc('created_at')
+            ->get();
+    }
 }
