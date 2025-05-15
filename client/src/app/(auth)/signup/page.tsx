@@ -12,6 +12,7 @@ import { setUser } from '../../../lib/auth';
 
 const SignupPage = () => {
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         first_name: '',
@@ -32,6 +33,7 @@ const SignupPage = () => {
         e.preventDefault();
 
         try {
+            setLoading(true);
             const res = await api.post('/signup', formData);
 
             if (res.data.success) {
@@ -45,6 +47,7 @@ const SignupPage = () => {
             const message = 'Signup failed';
             console.error('Signup failed:', message);
             toast.error(message);
+            setLoading(false);
         }
     };
 
@@ -99,7 +102,11 @@ const SignupPage = () => {
                         onChange={handleChange}
                         required
                     />
-                    <Button type="submit" className="w-full bg-primary text-black hover:opacity-90">
+                    <Button
+                        type="submit"
+                        isLoading={loading}
+                        className="w-full bg-primary text-black hover:opacity-90"
+                    >
                         Sign Up
                     </Button>
                 </form>
