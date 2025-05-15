@@ -64,9 +64,9 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                     </Link>
                 )
             ) : (
-                <Button variant="default">
-                    <Link href="/login">Login</Link>
-                </Button>
+                <Link href="/login">
+                    <Button variant="default">Login</Button>
+                </Link>
             )}
         </div>
     );
