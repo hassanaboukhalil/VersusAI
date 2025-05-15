@@ -1,6 +1,6 @@
 'use client';
 
-import { PanelLeft, Lock, Bell } from 'lucide-react';
+import { PanelLeft, Lock } from 'lucide-react';
 import { Button } from '../ui/button';
 import Logo from './Logo';
 import { useEffect, useState } from 'react';
@@ -8,8 +8,7 @@ import { isLoggedIn, getUser } from '../../lib/auth';
 import Link from 'next/link';
 import { Dialog, DialogTrigger } from '../ui/dialog';
 import CreateBattleDialog from '../global/CreateBattleDialog';
-import { useSelector } from 'react-redux';
-import { selectUnreadCount } from '../../redux/selectors/notificationSelectors';
+import NotificationBell from '../pages-components/notifications/NotificationBell';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -20,7 +19,6 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [isPremium, setIsPremium] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const unreadCount = useSelector(selectUnreadCount);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -52,16 +50,7 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
             </div>
 
             <div className="flex gap-4">
-                <Link href="/notifications">
-                    <Button variant="ghost" size="icon" className="relative">
-                        <Bell className="text-primary" width="35" height="35" />
-                        {unreadCount > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                                {unreadCount > 99 ? '99+' : unreadCount}
-                            </span>
-                        )}
-                    </Button>
-                </Link>
+                <NotificationBell />
                 {loggedIn ? (
                     isPremium ? (
                         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
