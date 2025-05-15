@@ -359,7 +359,7 @@ const BattleDetailsPage = () => {
                 {battle.rounds.map((round, i) => (
                     <div key={`round-${round.id}-${i}`} className="space-y-6">
                         {battle.type !== 'Debate Challenge' && (
-                            <h3 className="text-xl font-bold text-lime-300">⚔️ Round {i + 1}</h3>
+                            <h3 className="text-xl font-bold text-lime-300">Round {i + 1}</h3>
                         )}
 
                         <div
