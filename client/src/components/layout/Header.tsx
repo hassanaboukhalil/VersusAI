@@ -50,7 +50,7 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
             </div>
 
             <div className="flex gap-4">
-                <NotificationBell />
+                {loggedIn && <NotificationBell />}
                 {loggedIn ? (
                     isPremium ? (
                         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
