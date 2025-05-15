@@ -127,6 +127,7 @@ class BattleService
             ],
             'user' => [
                 'first_name' => $battle->user->first_name,
+                'last_name' => $battle->user->last_name,
                 'username' => $battle->user->username,
                 'profile_picture_url' => $battle->user->profile_picture_url,
             ],
