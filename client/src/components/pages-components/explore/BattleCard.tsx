@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Button } from '../../ui/button';
 import { Battle } from '../../../types/battle';
+import Link from 'next/link';
 
 const BattleCard = ({ battle }: { battle: Battle }) => {
     return (
@@ -43,9 +44,11 @@ const BattleCard = ({ battle }: { battle: Battle }) => {
 
             <div className="flex w-full justify-between items-end mt-4">
                 <span className="text-sm text-white">{battle.created_at}</span>
-                <Button size="sm" className="bg-primary text-black">
-                    View
-                </Button>
+                <Link href={`/battles/${battle.id}`}>
+                    <Button size="sm" className="bg-primary text-black">
+                        View
+                    </Button>
+                </Link>
             </div>
         </div>
     );
