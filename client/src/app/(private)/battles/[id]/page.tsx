@@ -5,7 +5,7 @@ import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
 import Image from 'next/image';
 import Section from '../../../../components/layout/Section';
-import { Send, Star } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
 import { getModelImage } from '../../../../utils/getModelImage';
@@ -19,7 +19,8 @@ import type { Battle, Response, Round } from '../../../../types/battle';
 import { voteForAiModel, unvoteFromBattle } from '../../../api/battle';
 import { getUser } from '../../../../lib/auth';
 import { toast } from 'sonner';
-import Echo from '../../../../lib/echo';
+import socket from '../../../../lib/socket';
+// import Echo from '../../../../lib/echo';
 
 const BattleDetailsPage = () => {
     const { id } = useParams();
@@ -86,68 +87,32 @@ const BattleDetailsPage = () => {
         if (id) fetchBattle();
     }, [id, dispatch]);
 
-    // Set up Echo subscription
     useEffect(() => {
-        let channel: typeof Echo;
+        if (!battle?.id) return;
 
-        const setupEchoSubscription = async () => {
-            if (!Echo || !id || !battle) return;
+        const channelName = `vote_update_${battle.id}`;
 
-            try {
-                console.log('Setting up Echo subscription for battle ID:', id);
-
-                // Use a public channel
-                channel = Echo.channel(`battle.${id}`);
-
-                console.log('Subscribed to channel:', `battle.${id}`);
-
-                // Listen for the exact event name without any prefix
-                channel.listen(
-                    'vote.updated',
-                    (data: {
-                        votes?: Record<string, number>;
-                        data?: { votes?: Record<string, number> };
-                    }) => {
-                        console.log('Vote update received (raw):', data);
-
-                        // Extract vote data, handling different possible structures
-                        const voteData = data.votes || data.data?.votes || {};
-                        console.log('Vote data extracted:', voteData);
-
-                        if (Object.keys(voteData).length > 0) {
-                            const updatedBattle = {
-                                ...battle,
-                                ai_models: battle.ai_models.map((model) => ({
-                                    ...model,
-                                    votes: voteData[model.name] ?? model.votes,
-                                })),
-                            };
-
-                            console.log('Updating battle state with:', updatedBattle.ai_models);
-                            dispatch(setCurrentBattle(updatedBattle));
-                        } else {
-                            console.warn('No vote data found in the event:', data);
-                        }
-                    }
-                );
-            } catch (error) {
-                console.error('Echo subscription error:', error);
+        socket.on(channelName, (data: { modelName: string; totalVotes: number }) => {
+            if (!data?.modelName || typeof data.totalVotes !== 'number') {
+                console.warn('Invalid vote data received:', data);
+                return;
             }
-        };
 
-        setupEchoSubscription();
+            const updatedBattle = {
+                ...battle,
+                ai_models: battle.ai_models.map((model) =>
+                    model.name === data.modelName ? { ...model, votes: data.totalVotes } : model
+                ),
+            };
+
+            console.log('Updating battle state with:', updatedBattle.ai_models);
+            dispatch(setCurrentBattle(updatedBattle));
+        });
 
         return () => {
-            if (channel) {
-                try {
-                    console.log('Unsubscribing from channel');
-                    channel.unsubscribe();
-                } catch (error) {
-                    console.error('Failed to unsubscribe:', error);
-                }
-            }
+            socket.off(channelName);
         };
-    }, [id, battle, dispatch]);
+    }, [battle?.id, battle, dispatch]);
 
     const handleCreateRound = async () => {
         setLoadingRound(true);
@@ -283,6 +248,14 @@ const BattleDetailsPage = () => {
                 };
                 console.log('Updating battle state with:', updatedBattle);
                 dispatch(setCurrentBattle(updatedBattle));
+
+                // emiting an event to the socket server after user votes
+                socket.emit('vote', {
+                    battleId: battle.id,
+                    modelName: aiModelName,
+                    totalVotes: result.data.votes[aiModelName] || 0,
+                });
+
                 setHasVoted(true);
                 setVotedModel(aiModelName);
                 toast.success(result.message || 'Vote recorded successfully!');
@@ -486,7 +459,7 @@ const BattleDetailsPage = () => {
                     {/* Votes */}
                     <div className="mt-6">
                         <h3 className="text-xl font-semibold mb-2">Votes</h3>
-                        <div className="flex items-center gap-4 text-right">
+                        <div className="flex items-center gap-4 text-right w-full">
                             {hasVoted ? (
                                 <Button
                                     className="bg-red-500 text-white hover:bg-red-600"
@@ -501,17 +474,27 @@ const BattleDetailsPage = () => {
                                 </Button>
                             ) : (
                                 battle?.ai_models.map((model) => (
+                                    // <Button
+                                    //     key={model.name}
+                                    //     className="bg-primary text-black"
+                                    //     onClick={() => handleVote(model.name)}
+                                    //     disabled={loadingVote}
+                                    // >
+                                    //     {loadingVote ? (
+                                    //         <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                                    //     ) : (
+                                    //         <Star className="mr-1" />
+                                    //     )}
+                                    //     Vote for {model.name}
+                                    // </Button>
                                     <Button
                                         key={model.name}
-                                        className="bg-primary text-black"
+                                        type="submit"
+                                        className="bg-primary text-black hover:opacity-90"
+                                        isLoading={loadingVote}
+                                        loadingText="Please wait..."
                                         onClick={() => handleVote(model.name)}
-                                        disabled={loadingVote}
                                     >
-                                        {loadingVote ? (
-                                            <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                                        ) : (
-                                            <Star className="mr-1" />
-                                        )}
                                         Vote for {model.name}
                                     </Button>
                                 ))
