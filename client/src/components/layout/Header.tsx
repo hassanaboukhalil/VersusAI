@@ -8,6 +8,8 @@ import { isLoggedIn, getUser } from '../../lib/auth';
 import Link from 'next/link';
 import { Dialog, DialogTrigger } from '../ui/dialog';
 import CreateBattleDialog from '../global/CreateBattleDialog';
+import { useSelector } from 'react-redux';
+import { selectUnreadCount } from '../../redux/selectors/notificationSelectors';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -18,6 +20,7 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [isPremium, setIsPremium] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const unreadCount = useSelector(selectUnreadCount);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -52,9 +55,11 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                 <Link href="/notifications">
                     <Button variant="ghost" size="icon" className="relative">
                         <Bell className="text-primary" width="35" height="35" />
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                            3
-                        </span>
+                        {unreadCount > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                {unreadCount > 99 ? '99+' : unreadCount}
+                            </span>
+                        )}
                     </Button>
                 </Link>
                 {loggedIn ? (
@@ -74,9 +79,6 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                         </Link>
                     )
                 ) : (
-                    // <Link href="/login">
-                    //     <Button variant="default">Login</Button>
-                    // </Link>
                     <Button variant="default" href="/login">
                         Login
                     </Button>
