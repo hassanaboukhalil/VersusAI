@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Log;
 
 class VoteService
 {
+
+    protected NotificationService $notificationService;
+
+    public function __construct()
+    {
+        $this->notificationService = new NotificationService();
+    }
+
     public function vote(Battle $battle, string $aiModel): array
     {
         $userId = Auth::id();
@@ -54,7 +62,7 @@ class VoteService
         $voteStats[$model2->model_name] = $battle->getVotesByModel($model2->id);
 
         // Broadcast the vote update
-        broadcast(new VoteUpdated($battle->id, $voteStats));
+        // broadcast(new VoteUpdated($battle->id, $voteStats));
 
         return [
             'success' => true,
