@@ -502,11 +502,17 @@ const BattleDetailsPage = () => {
                                 ))
                             )}
                         </div>
-                        <p className="mt-4 text-gray-300">
-                            {battle?.ai_models[0].name}: {battle?.ai_models[0].votes || 0}
-                            &nbsp;&nbsp;&nbsp;
-                            {battle?.ai_models[1].name}: {battle?.ai_models[1].votes || 0}
-                        </p>
+                        <div className="flex gap-4 mt-6 text-sm text-gray-300">
+                            {battle?.ai_models.map((model) => (
+                                <span
+                                    key={model.name}
+                                    className="px-3 py-1 bg-gray-800 rounded-full border border-gray-600"
+                                >
+                                    {model.name}: {model.votes || 0} vote
+                                    {(model.votes || 0) === 1 ? '' : 's'}
+                                </span>
+                            ))}
+                        </div>
                     </div>
 
                     <div className="mt-8">
