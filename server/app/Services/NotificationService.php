@@ -40,4 +40,12 @@ class NotificationService
             ->orderByDesc('created_at')
             ->get();
     }
+
+    // Mark all notifications for the user as read
+    public function markAllAsRead(int $userId): int
+    {
+        return Notification::where('user_id', $userId)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+    }
 }
