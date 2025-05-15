@@ -536,18 +536,25 @@ const BattleDetailsPage = () => {
                     {/* Static Comment */}
                     <div className="mt-6 space-y-4">
                         <div className="bg-white/5 p-4 rounded-md border border-gray-600 shadow">
-                            <div className="flex items-center gap-3 mb-2">
+                            <div className="flex items-center gap-4 mb-3">
                                 <Image
                                     src={
                                         battle?.user.profile_picture_url ||
                                         '/images/no-user-profile-pic.jpeg'
                                     }
                                     alt={`${battle?.user.first_name} ${battle?.user.last_name}`}
-                                    width={36}
-                                    height={36}
-                                    className="rounded-full border border-white"
+                                    width={40}
+                                    height={40}
+                                    className="rounded-full border border-white shadow-sm"
                                 />
-                                <span className="font-semibold text-white">Jorge Katto</span>
+                                <div className="flex flex-col leading-tight">
+                                    <span className="font-semibold text-white text-sm">
+                                        {battle?.user.first_name} {battle?.user.last_name}
+                                    </span>
+                                    <span className="text-gray-400 text-xs mt-0.5">
+                                        @{battle?.user.username}
+                                    </span>
+                                </div>
                             </div>
                             <p className="text-sm text-gray-300">I liked the debate.</p>
                         </div>
