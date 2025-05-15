@@ -53,12 +53,6 @@ class VoteService
         $voteStats[$model1->model_name] = $battle->getVotesByModel($model1->id);
         $voteStats[$model2->model_name] = $battle->getVotesByModel($model2->id);
 
-        // Log vote stats for debugging
-        Log::info('Broadcasting vote update', [
-            'battle_id' => $battle->id,
-            'vote_stats' => $voteStats
-        ]);
-
         // Broadcast the vote update
         broadcast(new VoteUpdated($battle->id, $voteStats));
 
