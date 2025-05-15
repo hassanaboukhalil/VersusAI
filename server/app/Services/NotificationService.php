@@ -23,4 +23,12 @@ class NotificationService
             'is_read'     => false,
         ]);
     }
+
+    // Get all notifications for a user (latest first)
+    public function getAllForUser(int $userId)
+    {
+        return Notification::where('user_id', $userId)
+            ->orderByDesc('created_at')
+            ->get();
+    }
 }
