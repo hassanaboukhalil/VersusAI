@@ -80,7 +80,7 @@ class BattleService
     {
         $battle_id = $id;
         $battle = Battle::with([
-            'user:id,first_name,username,profile_picture_url',
+            'user:id,first_name,last_name,username,profile_picture_url',
             'category:id,name',
             'ai_model_1:id,model_name',
             'ai_model_2:id,model_name',
