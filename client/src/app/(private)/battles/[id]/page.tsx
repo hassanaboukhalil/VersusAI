@@ -529,8 +529,11 @@ const BattleDetailsPage = () => {
                         <div>
                             <div className="flex items-center gap-2 mb-1">
                                 <Image
-                                    src="/images/no-user-profile-pic.jpeg"
-                                    alt="Jorge Katto"
+                                    src={
+                                        battle?.user.profile_picture_url ||
+                                        '/images/no-user-profile-pic.jpeg'
+                                    }
+                                    alt={`${battle?.user.first_name} ${battle?.user.last_name}`}
                                     width={32}
                                     height={32}
                                     className="rounded-full"
