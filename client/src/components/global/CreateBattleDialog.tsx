@@ -83,6 +83,7 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 battle_type_name: selectedBattleType,
                 ai_model_1_name: aiModel1,
                 ai_model_2_name: aiModel2,
+                temperature,
                 target_language:
                     selectedBattleType === 'Text Translation' ? targetLanguage : undefined,
                 programming_language:
@@ -171,6 +172,7 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                     <label className="text-lg block">Temperature</label>
                     <Input
                         value={temperature}
+                        type="number"
                         onChange={(e) => setTemperature(Number(e.target.value))}
                         placeholder="Enter temperature (from 0.0 to 1.0)"
                         className="mt-1"
