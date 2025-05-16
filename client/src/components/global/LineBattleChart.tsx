@@ -1,5 +1,17 @@
 'use client';
 
+import {
+    ResponsiveContainer,
+    CartesianGrid,
+    XAxis,
+    YAxis,
+    Tooltip,
+    Legend,
+    LineChart,
+    Line,
+} from 'recharts';
+import { motion } from 'framer-motion';
+
 import React from 'react';
 
 const TooltipCard = ({ active, payload, label }: any) => {
@@ -21,8 +33,48 @@ const TooltipCard = ({ active, payload, label }: any) => {
     );
 };
 
-const LineBattleChart = () => {
-    return <div>LineBattleChart</div>;
+type Props = {
+    data: any[];
+    modelNames: string[];
+    getColor: (index: number) => string;
+};
+
+const LineBattleChart: React.FC<Props> = ({ data, modelNames, getColor }) => {
+    return (
+        <motion.div
+            className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ type: 'spring', stiffness: 70 }}
+        >
+            <h4 className="mb-5 text-xl font-semibold text-white">Response Time per Round</h4>
+
+            <ResponsiveContainer width="100%" height={420}>
+                <LineChart data={data} margin={{ right: 24 }}>
+                    <CartesianGrid stroke="#4b5563" strokeDasharray="3 3" />
+                    <XAxis dataKey="name" stroke="#d1d5db" fontSize={12} />
+                    <YAxis stroke="#d1d5db" fontSize={12} />
+                    <Tooltip content={<TooltipCard />} cursor={{ fill: 'transparent' }} />
+                    <Legend />
+                    {modelNames.map((name, i) => (
+                        <Line
+                            key={name}
+                            type="monotone"
+                            dataKey={`${name}_response`}
+                            name={`Response – ${name}`}
+                            stroke={getColor(i)}
+                            strokeWidth={3}
+                            dot={{ r: 4 }}
+                            activeDot={{ r: 6 }}
+                            isAnimationActive
+                            animationDuration={800}
+                        />
+                    ))}
+                </LineChart>
+            </ResponsiveContainer>
+        </motion.div>
+    );
 };
 
 export default LineBattleChart;
