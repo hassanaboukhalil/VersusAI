@@ -9,7 +9,7 @@ const Features = () => {
             <h2 className="h2 text-center">
                 What You Can Do on <span className="text-primary">VersusAI</span>
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-0 md:px-24 mt-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-0 xl:px-16 mt-16">
                 {FEATURES.map((feature, index) => (
                     <div
                         key={feature.title}
