@@ -1,34 +1,41 @@
 'use client';
 
-import Header from '../../..//components/layout/Header';
-import Section from '../../../components/layout/Section';
-import { Button } from '../../..//components/ui/button';
-import { Spotlight } from '../../..//components/ui/Spotlight';
-import { cn } from '../../..//lib/utils';
-import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
-import Sidebar from '../../layout/Sidebar';
-import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+
+import Header from '../../../components/layout/Header';
+import Sidebar from '../../../components/layout/Sidebar';
+import Section from '../../../components/layout/Section';
+import { Spotlight } from '../../../components/ui/Spotlight';
+import { Button } from '../../../components/ui/button';
 
 const Hero = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
     return (
         <Section
-            className="relative flex flex-col w-full overflow-hidden rounded-md bg-background antialiased"
             id="hero"
+            /* `isolate` keeps the spotlight blur under the text but over the bg */
+            className="relative isolate flex min-h-screen flex-col bg-background antialiased"
         >
-            <Header onToggleSidebar={() => setSidebarOpen(true)} />
-            <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-            <div
-                className={cn(
-                    'pointer-events-none absolute inset-0 [background-size:40px_40px] select-none'
-                    // '[background-image:linear-gradient(to_right,#171717_1px,transparent_1px),linear-gradient(to_bottom,#171717_1px,transparent_1px)]'
-                )}
+            {/* ─────────  BACKGROUND EFFECT  ───────── */}
+            <Spotlight
+                /* tweak position for lg screens; text sits dead-center */
+                className="-top-52 left-1/2 -translate-x-1/2 md:-top-40"
+                fill="white"
             />
 
-            <Spotlight className="-top-40 left-0 md:-top-20 md:left-60" fill="white" />
-            <div className="flex flex-col flex-center gap-8 relative z-10 mx-auto w-full max-w-7xl py-36 lg:py-32 2xl:py-40">
-                <h1 className="h1 w-full lg:w-[75%] leading-normal bg-opacity-50 bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-7xl">
+            {/* ─────────  NAV & SIDEBAR  ───────── */}
+            <Header
+                onToggleSidebar={() => setSidebarOpen(true)}
+                className="absolute top-0 left-0 w-full my-container"
+            />
+            <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+            {/* ─────────  HERO CONTENT  ───────── */}
+            {/* <div className="flex flex-col flex-center gap-8 relative z-10 mx-auto w-full max-w-7xl"> */}
+            <div className="flex flex-1 flex-col items-center justify-center">
+                <h1 className="h1 w-full lg:w-[75%] leading-normal bg-opacity-50 bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-7xl mt-8">
                     Create Challenges and Let AIs Compete with{' '}
                     <span className="text-primary">VersusAI</span>
                 </h1>
@@ -37,13 +44,18 @@ const Hero = () => {
                     summarizing text to debating opinions. Compare, vote, and discover which AI
                     performs best.
                 </p>
-                <Link href="/signup">
+                <Button variant="default" href="/signup" className="mt-4">
+                    Get Started <ArrowRight />
+                </Button>
+
+                {/* <Link href="/signup">
                     <Button variant="default">
                         Get Started <ArrowRight />
                     </Button>
-                </Link>
+                </Link> */}
             </div>
         </Section>
     );
 };
+
 export default Hero;
