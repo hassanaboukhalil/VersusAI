@@ -26,6 +26,13 @@
   }
 }
 
+
+.gradient-text {
+  background: linear-gradient(90deg,#22d3ee 0%,#c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 @layer base {
   :root {
     /* colors */
