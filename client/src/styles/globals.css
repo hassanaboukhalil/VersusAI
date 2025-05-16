@@ -134,10 +134,10 @@
 
   /* ===== text sizes */
   .h1{
-    @apply text-5xl font-bold lg:text-6xl; /* 60px */
+    @apply text-4xl md:text-6xl font-bold lg:text-5xl; /* 60px */
   }
   .h2{
-    @apply text-4xl font-bold lg:text-5xl; /* 60px */
+    @apply text-4xl font-bold lg:text-4xl; /* 60px */
   }
 
   .body-1{
