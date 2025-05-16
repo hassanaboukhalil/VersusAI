@@ -78,15 +78,7 @@ class BattleResponseService
     {
         $prompt = $this->buildSummarizationPrompt($text_to_summarize);
 
-        // if ($this->isOpenRouterModel($ai_model_name)) {
-        //     $response = $this->callOpenRouterChat($prompt, $ai_model_name);
-        //     return [
-        //         'summary' => $response
-        //     ];
-        // }
-
-
-        // 2) If this model should go to OpenRouter…
+        // If this model should go to OpenRouter…
         if ($this->isOpenRouterModel($ai_model_name)) {
             $data = $this->callOpenRouterChat($prompt, $ai_model_name, $temperature);
             return [
