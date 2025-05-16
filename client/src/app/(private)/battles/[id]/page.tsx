@@ -140,6 +140,9 @@ const BattleDetailsPage = () => {
                             {
                                 ai_model_name: data.ai_model_name,
                                 response_text: data.response_text,
+                                response_time_ms: data.response_time_ms,
+                                prompt_tokens: data.prompt_tokens,
+                                completion_tokens: data.completion_tokens,
                             },
                         ],
                     };
@@ -196,10 +199,16 @@ const BattleDetailsPage = () => {
                         {
                             ai_model_name: data.ai_model_1_name,
                             response_text: data.ai_model_1_response,
+                            response_time_ms: data.response_time_ms,
+                            prompt_tokens: data.prompt_tokens,
+                            completion_tokens: data.completion_tokens,
                         },
                         {
                             ai_model_name: data.ai_model_2_name,
                             response_text: data.ai_model_2_response,
+                            response_time_ms: data.response_time_ms,
+                            prompt_tokens: data.prompt_tokens,
+                            completion_tokens: data.completion_tokens,
                         },
                     ],
                 };
@@ -361,6 +370,44 @@ const BattleDetailsPage = () => {
                         {battle.type !== 'Debate Challenge' && (
                             <h3 className="text-xl font-bold text-lime-300">Round {i + 1}</h3>
                         )}
+
+                        <div className="flex flex-col gap-6">
+                            <h2 className="text-lg font-bold text-lime-300">
+                                Analysis of the round
+                            </h2>
+
+                            {/*  AI 1 */}
+                            <div className="flex flex-col gap-2">
+                                <p className="text-sm text-gray-400">
+                                    Response Time {round.responses[0].ai_model_name}:{' '}
+                                    {round.responses[0].response_time_ms} ms
+                                </p>
+                                <p className="text-sm text-gray-400">
+                                    Prompt Tokens {round.responses[0].ai_model_name}:{' '}
+                                    {round.responses[0].prompt_tokens}
+                                </p>
+                                <p className="text-sm text-gray-400">
+                                    Completion Tokens {round.responses[0].ai_model_name}:{' '}
+                                    {round.responses[0].completion_tokens}
+                                </p>
+                            </div>
+
+                            {/*  AI 2 */}
+                            <div className="flex flex-col gap-2">
+                                <p className="text-sm text-gray-400">
+                                    Response Time {round.responses[1].ai_model_name}:{' '}
+                                    {round.responses[1].response_time_ms} ms
+                                </p>
+                                <p className="text-sm text-gray-400">
+                                    Prompt Tokens {round.responses[1].ai_model_name}:{' '}
+                                    {round.responses[1].prompt_tokens}
+                                </p>
+                                <p className="text-sm text-gray-400">
+                                    Completion Tokens {round.responses[1].ai_model_name}:{' '}
+                                    {round.responses[1].completion_tokens}
+                                </p>
+                            </div>
+                        </div>
 
                         <div
                             className={`flex flex-col gap-6 ${battle.type === 'Debate Challenge' ? 'mt-0' : 'mt-4'}`}
