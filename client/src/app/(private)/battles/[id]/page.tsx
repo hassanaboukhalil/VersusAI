@@ -20,6 +20,7 @@ import { voteForAiModel, unvoteFromBattle } from '../../../api/battle';
 import { getUser } from '../../../../lib/auth';
 import { toast } from 'sonner';
 import socket from '../../../../lib/socket';
+import BattleCharts from '../../../../components/global/BattleCharts';
 // import Echo from '../../../../lib/echo';
 
 const BattleDetailsPage = () => {
@@ -564,6 +565,8 @@ const BattleDetailsPage = () => {
                 </div>
             ) : (
                 <>
+                    <BattleCharts rounds={battle.rounds} />
+
                     {/* Votes */}
                     <div className="mt-6">
                         <h3 className="text-xl font-semibold mb-2">Votes</h3>
