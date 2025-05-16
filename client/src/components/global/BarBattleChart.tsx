@@ -21,6 +21,14 @@ const TooltipCard = ({ active, payload, label }: any) => {
     );
 };
 
+type Props = {
+    data: any[];
+    modelNames: string[];
+    getColor: (index: number) => string;
+    hoveredRound: number | null;
+    setHoveredRound: (v: number | null) => void;
+};
+
 const BarBattleChart = () => {
     return <div>BarBattleChart</div>;
 };
