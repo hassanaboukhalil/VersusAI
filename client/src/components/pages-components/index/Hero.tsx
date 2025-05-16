@@ -15,25 +15,16 @@ const Hero = () => {
     return (
         <Section
             id="hero"
-            /* `isolate` keeps the spotlight blur under the text but over the bg */
             className="relative isolate flex min-h-screen flex-col bg-background antialiased"
         >
-            {/* ─────────  BACKGROUND EFFECT  ───────── */}
-            <Spotlight
-                /* tweak position for lg screens; text sits dead-center */
-                className="-top-52 left-1/2 -translate-x-1/2 md:-top-40"
-                fill="white"
-            />
+            <Spotlight className="-top-52 left-1/2 -translate-x-1/2 md:-top-40" fill="white" />
 
-            {/* ─────────  NAV & SIDEBAR  ───────── */}
             <Header
                 onToggleSidebar={() => setSidebarOpen(true)}
                 className="absolute top-0 left-0 w-full my-container"
             />
             <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-            {/* ─────────  HERO CONTENT  ───────── */}
-            {/* <div className="flex flex-col flex-center gap-8 relative z-10 mx-auto w-full max-w-7xl"> */}
             <div className="flex flex-1 flex-col items-center justify-center">
                 <h1 className="h1 w-full lg:w-[75%] leading-normal bg-opacity-50 bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-center text-4xl font-bold text-transparent md:text-7xl mt-8">
                     Create Challenges and Let AIs Compete with{' '}
@@ -47,12 +38,6 @@ const Hero = () => {
                 <Button variant="default" href="/signup" className="mt-4">
                     Get Started <ArrowRight />
                 </Button>
-
-                {/* <Link href="/signup">
-                    <Button variant="default">
-                        Get Started <ArrowRight />
-                    </Button>
-                </Link> */}
             </div>
         </Section>
     );
