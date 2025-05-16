@@ -72,23 +72,55 @@ class BattleResponseController extends Controller
 
     public function getTextSummarization(Request $request): JsonResponse
     {
-        try {
-            $result = $this->battleResponseService->getTextSummarizationResponse(
+        // try {
+        //     $result = $this->battleResponseService->getTextSummarizationResponse(
+        //         $request->ai_model_name,
+        //         $request->text_to_summarize
+        //     );
+
+        //     return response()->json([
+        //         'success' => true,
+        //         'data' => $result
+        //     ]);
+        // } catch (\Exception $e) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Failed to get text summarization',
+        //         'error' => $e->getMessage()
+        //     ], 500);
+        // }
+
+
+        $request->validate([
+            'ai_model_name'     => 'required|string',
+            'text_to_summarize' => 'required|string',
+        ]);
+
+        // 3) Call service
+        $result = $this->battleResponseService
+            ->getTextSummarizationResponse(
                 $request->ai_model_name,
                 $request->text_to_summarize
             );
 
-            return response()->json([
-                'success' => true,
-                'data' => $result
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to get text summarization',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+
+        // // 5) Persist the actual summary
+        // $battleResponse = BattleResponse::create([
+        //     // 'battle_round_id' => $round->id,
+        //     // 'ai_model_id'     => $battle->ai_model_1_id,   // or whatever you choose
+        //     'response_text'   => $result['summary'],
+        //     // optionally store tokens on the response too
+        //     'prompt_tokens'     => $result['prompt_tokens'],
+        //     'completion_tokens' => $result['completion_tokens'],
+        // ]);
+
+        return response()->json([
+            'success' => true,
+            'data'    => [
+                // 'round'    => $round,
+                'response' => $result,
+            ],
+        ]);
     }
 
     public function createDebateResponse(Request $request): JsonResponse
