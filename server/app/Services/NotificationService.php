@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Notification;
+use App\Models\User;
 
 class NotificationService
 {
@@ -27,9 +28,15 @@ class NotificationService
     // Get all notifications for a user (latest first)
     public function getAllForUser(int $userId)
     {
-        return Notification::where('user_id', $userId)
+        $notifications = Notification::where('user_id', $userId)
             ->orderByDesc('created_at')
             ->get();
+
+        foreach ($notifications as $notification) {
+            $notification->notifier_name = User::find($notification->notifier_id)->name;
+        }
+
+        return $notifications;
     }
 
     // Get unread notifications only
