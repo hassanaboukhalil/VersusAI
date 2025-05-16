@@ -21,6 +21,7 @@ class Battle extends Model
         'programming_language',
         'debate_title_1',
         'debate_title_2',
+        'temperature',
         'is_active'
     ];
 
