@@ -19,11 +19,6 @@ class VoteService
         $this->notificationService = new NotificationService();
     }
 
-    public function __construct()
-    {
-        $this->notificationService = new NotificationService();
-    }
-
     public function vote(Battle $battle, string $aiModel): array
     {
         $userId = Auth::id();
