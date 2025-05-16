@@ -74,7 +74,7 @@ class BattleResponseService
         }
     }
 
-    public function getTextSummarizationResponse(string $ai_model_name, string $text_to_summarize): array
+    public function getTextSummarizationResponse(string $ai_model_name, string $text_to_summarize, float $temperature = 0.2): array
     {
         $prompt = $this->buildSummarizationPrompt($text_to_summarize);
 
@@ -88,7 +88,7 @@ class BattleResponseService
 
         // 2) If this model should go to OpenRouter…
         if ($this->isOpenRouterModel($ai_model_name)) {
-            $data = $this->callOpenRouterChat($prompt, $ai_model_name);
+            $data = $this->callOpenRouterChat($prompt, $ai_model_name, $temperature);
             return [
                 'summary' => $data['result'],
                 'response_time_ms' => $data['response_time_ms'],
@@ -114,7 +114,7 @@ class BattleResponseService
             ->using($provider, $ai_model_name)
             ->withSchema($schema)
             ->withPrompt($prompt)
-            ->usingTemperature(0.2)
+            ->usingTemperature($temperature)
             ->asStructured();
 
         $end = microtime(true);
