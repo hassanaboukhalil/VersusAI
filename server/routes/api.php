@@ -31,7 +31,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/create-battle', [BattleController::class, 'create']);
             Route::post('/create-round', [BattleRoundController::class, 'create']);
             Route::post('/create-debate-response', [BattleResponseController::class, 'createDebateResponse']);
-            // Route::post('/get-text-summarization', [BattleResponseController::class, 'getTextSummarization']);
+            Route::post('/get-text-summarization', [BattleResponseController::class, 'getTextSummarization']);
             Route::patch('/battles/{id}/end', [BattleController::class, 'end']);
         });
     });
