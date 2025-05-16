@@ -60,12 +60,23 @@ class BattleRoundService
                 'ai_model_2_name' => $battle->ai_model_2->model_name,
                 'ai_model_1_response' => $battleResponse1->response_text,
                 'ai_model_2_response' => $battleResponse2->response_text,
-                'response_time_ms_1' => $response_1['response_time_ms'],
-                'prompt_tokens_1' => $response_1['prompt_tokens'],
-                'completion_tokens_1' => $response_1['completion_tokens'],
-                'response_time_ms_2' => $response_2['response_time_ms'],
-                'prompt_tokens_2' => $response_2['prompt_tokens'],
-                'completion_tokens_2' => $response_2['completion_tokens'],
+                'responses' => [
+                    [
+                        'ai_model_name' => $battle->ai_model_1->model_name,
+                        'response_text' => $response_text_1,
+                        'response_time_ms' => $response_1['response_time_ms'],
+                        'prompt_tokens' => $response_1['prompt_tokens'],
+                        'completion_tokens' => $response_1['completion_tokens'],
+                    ],
+                    [
+                        'ai_model_name' => $battle->ai_model_2->model_name,
+                        'response_text' => $response_text_2,
+                        'response_time_ms' => $response_2['response_time_ms'],
+                        'prompt_tokens' => $response_2['prompt_tokens'],
+                        'completion_tokens' => $response_2['completion_tokens'],
+                    ],
+                ],
+
             ];
         }
 
