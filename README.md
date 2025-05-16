@@ -21,7 +21,7 @@
 <!-- Project Highlights -->
 <img src="./readme/title4.svg"/>
 
-### Some Features that is included in this project
+### Some features included in VersusAI
 
 - Create Battles - Premium members, who upgrade through Stripe, can set up head-to-head contests between supported AI models.
 
