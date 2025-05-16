@@ -5,7 +5,7 @@ import { FEATURES } from '../../../constants/features';
 
 const Features = () => {
     return (
-        <Section className="flex flex-center flex-col mt-52" id="features">
+        <Section className="flex flex-center flex-col mt-24" id="features">
             <h2 className="h2 text-center">
                 What You Can Do on <span className="text-primary">VersusAI</span>
             </h2>
