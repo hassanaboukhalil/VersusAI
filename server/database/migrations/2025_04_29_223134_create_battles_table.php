@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('programming_language')->nullable();
             $table->string('debate_title_1')->nullable();
             $table->string('debate_title_2')->nullable();
+            $table->float('temperature')->default(0.2);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
