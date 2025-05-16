@@ -57,7 +57,26 @@ const BattleDetailsPage = () => {
                             responses: round.responses.map((resp: Response) => ({
                                 ai_model_name: resp.ai_model_name,
                                 response_text: resp.response_text,
+                                response_time_ms: resp.response_time_ms,
+                                prompt_tokens: resp.prompt_tokens,
+                                completion_tokens: resp.completion_tokens,
                             })),
+                            // responses: [
+                            //     {
+                            //         ai_model_name: round.responses[0].ai_model_name,
+                            //         response_text: round.responses[0].response_text,
+                            //         response_time_ms: round.responses[0].response_time_ms_1,
+                            //         prompt_tokens: round.responses[0].prompt_tokens_1,
+                            //         completion_tokens: round.responses[0].completion_tokens_1,
+                            //     },
+                            //     {
+                            //         ai_model_name: round.responses[1].ai_model_name,
+                            //         response_text: round.responses[1].response_text,
+                            //         response_time_ms: round.responses[1].response_time_ms_2,
+                            //         prompt_tokens: round.responses[1].prompt_tokens_2,
+                            //         completion_tokens: round.responses[1].completion_tokens_2,
+                            //     },
+                            // ],
                         })),
                     })
                 );
@@ -166,6 +185,9 @@ const BattleDetailsPage = () => {
                             {
                                 ai_model_name: data.ai_model_name,
                                 response_text: data.response_text,
+                                response_time_ms: data.response_time_ms,
+                                prompt_tokens: data.prompt_tokens,
+                                completion_tokens: data.completion_tokens,
                             },
                         ],
                     };
