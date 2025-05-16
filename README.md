@@ -12,9 +12,9 @@
 <!-- System Design -->
 <img src="./readme/title3.svg"/>
 
-### Add Title Here
+### ER diagram
 
-- To be decided on later on.
+<img src="./readme/VersusAI-ER-diagram.png"/>
 
 <br><br>
 
@@ -23,11 +23,15 @@
 
 ### Some Features that is included in this project
 
-- Premium users can create AI battles to compare model performance across tasks.
+- Create Battles - Premium members, who upgrade through Stripe, can set up head-to-head contests between supported AI models.
 
-- All users can vote on AI responses to help identify the best-performing models.
+- Vote on Battles - Cast your vote and watch the results update instantly.
 
-- Only users who subscribe through Stripe can access the battle creation feature.
+- Explore Battles - Browse finished battles and catch up on the highlights.
+
+- See the Stats - Check analytics to see which model performed better and how quickly it responded.
+
+- Pay Securely - Subscribe through Stripe; every transaction is quick and safe.
 
 <br><br>
 
