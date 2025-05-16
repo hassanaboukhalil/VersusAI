@@ -216,22 +216,23 @@ const BattleDetailsPage = () => {
                 const data = res.data.data;
                 const newRound = {
                     id: data.id,
-                    responses: [
-                        {
-                            ai_model_name: data.ai_model_1_name,
-                            response_text: data.ai_model_1_response,
-                            response_time_ms: data.response_time_ms_1,
-                            prompt_tokens: data.prompt_tokens_1,
-                            completion_tokens: data.completion_tokens_1,
-                        },
-                        {
-                            ai_model_name: data.ai_model_2_name,
-                            response_text: data.ai_model_2_response,
-                            response_time_ms: data.response_time_ms_2,
-                            prompt_tokens: data.prompt_tokens_2,
-                            completion_tokens: data.completion_tokens_2,
-                        },
-                    ],
+                    // responses: [
+                    //     {
+                    //         ai_model_name: data.ai_model_1_name,
+                    //         response_text: data.ai_model_1_response,
+                    //         response_time_ms: data.response_time_ms_1,
+                    //         prompt_tokens: data.prompt_tokens_1,
+                    //         completion_tokens: data.completion_tokens_1,
+                    //     },
+                    //     {
+                    //         ai_model_name: data.ai_model_2_name,
+                    //         response_text: data.ai_model_2_response,
+                    //         response_time_ms: data.response_time_ms_2,
+                    //         prompt_tokens: data.prompt_tokens_2,
+                    //         completion_tokens: data.completion_tokens_2,
+                    //     },
+                    // ],
+                    responses: data.responses,
                 };
                 dispatch(addRound(newRound));
             }
