@@ -16,6 +16,9 @@ return new class extends Migration
             $table->foreignId('battle_round_id');
             $table->foreignId('ai_model_id');
             $table->longText('response_text');
+            $table->integer('response_time_ms')->nullable();
+            $table->integer('prompt_tokens')->nullable();
+            $table->integer('completion_tokens')->nullable();
             $table->timestamps();
         });
     }
