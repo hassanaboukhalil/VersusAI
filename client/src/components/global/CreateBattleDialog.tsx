@@ -25,6 +25,7 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const [debateTitle2, setDebateTitle2] = useState('');
     const [aiModel1, setAiModel1] = useState('');
     const [aiModel2, setAiModel2] = useState('');
+    const [temperature, setTemperature] = useState(0.5);
     const [loading, setLoading] = useState(false);
 
     const router = useRouter();
@@ -164,6 +165,16 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                             placeholder="Select AI Model B"
                         />
                     </div>
+                </div>
+
+                <div>
+                    <label className="text-lg block">Temperature</label>
+                    <Input
+                        value={temperature}
+                        onChange={(e) => setTemperature(Number(e.target.value))}
+                        placeholder="Enter temperature (from 0.0 to 1.0)"
+                        className="mt-1"
+                    />
                 </div>
 
                 {selectedBattleType === 'Text Translation' && (
