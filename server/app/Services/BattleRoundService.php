@@ -21,11 +21,13 @@ class BattleRoundService
         if ($battle->category->name === 'Text Summarization') {
             $response_1 = $battle_response_service->getTextSummarizationResponse(
                 $battle->ai_model_1->model_name,
-                $request->description
+                $request->description,
+                $battle->temperature
             );
             $response_2 = $battle_response_service->getTextSummarizationResponse(
                 $battle->ai_model_2->model_name,
-                $request->description
+                $request->description,
+                $battle->temperature
             );
 
             $response_text_1 = is_array($response_1) ? $response_1['summary'] : $response_1;
@@ -35,12 +37,18 @@ class BattleRoundService
                 'battle_round_id' => $round->id,
                 'ai_model_id' => $battle->ai_model_1_id,
                 'response_text' => $response_text_1,
+                'response_time_ms' => $response_1['response_time_ms'],
+                'prompt_tokens' => $response_1['prompt_tokens'],
+                'completion_tokens' => $response_1['completion_tokens'],
             ]);
 
             $battleResponse2 = BattleResponse::create([
                 'battle_round_id' => $round->id,
                 'ai_model_id' => $battle->ai_model_2_id,
                 'response_text' => $response_text_2,
+                'response_time_ms' => $response_2['response_time_ms'],
+                'prompt_tokens' => $response_2['prompt_tokens'],
+                'completion_tokens' => $response_2['completion_tokens'],
             ]);
 
             return [
