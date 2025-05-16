@@ -374,14 +374,15 @@ const BattleDetailsPage = () => {
                             <h2 className="text-lg font-bold text-lime-300">
                                 Analysis of the round
                             </h2>
-                            {battle.type !== 'Debate Challenge' && (
-                                <p className="text-sm text-gray-400">
-                                    Prompt Tokens {round.responses[0].ai_model_name}:{' '}
-                                    {round.responses[0].prompt_tokens}
-                                </p>
-                            )}
+                            <div className="flex flex-col gap-2">
+                                {battle.type !== 'Debate Challenge' && (
+                                    <p className="text-sm text-gray-400">
+                                        Prompt Tokens {round.responses[0].ai_model_name}:{' '}
+                                        {round.responses[0].prompt_tokens}
+                                    </p>
+                                )}
+                            </div>
 
-                            {/*  AI 1 */}
                             <div className="flex flex-col gap-2">
                                 {battle.type === 'Debate Challenge' && (
                                     <p className="text-sm text-gray-400">
@@ -389,27 +390,31 @@ const BattleDetailsPage = () => {
                                         {round.responses[0].prompt_tokens}
                                     </p>
                                 )}
-                                <p className="text-sm text-gray-400">
-                                    Response Time {round.responses[0].ai_model_name}:{' '}
-                                    {round.responses[0].response_time_ms} ms
-                                </p>
-                                <p className="text-sm text-gray-400">
-                                    Completion Tokens {round.responses[0].ai_model_name}:{' '}
-                                    {round.responses[0].completion_tokens}
-                                </p>
-                            </div>
-
-                            {/*  AI 2 */}
-                            <div className="flex flex-col gap-2">
                                 {battle.type === 'Debate Challenge' && (
                                     <p className="text-sm text-gray-400">
                                         Prompt Tokens {round.responses[1].ai_model_name}:{' '}
                                         {round.responses[1].prompt_tokens}
                                     </p>
                                 )}
+                            </div>
+
+                            {/* response time  */}
+                            <div className="flex flex-col gap-2">
+                                <p className="text-sm text-gray-400">
+                                    Response Time {round.responses[0].ai_model_name}:{' '}
+                                    {round.responses[0].response_time_ms} ms
+                                </p>
                                 <p className="text-sm text-gray-400">
                                     Response Time {round.responses[1].ai_model_name}:{' '}
                                     {round.responses[1].response_time_ms} ms
+                                </p>
+                            </div>
+
+                            {/* completion tokens */}
+                            <div className="flex flex-col gap-2">
+                                <p className="text-sm text-gray-400">
+                                    Completion Tokens {round.responses[0].ai_model_name}:{' '}
+                                    {round.responses[0].completion_tokens}
                                 </p>
                                 <p className="text-sm text-gray-400">
                                     Completion Tokens {round.responses[1].ai_model_name}:{' '}
@@ -421,7 +426,7 @@ const BattleDetailsPage = () => {
                         <div
                             className={`flex flex-col gap-6 ${battle.type === 'Debate Challenge' ? 'mt-0' : 'mt-4'}`}
                         >
-                            {/* First AI */}
+                            {/* AI model 1 */}
                             {round.responses[0] && (
                                 <div className="flex w-full items-start gap-4">
                                     <div className="flex flex-col items-center gap-1">
@@ -453,7 +458,7 @@ const BattleDetailsPage = () => {
                                 </div>
                             )}
 
-                            {/* Second AI */}
+                            {/* AI model 2 */}
                             {round.responses[1] && (
                                 <div className="flex w-full items-start justify-end gap-4">
                                     {battle.type === 'Code Generation' ? (
