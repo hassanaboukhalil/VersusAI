@@ -25,11 +25,10 @@ class BattleFactory extends Factory
             'category_id' => Category::inRandomOrder()->first()->id,
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
-            // 'ai_model_1_id' => AiModel::inRandomOrder()->first()->id,
-            // 'ai_model_2_id' => AiModel::inRandomOrder()->first()->id,
             'ai_model_1_id' => $ai_Ids[0],
             'ai_model_2_id' => $ai_Ids[1],
             'is_active' => $this->faker->boolean(50),
+            'temperature' => $this->faker->randomFloat(1, 0, 1),
         ];
     }
 }
