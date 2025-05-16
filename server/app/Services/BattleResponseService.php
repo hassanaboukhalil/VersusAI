@@ -76,14 +76,6 @@ class BattleResponseService
 
     public function getTextSummarizationResponse(string $ai_model_name, string $text_to_summarize): array
     {
-        $schema = BattleResponseSchema::createPrismSchema(
-            "text_summarization",
-            "Summarize a given text clearly and concisely",
-            [
-                "summary" => "A clear, concise summary of the input text in 3 to 4 lines max.",
-            ]
-        );
-
         $prompt = $this->buildSummarizationPrompt($text_to_summarize);
 
         // if ($this->isOpenRouterModel($ai_model_name)) {
@@ -96,50 +88,22 @@ class BattleResponseService
 
         // 2) If this model should go to OpenRouter…
         if ($this->isOpenRouterModel($ai_model_name)) {
-            $model = match (true) {
-                str_contains($ai_model_name, 'deepseek-prover-v2') => 'deepseek/deepseek-prover-v2:free',
-                str_contains($ai_model_name, 'meta-llama')      => $ai_model_name,
-                str_contains($ai_model_name, 'mixtral')         => $ai_model_name,
-                $ai_model_name === 'Groq'                       => 'meta-llama/llama-4-scout-17b-16e-instruct',
-            };
-
-            $start = microtime(true);
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
-                'Content-Type'  => 'application/json',
-                'HTTP-Referer'  => env('OPENROUTER_REFERER', 'https://versusai.local'),
-                'X-Title'       => env('OPENROUTER_TITLE', 'VersusAI'),
-            ])->post('https://openrouter.ai/api/v1/chat/completions', [
-                'model'    => $model,
-                'messages' => [
-                    ['role' => 'user', 'content' => $prompt],
-                ],
-            ]);
-            $end = microtime(true);
-
-            if ($http->failed()) {
-                throw new \Exception('OpenRouter API call failed: ' . $http->body());
-            }
-
-            $json = $http->json();
-
-            // 3) extract the summary
-            $summary = $json['choices'][0]['message']['content'] ?? null;
-
-            // 4) pull out usage if available
-            $promptTokens     = $json['usage']['prompt_tokens']     ?? null;
-            $completionTokens = $json['usage']['completion_tokens'] ?? null;
-
-            // 5) return the *same* shape as Prism
+            $data = $this->callOpenRouterChat($prompt, $ai_model_name);
             return [
-                'summary'           => $summary,
-                'response_time_ms'  => (int)(($end - $start) * 1000),
-                'prompt_tokens'     => $promptTokens,
-                'completion_tokens' => $completionTokens,
+                'summary' => $data['result'],
+                'response_time_ms' => $data['response_time_ms'],
+                'prompt_tokens' => $data['prompt_tokens'],
+                'completion_tokens' => $data['completion_tokens'],
             ];
         }
 
-
+        $schema = BattleResponseSchema::createPrismSchema(
+            "text_summarization",
+            "Summarize a given text clearly and concisely",
+            [
+                "summary" => "A clear, concise summary of the input text in 3 to 4 lines max.",
+            ]
+        );
 
         $provider = $this->getProviderForModel($ai_model_name);
 
@@ -223,7 +187,7 @@ class BattleResponseService
         if ($this->isOpenRouterModel($ai_model_name)) {
             $response = $this->callOpenRouterChat($prompt, $ai_model_name);
             // Remove any potential code block markers
-            $cleanResponse = trim($response, '`');
+            $cleanResponse = trim($response['result'], '`');
             return [
                 'language' => $programming_language,
                 'task' => $task_description,
