@@ -31,17 +31,17 @@ class BattleResponseSeeder extends Seeder
             BattleResponse::factory()->create([
                 'battle_round_id' => $round->id,
                 'ai_model_id' => $battle->ai_model_1_id,
-                'response_time_ms' => $faker->randomFloat(2, 100, 1000),
-                'prompt_tokens' => $faker->numberBetween(100, 1000),
-                'completion_tokens' => $faker->numberBetween(100, 1000),
+                'response_time_ms' => $faker->randomFloat(2, 100, 5000),
+                'prompt_tokens' => $faker->numberBetween(10, 1000),
+                'completion_tokens' => $faker->numberBetween(50, 1000),
             ]);
 
             BattleResponse::factory()->create([
                 'battle_round_id' => $round->id,
                 'ai_model_id' => $battle->ai_model_2_id,
-                'response_time_ms' => $faker->randomFloat(2, 100, 1000),
-                'prompt_tokens' => $faker->numberBetween(100, 1000),
-                'completion_tokens' => $faker->numberBetween(100, 1000),
+                'response_time_ms' => $faker->randomFloat(2, 100, 5000),
+                'prompt_tokens' => $faker->numberBetween(10, 1000),
+                'completion_tokens' => $faker->numberBetween(50, 1000),
             ]);
         });
     }
