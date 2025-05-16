@@ -8,7 +8,7 @@ import { isLoggedIn, getUser } from '../../lib/auth';
 import Link from 'next/link';
 import { Dialog, DialogTrigger } from '../ui/dialog';
 import CreateBattleDialog from '../global/CreateBattleDialog';
-import NotificationBell from '../pages-components/notifications/NotificationBell';
+// import NotificationBell from '../pages-components/notifications/NotificationBell';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -50,7 +50,7 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
             </div>
 
             <div className="flex gap-4">
-                {loggedIn && <NotificationBell />}
+                {/* {loggedIn && <NotificationBell />} */}
                 {loggedIn ? (
                     isPremium ? (
                         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
