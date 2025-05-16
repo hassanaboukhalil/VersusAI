@@ -180,7 +180,6 @@ const BattleDetailsPage = () => {
                     );
                 }
             } else {
-                // Handle other battle types as before
                 const res = await api.post('/premium/create-round', {
                     battle_id: battle?.id,
                     description: battle?.description,
@@ -199,16 +198,16 @@ const BattleDetailsPage = () => {
                         {
                             ai_model_name: data.ai_model_1_name,
                             response_text: data.ai_model_1_response,
-                            response_time_ms: data.response_time_ms,
-                            prompt_tokens: data.prompt_tokens,
-                            completion_tokens: data.completion_tokens,
+                            response_time_ms: data.response_time_ms_1,
+                            prompt_tokens: data.prompt_tokens_1,
+                            completion_tokens: data.completion_tokens_1,
                         },
                         {
                             ai_model_name: data.ai_model_2_name,
                             response_text: data.ai_model_2_response,
-                            response_time_ms: data.response_time_ms,
-                            prompt_tokens: data.prompt_tokens,
-                            completion_tokens: data.completion_tokens,
+                            response_time_ms: data.response_time_ms_2,
+                            prompt_tokens: data.prompt_tokens_2,
+                            completion_tokens: data.completion_tokens_2,
                         },
                     ],
                 };
@@ -375,16 +374,24 @@ const BattleDetailsPage = () => {
                             <h2 className="text-lg font-bold text-lime-300">
                                 Analysis of the round
                             </h2>
-
-                            {/*  AI 1 */}
-                            <div className="flex flex-col gap-2">
-                                <p className="text-sm text-gray-400">
-                                    Response Time {round.responses[0].ai_model_name}:{' '}
-                                    {round.responses[0].response_time_ms} ms
-                                </p>
+                            {battle.type !== 'Debate Challenge' && (
                                 <p className="text-sm text-gray-400">
                                     Prompt Tokens {round.responses[0].ai_model_name}:{' '}
                                     {round.responses[0].prompt_tokens}
+                                </p>
+                            )}
+
+                            {/*  AI 1 */}
+                            <div className="flex flex-col gap-2">
+                                {battle.type === 'Debate Challenge' && (
+                                    <p className="text-sm text-gray-400">
+                                        Prompt Tokens {round.responses[0].ai_model_name}:{' '}
+                                        {round.responses[0].prompt_tokens}
+                                    </p>
+                                )}
+                                <p className="text-sm text-gray-400">
+                                    Response Time {round.responses[0].ai_model_name}:{' '}
+                                    {round.responses[0].response_time_ms} ms
                                 </p>
                                 <p className="text-sm text-gray-400">
                                     Completion Tokens {round.responses[0].ai_model_name}:{' '}
@@ -394,13 +401,15 @@ const BattleDetailsPage = () => {
 
                             {/*  AI 2 */}
                             <div className="flex flex-col gap-2">
+                                {battle.type === 'Debate Challenge' && (
+                                    <p className="text-sm text-gray-400">
+                                        Prompt Tokens {round.responses[1].ai_model_name}:{' '}
+                                        {round.responses[1].prompt_tokens}
+                                    </p>
+                                )}
                                 <p className="text-sm text-gray-400">
                                     Response Time {round.responses[1].ai_model_name}:{' '}
                                     {round.responses[1].response_time_ms} ms
-                                </p>
-                                <p className="text-sm text-gray-400">
-                                    Prompt Tokens {round.responses[1].ai_model_name}:{' '}
-                                    {round.responses[1].prompt_tokens}
                                 </p>
                                 <p className="text-sm text-gray-400">
                                     Completion Tokens {round.responses[1].ai_model_name}:{' '}
