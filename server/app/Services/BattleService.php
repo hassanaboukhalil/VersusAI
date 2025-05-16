@@ -102,6 +102,9 @@ class BattleService
                     return [
                         'ai_model_name' => $response->ai_model->model_name,
                         'response_text' => $response->response_text,
+                        'response_time_ms' => $response->response_time_ms,
+                        'prompt_tokens' => $response->prompt_tokens,
+                        'completion_tokens' => $response->completion_tokens,
                     ];
                 })->toArray()
             ];
