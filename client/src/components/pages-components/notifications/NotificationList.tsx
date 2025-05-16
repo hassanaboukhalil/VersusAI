@@ -3,14 +3,14 @@
 import { Star, User } from 'lucide-react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
-import { selectNotifications } from '../../../redux/selectors/notificationSelectors';
+import { RootState } from '../../../redux/store';
 
 interface NotificationListProps {
     className?: string;
 }
 
 const NotificationList = ({ className = '' }: NotificationListProps) => {
-    const notifications = useSelector(selectNotifications);
+    const notifications = useSelector((state: RootState) => state.notification.notifications);
 
     return (
         <div
@@ -30,15 +30,16 @@ const NotificationList = ({ className = '' }: NotificationListProps) => {
                     {/* Avatar and Message */}
                     <div className="flex items-start gap-2">
                         <Image
-                            src={notification.user.avatar}
-                            alt={notification.user.name}
+                            src="/images/no-user-profile-pic.jpeg"
+                            // alt={notification.notifier_name}
+                            alt="user avatar"
                             width={30}
                             height={30}
                             className="rounded-full"
                         />
                         <p className="text-sm">
                             <span className="font-semibold text-white">
-                                {notification.user.name}
+                                {notification.notifier_name}
                             </span>{' '}
                             <span className="text-gray-300">{notification.message}</span>
                         </p>
