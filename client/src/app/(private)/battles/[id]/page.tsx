@@ -393,59 +393,81 @@ const BattleDetailsPage = () => {
                             <h3 className="text-xl font-bold text-lime-300">Round {i + 1}</h3>
                         )}
 
-                        <div className="flex flex-col gap-6">
-                            <h2 className="text-lg font-bold text-lime-300">
-                                Analysis of the round
-                            </h2>
-                            <div className="flex flex-col gap-2">
-                                {battle.type !== 'Debate Challenge' && (
-                                    <p className="text-sm text-gray-400">
-                                        Prompt Tokens {round.responses[0].ai_model_name}:{' '}
-                                        {round.responses[0].prompt_tokens}
-                                    </p>
-                                )}
-                            </div>
+                        {/* Analysis of the Round */}
+                        <div className="flex flex-col lg:flex-row gap-6 bg-white/5 shadow-sm rounded-xl p-6 border border-lime-300">
+                            {/* Prompt Tokens */}
+                            {(battle.type !== 'Debate Challenge' ||
+                                battle.type === 'Debate Challenge') && (
+                                <div className="flex-1 bg-white/10 p-4 rounded-lg border border-white/10">
+                                    <h4 className="text-sm text-gray-200 font-semibold mb-2">
+                                        Prompt Tokens
+                                    </h4>
+                                    {battle.type !== 'Debate Challenge' ? (
+                                        <p className="text-sm text-gray-400">
+                                            {round.responses[0].ai_model_name}:{' '}
+                                            <span className="text-white">
+                                                {round.responses[0].prompt_tokens}
+                                            </span>
+                                        </p>
+                                    ) : (
+                                        <>
+                                            <p className="text-sm text-gray-400">
+                                                {round.responses[0].ai_model_name}:{' '}
+                                                <span className="text-white">
+                                                    {round.responses[0].prompt_tokens}
+                                                </span>
+                                            </p>
+                                            <p className="text-sm text-gray-400">
+                                                {round.responses[1].ai_model_name}:{' '}
+                                                <span className="text-white">
+                                                    {round.responses[1].prompt_tokens}
+                                                </span>
+                                            </p>
+                                        </>
+                                    )}
+                                </div>
+                            )}
 
-                            <div className="flex flex-col gap-2">
-                                {battle.type === 'Debate Challenge' && (
-                                    <p className="text-sm text-gray-400">
-                                        Prompt Tokens {round.responses[0].ai_model_name}:{' '}
-                                        {round.responses[0].prompt_tokens}
-                                    </p>
-                                )}
-                                {battle.type === 'Debate Challenge' && (
-                                    <p className="text-sm text-gray-400">
-                                        Prompt Tokens {round.responses[1].ai_model_name}:{' '}
-                                        {round.responses[1].prompt_tokens}
-                                    </p>
-                                )}
-                            </div>
-
-                            {/* response time  */}
-                            <div className="flex flex-col gap-2">
+                            {/* Response Time */}
+                            <div className="flex-1 bg-white/10 p-4 rounded-lg border border-white/10">
+                                <h4 className="text-sm text-gray-200 font-semibold mb-2">
+                                    Response Time
+                                </h4>
                                 <p className="text-sm text-gray-400">
-                                    Response Time {round.responses[0].ai_model_name}:{' '}
-                                    {round.responses[0].response_time_ms} ms
+                                    {round.responses[0].ai_model_name}:{' '}
+                                    <span className="text-white">
+                                        {round.responses[0].response_time_ms} ms
+                                    </span>
                                 </p>
                                 <p className="text-sm text-gray-400">
-                                    Response Time {round.responses[1].ai_model_name}:{' '}
-                                    {round.responses[1].response_time_ms} ms
+                                    {round.responses[1].ai_model_name}:{' '}
+                                    <span className="text-white">
+                                        {round.responses[1].response_time_ms} ms
+                                    </span>
                                 </p>
                             </div>
 
-                            {/* completion tokens */}
-                            <div className="flex flex-col gap-2">
+                            {/* Completion Tokens */}
+                            <div className="flex-1 bg-white/10 p-4 rounded-lg border border-white/10">
+                                <h4 className="text-sm text-gray-200 font-semibold mb-2">
+                                    Completion Tokens
+                                </h4>
                                 <p className="text-sm text-gray-400">
-                                    Completion Tokens {round.responses[0].ai_model_name}:{' '}
-                                    {round.responses[0].completion_tokens}
+                                    {round.responses[0].ai_model_name}:{' '}
+                                    <span className="text-white">
+                                        {round.responses[0].completion_tokens}
+                                    </span>
                                 </p>
                                 <p className="text-sm text-gray-400">
-                                    Completion Tokens {round.responses[1].ai_model_name}:{' '}
-                                    {round.responses[1].completion_tokens}
+                                    {round.responses[1].ai_model_name}:{' '}
+                                    <span className="text-white">
+                                        {round.responses[1].completion_tokens}
+                                    </span>
                                 </p>
                             </div>
                         </div>
 
+                        {/* AI model responses */}
                         <div
                             className={`flex flex-col gap-6 ${battle.type === 'Debate Challenge' ? 'mt-0' : 'mt-4'}`}
                         >
