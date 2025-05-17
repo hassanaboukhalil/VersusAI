@@ -18,13 +18,13 @@ type Props = { rounds: Round[] };
 const COLORS = ['#22d3ee', '#c084fc'];
 
 const makeChartData = (rounds: Round[]) => {
-    rounds.map((r, i) =>
-        r.responses.reduce(
-            (acc, cur) => ({
-                ...acc,
-                name: `Round ${i + 1}`,
-                [`${cur.ai_model_name}_response`]: cur.response_time_ms,
-                [`${cur.ai_model_name}_tokens`]: cur.completion_tokens,
+    return rounds.map((round, index) =>
+        round.responses.reduce(
+            (accumulator, currentResponse) => ({
+                ...accumulator,
+                name: `Round ${index + 1}`,
+                [`${currentResponse.ai_model_name}_response`]: currentResponse.response_time_ms,
+                [`${currentResponse.ai_model_name}_tokens`]: currentResponse.completion_tokens,
             }),
             {} as Record<string, string | number>
         )
