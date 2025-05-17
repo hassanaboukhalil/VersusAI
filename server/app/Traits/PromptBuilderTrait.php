@@ -67,6 +67,7 @@ trait PromptBuilderTrait
                     You are a professional translator AI.
 
                     Task:
+                    - Translate the following text into {$target_language}.
                     - Provide ONLY the translated plain text output.
                     - Do NOT include quotation marks (unless in the original), backticks, markdown, bullet points, lists, or any other formatting.
                     - Do not explain the translation or add any extra text.
