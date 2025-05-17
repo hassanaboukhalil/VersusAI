@@ -4,20 +4,6 @@ namespace App\Traits;
 
 trait PromptBuilderTrait
 {
-    // protected function buildDebatePrompt(string $debate_topic, string $opponent_topic, ?string $opponent_response): string
-    // {
-    //     if ($opponent_response === null) {
-    //         return "You are participating in a debate. Your position is: \"{$debate_topic}\". " .
-    //             "You are debating against: \"{$opponent_topic}\". " .
-    //             "Present a concise opening argument in 2-3 sentences. Be persuasive and focused.";
-    //     }
-
-    //     return "You are participating in a debate. Your position is: \"{$debate_topic}\". " .
-    //         "Your opponent argued: \"{$opponent_response}\"\n\n" .
-    //         "Respond to their argument in 2-3 sentences, defending your position and addressing their key points. " .
-    //         "Be concise and impactful.";
-    // }
-
     protected function buildDebatePrompt(string $debate_topic, string $opponent_topic, ?string $opponent_response): string
     {
         if ($opponent_response === null) {
@@ -73,10 +59,6 @@ trait PromptBuilderTrait
                     {$text_to_summarize}
                 PROMPT;
     }
-
-
-
-
 
     protected function buildTranslationPrompt(string $text, string $target_language): string
     {
