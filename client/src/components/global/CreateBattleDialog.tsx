@@ -174,8 +174,11 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                         value={temperature}
                         type="number"
                         onChange={(e) => setTemperature(Number(e.target.value))}
-                        placeholder="Enter temperature (from 0.0 to 1.0)"
+                        placeholder="Enter temperature (from 0.0 to 1.5)"
                         className="mt-1"
+                        min={0.0}
+                        max={1.5}
+                        step={0.1}
                     />
                 </div>
 
