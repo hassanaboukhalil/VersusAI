@@ -30,3 +30,33 @@ const makeChartData = (rounds: Round[]) => {
         )
     );
 };
+
+const BattleCharts: React.FC<Props> = ({ rounds }) => {
+    const chartData = useMemo(() => makeChartData(rounds), [rounds]);
+    const modelNames = rounds[0]?.responses.map((r) => r.ai_model_name) ?? [];
+    const [hoveredRound, setHoveredRound] = useState<number | null>(null);
+
+    const getColor = (i: number) => COLORS[i % COLORS.length];
+
+    return (
+        <motion.section
+            className="my-14 space-y-12"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ type: 'spring', stiffness: 60 }}
+        >
+            <h3 className="mb-6 text-3xl font-extrabold text-primary">Battle Statistics</h3>
+            <LineBattleChart data={chartData} modelNames={modelNames} getColor={getColor} />
+            <BarBattleChart
+                data={chartData}
+                modelNames={modelNames}
+                getColor={getColor}
+                hoveredRound={hoveredRound}
+                setHoveredRound={setHoveredRound}
+            />
+        </motion.section>
+    );
+};
+
+export default BattleCharts;
