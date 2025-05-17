@@ -54,6 +54,41 @@ class BattleRoundService
     }
 
 
+    private function storeResponsesAndFormatResult($battle, $round, $res1, $res2, $key, $extra = [])
+    {
+        $text1 = is_array($res1) ? $res1[$key] : $res1;
+        $text2 = is_array($res2) ? $res2[$key] : $res2;
+
+        $response1 = BattleResponse::create([
+            'battle_round_id' => $round->id,
+            'ai_model_id' => $battle->ai_model_1_id,
+            'response_text' => $text1,
+            'response_time_ms' => $res1['response_time_ms'] ?? null,
+            'prompt_tokens' => $res1['prompt_tokens'] ?? null,
+            'completion_tokens' => $res1['completion_tokens'] ?? null,
+        ]);
+
+        $response2 = BattleResponse::create([
+            'battle_round_id' => $round->id,
+            'ai_model_id' => $battle->ai_model_2_id,
+            'response_text' => $text2,
+            'response_time_ms' => $res2['response_time_ms'] ?? null,
+            'prompt_tokens' => $res2['prompt_tokens'] ?? null,
+            'completion_tokens' => $res2['completion_tokens'] ?? null,
+        ]);
+
+        return array_merge([
+            'id' => $battle->id,
+            'title' => $battle->title,
+            'type' => $battle->category->name,
+            'description' => $battle->description,
+            'ai_model_1_name' => $battle->ai_model_1->model_name,
+            'ai_model_2_name' => $battle->ai_model_2->model_name,
+            'ai_model_1_response' => $response1->response_text,
+            'ai_model_2_response' => $response2->response_text,
+        ], $extra);
+    }
+
 
     public function createRoundAndResponses(Battle $battle, Request $request, int $round_number): array
     {
