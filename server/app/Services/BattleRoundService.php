@@ -90,6 +90,21 @@ class BattleRoundService
     }
 
 
+    private function getOpponentResponse(Battle $battle, int $round_number, int $opponent_id): ?string
+    {
+        $lastRound = BattleRound::where('battle_id', $battle->id)
+            ->where('round_number', $round_number - 1)
+            ->first();
+
+        if (!$lastRound) return null;
+
+        return $lastRound->responses()
+            ->where('ai_model_id', $opponent_id)
+            ->value('response_text');
+    }
+
+    // main functions
+
     public function createRoundAndResponses(Battle $battle, Request $request, int $round_number): array
     {
         $round = BattleRound::create([
