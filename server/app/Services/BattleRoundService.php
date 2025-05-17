@@ -19,7 +19,15 @@ class BattleRoundService
         return $this->storeResponsesAndFormatResult($battle, $round, $response_1, $response_2, 'summary');
     }
 
+    private function handleTextTranslation($battle, $request, $round, $service)
+    {
+        $response_1 = $service->getTextTranslationResponse($battle->ai_model_1->model_name, $request->description, $request->target_language);
+        $response_2 = $service->getTextTranslationResponse($battle->ai_model_2->model_name, $request->description, $request->target_language);
 
+        return $this->storeResponsesAndFormatResult($battle, $round, $response_1, $response_2, 'translated', [
+            'target_language' => $request->target_language
+        ]);
+    }
 
 
     public function createRoundAndResponses(Battle $battle, Request $request, int $round_number): array
