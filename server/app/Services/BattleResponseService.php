@@ -127,42 +127,6 @@ class BattleResponseService
         ];
     }
 
-    // public function getTextTranslationResponse(string $ai_model_name, string $text, string $target_language): array
-    // {
-    //     $schema = BattleResponseSchema::createPrismSchema(
-    //         "text_translation",
-    //         "Translate a given text to another language",
-    //         [
-    //             "original" => "The original input text",
-    //             "translated" => "The translated version of the text",
-    //             "language" => "Target language",
-    //         ]
-    //     );
-
-    //     $prompt = $this->buildTranslationPrompt($text, $target_language);
-
-    //     if ($this->isOpenRouterModel($ai_model_name)) {
-    //         $response = $this->callOpenRouterChat($prompt, $ai_model_name);
-    //         // Remove any potential formatting characters
-    //         $cleanResponse = preg_replace('/[`*_#>-]/', '', $response);
-    //         return [
-    //             'original' => $text,
-    //             'translated' => $cleanResponse,
-    //             'language' => $target_language
-    //         ];
-    //     }
-
-    //     $provider = $this->getProviderForModel($ai_model_name);
-    //     $response = Prism::structured()
-    //         ->using($provider, $ai_model_name)
-    //         ->withSchema($schema)
-    //         ->withPrompt($prompt)
-    //         ->asStructured();
-
-    //     return $response->structured;
-    // }
-
-
     public function getTextTranslationResponse(string $ai_model_name, string $text, string $target_language, float $temperature = 0.2): array
     {
         $prompt = $this->buildTranslationPrompt($text, $target_language);
@@ -215,41 +179,58 @@ class BattleResponseService
         ];
     }
 
-
-
-    public function getCodeGenerationResponse(string $ai_model_name, string $task_description, string $programming_language): array
+    public function getCodeGenerationResponse(string $ai_model_name, string $task_description, string $programming_language, float $temperature = 0.2): array
     {
+        $prompt = $this->buildCodeGenerationPrompt($task_description, $programming_language);
+
+        if ($this->isOpenRouterModel($ai_model_name)) {
+            $data = $this->callOpenRouterChat($prompt, $ai_model_name, $temperature);
+
+            $cleanCode = trim($data['result'], '`'); // Clean up possible markdown-style code blocks
+
+            return [
+                'language'          => $programming_language,
+                'task'              => $task_description,
+                'code'              => $cleanCode,
+                'response_time_ms'  => $data['response_time_ms'],
+                'prompt_tokens'     => $data['prompt_tokens'],
+                'completion_tokens' => $data['completion_tokens'],
+            ];
+        }
+
         $schema = BattleResponseSchema::createPrismSchema(
             "code_generation",
             "Generate code in a specific language based on a task description",
             [
                 "language" => "The programming language used",
-                "task" => "The description of the task",
-                "code" => "The generated code solution",
+                "task"     => "The description of the task",
+                "code"     => "The generated code solution",
             ]
         );
 
-        $prompt = $this->buildCodeGenerationPrompt($task_description, $programming_language);
-
-        if ($this->isOpenRouterModel($ai_model_name)) {
-            $response = $this->callOpenRouterChat($prompt, $ai_model_name);
-            // Remove any potential code block markers
-            $cleanResponse = trim($response['result'], '`');
-            return [
-                'language' => $programming_language,
-                'task' => $task_description,
-                'code' => $cleanResponse
-            ];
-        }
-
         $provider = $this->getProviderForModel($ai_model_name);
+
+        $start = microtime(true);
+
         $response = Prism::structured()
             ->using($provider, $ai_model_name)
             ->withSchema($schema)
             ->withPrompt($prompt)
+            ->usingTemperature($temperature)
             ->asStructured();
 
-        return $response->structured;
+        $end = microtime(true);
+
+        $structured = $response->structured;
+
+        return [
+            'language'          => $structured['language'] ?? $programming_language,
+            'task'              => $structured['task'] ?? $task_description,
+            'code'              => $structured['code'] ?? null,
+            'response_time_ms'  => (int)(($end - $start) * 1000),
+            'prompt_tokens'     => $response->usage->promptTokens ?? null,
+            'completion_tokens' => $response->usage->completionTokens ?? null,
+        ];
     }
 
     public function getDebateChallengeResponse(
