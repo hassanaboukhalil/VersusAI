@@ -57,7 +57,21 @@ trait PromptBuilderTrait
 
     protected function buildSummarizationPrompt(string $text_to_summarize): string
     {
-        return "Summarize the following text in a short, clear paragraph (no more than 3–4 lines):\n\n" . $text_to_summarize;
+        return
+            <<<PROMPT
+                    You are a professional summarizer AI.
+
+                    Task:
+                    - Summarize the following content into 1 short paragraph (3–4 lines max).
+                    - Focus on clarity, brevity, and factual accuracy.
+                    - Avoid unnecessary embellishments or assumptions.
+                    - Do not include quotation marks, markdown symbols, bullet points, dashes, or special formatting in your response.
+                    - Only return natural language sentences in plain text.
+                    - If you’re unsure, respond with: “I don’t know”.
+
+                    Text:
+                    {$text_to_summarize}
+                PROMPT;
     }
 
 
