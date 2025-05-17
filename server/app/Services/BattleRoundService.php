@@ -39,6 +39,21 @@ class BattleRoundService
         ]);
     }
 
+    private function handleDebateChallenge($battle, $request, $round_number, $round, $service)
+    {
+        $prevResponseA = $this->getOpponentResponse($battle, $round_number, $battle->ai_model_2_id);
+        $response_1 = $service->getDebateChallengeResponse($battle->ai_model_1->model_name, $battle->debate_title_1, $battle->debate_title_2, $prevResponseA);
+
+        $prevResponseB = $this->getOpponentResponse($battle, $round_number, $battle->ai_model_1_id);
+        $response_2 = $service->getDebateChallengeResponse($battle->ai_model_2->model_name, $battle->debate_title_2, $battle->debate_title_1, $prevResponseB);
+
+        return $this->storeResponsesAndFormatResult($battle, $round, $response_1, $response_2, 'response', [
+            'debate_title_1' => $battle->debate_title_1,
+            'debate_title_2' => $battle->debate_title_2
+        ]);
+    }
+
+
 
     public function createRoundAndResponses(Battle $battle, Request $request, int $round_number): array
     {
