@@ -9,6 +9,19 @@ use Illuminate\Http\Request;
 
 class BattleRoundService
 {
+    // helper functions
+
+    private function handleTextSummarization($battle, $request, $round, $service)
+    {
+        $response_1 = $service->getTextSummarizationResponse($battle->ai_model_1->model_name, $request->description, $battle->temperature);
+        $response_2 = $service->getTextSummarizationResponse($battle->ai_model_2->model_name, $request->description, $battle->temperature);
+
+        return $this->storeResponsesAndFormatResult($battle, $round, $response_1, $response_2, 'summary');
+    }
+
+
+
+
     public function createRoundAndResponses(Battle $battle, Request $request, int $round_number): array
     {
         $round = BattleRound::create([
