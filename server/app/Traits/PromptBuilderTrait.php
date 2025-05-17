@@ -30,6 +30,8 @@ trait PromptBuilderTrait
                         - Write a clear and persuasive opening argument supporting your position.
                         - Limit your response to 2-3 sentences.
                         - Use strong reasoning and avoid emotional or vague statements.
+                        - Do not include quotation marks, markdown symbols, bullet points, dashes, or special formatting in your response.
+                        - Only return natural language sentences in plain text.
                         - If you’re unsure, respond with: “I don’t know”.
                     PROMPT;
         }
@@ -47,6 +49,8 @@ trait PromptBuilderTrait
                     - Focus on defending your position while addressing the opponent's key claims.
                     - Be direct, logical, and maintain a professional tone.
                     - Do not repeat your previous arguments in exactly the same words.
+                    - Do not include quotation marks, markdown symbols, bullet points, dashes, or special formatting in your response.
+                    - Only return natural language sentences in plain text.
                     - If you’re unsure, respond with: “I don’t know”.
                 PROMPT;
     }
@@ -55,6 +59,10 @@ trait PromptBuilderTrait
     {
         return "Summarize the following text in a short, clear paragraph (no more than 3–4 lines):\n\n" . $text_to_summarize;
     }
+
+
+
+
 
     protected function buildTranslationPrompt(string $text, string $target_language): string
     {
