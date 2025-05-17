@@ -127,40 +127,95 @@ class BattleResponseService
         ];
     }
 
-    public function getTextTranslationResponse(string $ai_model_name, string $text, string $target_language): array
+    // public function getTextTranslationResponse(string $ai_model_name, string $text, string $target_language): array
+    // {
+    //     $schema = BattleResponseSchema::createPrismSchema(
+    //         "text_translation",
+    //         "Translate a given text to another language",
+    //         [
+    //             "original" => "The original input text",
+    //             "translated" => "The translated version of the text",
+    //             "language" => "Target language",
+    //         ]
+    //     );
+
+    //     $prompt = $this->buildTranslationPrompt($text, $target_language);
+
+    //     if ($this->isOpenRouterModel($ai_model_name)) {
+    //         $response = $this->callOpenRouterChat($prompt, $ai_model_name);
+    //         // Remove any potential formatting characters
+    //         $cleanResponse = preg_replace('/[`*_#>-]/', '', $response);
+    //         return [
+    //             'original' => $text,
+    //             'translated' => $cleanResponse,
+    //             'language' => $target_language
+    //         ];
+    //     }
+
+    //     $provider = $this->getProviderForModel($ai_model_name);
+    //     $response = Prism::structured()
+    //         ->using($provider, $ai_model_name)
+    //         ->withSchema($schema)
+    //         ->withPrompt($prompt)
+    //         ->asStructured();
+
+    //     return $response->structured;
+    // }
+
+
+    public function getTextTranslationResponse(string $ai_model_name, string $text, string $target_language, float $temperature = 0.2): array
     {
+        $prompt = $this->buildTranslationPrompt($text, $target_language);
+
+        if ($this->isOpenRouterModel($ai_model_name)) {
+            $data = $this->callOpenRouterChat($prompt, $ai_model_name, $temperature);
+
+            return [
+                'original'          => $text,
+                'translated'        => $data['result'],
+                'language'          => $target_language,
+                'response_time_ms'  => $data['response_time_ms'],
+                'prompt_tokens'     => $data['prompt_tokens'],
+                'completion_tokens' => $data['completion_tokens'],
+            ];
+        }
+
         $schema = BattleResponseSchema::createPrismSchema(
             "text_translation",
             "Translate a given text to another language",
             [
-                "original" => "The original input text",
+                "original"   => "The original input text",
                 "translated" => "The translated version of the text",
-                "language" => "Target language",
+                "language"   => "Target language",
             ]
         );
 
-        $prompt = $this->buildTranslationPrompt($text, $target_language);
-
-        if ($this->isOpenRouterModel($ai_model_name)) {
-            $response = $this->callOpenRouterChat($prompt, $ai_model_name);
-            // Remove any potential formatting characters
-            $cleanResponse = preg_replace('/[`*_#>-]/', '', $response);
-            return [
-                'original' => $text,
-                'translated' => $cleanResponse,
-                'language' => $target_language
-            ];
-        }
-
         $provider = $this->getProviderForModel($ai_model_name);
+
+        $start = microtime(true);
+
         $response = Prism::structured()
             ->using($provider, $ai_model_name)
             ->withSchema($schema)
             ->withPrompt($prompt)
+            ->usingTemperature($temperature)
             ->asStructured();
 
-        return $response->structured;
+        $end = microtime(true);
+
+        $structured = $response->structured;
+
+        return [
+            'original'          => $structured['original'] ?? $text,
+            'translated'        => $structured['translated'] ?? null,
+            'language'          => $structured['language'] ?? $target_language,
+            'response_time_ms'  => (int)(($end - $start) * 1000),
+            'prompt_tokens'     => $response->usage->promptTokens ?? null,
+            'completion_tokens' => $response->usage->completionTokens ?? null,
+        ];
     }
+
+
 
     public function getCodeGenerationResponse(string $ai_model_name, string $task_description, string $programming_language): array
     {
