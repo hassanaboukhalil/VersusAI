@@ -49,6 +49,9 @@ class BattleResponseService
                 'id' => $round->id,
                 'ai_model_name' => $battle->ai_model_1->model_name,
                 'response_text' => $battleResponse->response_text,
+                'response_time_ms' => $response['response_time_ms'],
+                'prompt_tokens' => $response['prompt_tokens'],
+                'completion_tokens' => $response['completion_tokens'],
             ];
         } else {
             // Add second response to existing round
@@ -70,6 +73,9 @@ class BattleResponseService
             return [
                 'ai_model_name' => $battle->ai_model_2->model_name,
                 'response_text' => $battleResponse->response_text,
+                'response_time_ms' => $response['response_time_ms'],
+                'prompt_tokens' => $response['prompt_tokens'],
+                'completion_tokens' => $response['completion_tokens'],
             ];
         }
     }
@@ -237,18 +243,24 @@ class BattleResponseService
         string $ai_model_name,
         string $debate_topic,
         string $opponent_topic,
-        ?string $opponent_response = null
+        ?string $opponent_response = null,
+        float $temperature = 0.2
     ): array {
         $prompt = $this->buildDebatePrompt($debate_topic, $opponent_topic, $opponent_response);
 
         if ($this->isOpenRouterModel($ai_model_name)) {
-            $response = $this->callOpenRouterChat($prompt, $ai_model_name);
+            $data = $this->callOpenRouterChat($prompt, $ai_model_name, $temperature);
+
             return [
-                'response' => $response
+                'response'          => $data['result'],
+                'response_time_ms'  => $data['response_time_ms'],
+                'prompt_tokens'     => $data['prompt_tokens'],
+                'completion_tokens' => $data['completion_tokens'],
             ];
         }
 
         $provider = $this->getProviderForModel($ai_model_name);
+
         $schema = BattleResponseSchema::createPrismSchema(
             "debate_challenge",
             "Structured response for an AI vs AI debate",
@@ -257,13 +269,23 @@ class BattleResponseService
             ]
         );
 
+        $start = microtime(true);
+
         $response = Prism::structured()
             ->using($provider, $ai_model_name)
             ->withSchema($schema)
             ->withPrompt($prompt)
+            ->usingTemperature($temperature)
             ->asStructured();
 
-        return $response->structured;
+        $end = microtime(true);
+
+        return [
+            'response'          => $response->structured['response'] ?? null,
+            'response_time_ms'  => (int)(($end - $start) * 1000),
+            'prompt_tokens'     => $response->usage->promptTokens ?? null,
+            'completion_tokens' => $response->usage->completionTokens ?? null,
+        ];
     }
 
     private function isOpenRouterModel(string $model): bool
