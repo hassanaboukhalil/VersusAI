@@ -20,7 +20,7 @@ import { voteForAiModel, unvoteFromBattle } from '../../../api/battle';
 import { getUser } from '../../../../lib/auth';
 import { toast } from 'sonner';
 import socket from '../../../../lib/socket';
-import BattleCharts from '../../../../components/global/BattleCharts';
+import BattleCharts from '../../../../components/pages-components/battle-details/BattleCharts';
 // import Echo from '../../../../lib/echo';
 
 const BattleDetailsPage = () => {
@@ -405,7 +405,6 @@ const BattleDetailsPage = () => {
                                     </h4>
                                     {battle.type !== 'Debate Challenge' ? (
                                         <p className="text-sm text-gray-400">
-                                            {round.responses[0].ai_model_name}:{' '}
                                             <span className="text-white">
                                                 {round.responses[0].prompt_tokens}
                                             </span>
@@ -585,19 +584,6 @@ const BattleDetailsPage = () => {
                                 </Button>
                             ) : (
                                 battle?.ai_models.map((model) => (
-                                    // <Button
-                                    //     key={model.name}
-                                    //     className="bg-primary text-black"
-                                    //     onClick={() => handleVote(model.name)}
-                                    //     disabled={loadingVote}
-                                    // >
-                                    //     {loadingVote ? (
-                                    //         <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                                    //     ) : (
-                                    //         <Star className="mr-1" />
-                                    //     )}
-                                    //     Vote for {model.name}
-                                    // </Button>
                                     <Button
                                         key={model.name}
                                         type="submit"
