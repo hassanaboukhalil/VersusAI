@@ -417,12 +417,14 @@ const BattleDetailsPage = () => {
                                                     {round.responses[0].prompt_tokens}
                                                 </span>
                                             </p>
-                                            <p className="text-sm text-gray-400">
-                                                {round.responses[1].ai_model_name}:{' '}
-                                                <span className="text-white">
-                                                    {round.responses[1].prompt_tokens}
-                                                </span>
-                                            </p>
+                                            {round.responses[1] && (
+                                                <p className="text-sm text-gray-400">
+                                                    {round.responses[1].ai_model_name}:{' '}
+                                                    <span className="text-white">
+                                                        {round.responses[1].prompt_tokens}
+                                                    </span>
+                                                </p>
+                                            )}
                                         </>
                                     )}
                                 </div>
@@ -439,12 +441,14 @@ const BattleDetailsPage = () => {
                                         {round.responses[0].response_time_ms} ms
                                     </span>
                                 </p>
-                                <p className="text-sm text-gray-400">
-                                    {round.responses[1].ai_model_name}:{' '}
-                                    <span className="text-white">
-                                        {round.responses[1].response_time_ms} ms
-                                    </span>
-                                </p>
+                                {round.responses[1] && (
+                                    <p className="text-sm text-gray-400">
+                                        {round.responses[1].ai_model_name}:{' '}
+                                        <span className="text-white">
+                                            {round.responses[1].response_time_ms} ms
+                                        </span>
+                                    </p>
+                                )}
                             </div>
 
                             {/* Completion Tokens */}
@@ -458,12 +462,14 @@ const BattleDetailsPage = () => {
                                         {round.responses[0].completion_tokens}
                                     </span>
                                 </p>
-                                <p className="text-sm text-gray-400">
-                                    {round.responses[1].ai_model_name}:{' '}
-                                    <span className="text-white">
-                                        {round.responses[1].completion_tokens}
-                                    </span>
-                                </p>
+                                {round.responses[1] && (
+                                    <p className="text-sm text-gray-400">
+                                        {round.responses[1].ai_model_name}:{' '}
+                                        <span className="text-white">
+                                            {round.responses[1].completion_tokens}
+                                        </span>
+                                    </p>
+                                )}
                             </div>
                         </div>
 
@@ -506,6 +512,7 @@ const BattleDetailsPage = () => {
                             {/* AI model 2 */}
                             {round.responses[1] && (
                                 <div className="flex w-full items-start justify-end gap-4">
+                                    {/* Render the second AI's response safely */}
                                     {battle.type === 'Code Generation' ? (
                                         <div className="w-[85%]">
                                             <CodeResponse
