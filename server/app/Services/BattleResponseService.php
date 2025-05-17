@@ -6,15 +6,14 @@ use App\Models\Battle;
 use App\Models\BattleResponse;
 use App\Models\BattleRound;
 use App\Schemas\BattleResponseSchema;
-use App\Traits\HandlesAiModelCalls;
+use App\Traits\HandlesAiModelCallsTrait;
 use App\Traits\PromptBuilderTrait;
-use Illuminate\Support\Facades\Http;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
 
 class BattleResponseService
 {
-    use HandlesAiModelCalls, PromptBuilderTrait;
+    use HandlesAiModelCallsTrait, PromptBuilderTrait;
 
     public function createDebateResponse(
         Battle $battle,
@@ -290,10 +289,13 @@ class BattleResponseService
 
     private function isOpenRouterModel(string $model): bool
     {
-        return str_starts_with($model, 'deepseek-prover-v2') ||
-            str_starts_with($model, 'meta-llama') ||
-            str_starts_with($model, 'mixtral') ||
-            $model === 'Groq';
+        return match (true) {
+            str_contains($model, 'deepseek-prover-v2') => true,
+            str_contains($model, 'meta-llama') => true,
+            str_contains($model, 'mixtral') => true,
+            $model === 'Groq' => true,
+            default => false,
+        };
     }
 
     private function getProviderForModel(string $model): Provider
