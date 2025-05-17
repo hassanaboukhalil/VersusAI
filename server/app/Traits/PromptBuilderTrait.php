@@ -80,12 +80,18 @@ trait PromptBuilderTrait
 
     protected function buildTranslationPrompt(string $text, string $target_language): string
     {
-        return "Translate the following text to {$target_language}. Important: Give me ONLY the direct translation as plain text. Do not include:\n" .
-            "- No triple backticks (```) or single backticks (`)\n" .
-            "- No markdown formatting (no *, **, _, __, #, ##, etc.)\n" .
-            "- No bullet points or numbered lists\n" .
-            "- No quotation marks unless they are part of the original text\n\n" .
-            "Here's the text to translate:\n{$text}";
+        return
+            <<<PROMPT
+                    You are a professional translator AI.
+
+                    Task:
+                    - Provide ONLY the translated plain text output.
+                    - Do NOT include quotation marks (unless in the original), backticks, markdown, bullet points, lists, or any other formatting.
+                    - Do not explain the translation or add any extra text.
+
+                    Text:
+                    {$text}
+                PROMPT;
     }
 
     protected function buildCodeGenerationPrompt(string $task_description, string $programming_language): string
