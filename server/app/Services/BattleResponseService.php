@@ -115,9 +115,9 @@ class BattleResponseService
             ->usingTemperature($temperature)
             ->asStructured();
 
+        // end timer
         $end = microtime(true);
 
-        // 4) extract the structured payload
         $summary = $response->structured['summary'] ?? null;
 
         // extract usage
@@ -290,7 +290,7 @@ class BattleResponseService
 
     private function isOpenRouterModel(string $model): bool
     {
-        return str_starts_with($model, 'deepseek') ||
+        return str_starts_with($model, 'deepseek-prover-v2') ||
             str_starts_with($model, 'meta-llama') ||
             str_starts_with($model, 'mixtral') ||
             $model === 'Groq';
