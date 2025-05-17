@@ -4,18 +4,51 @@ namespace App\Traits;
 
 trait PromptBuilderTrait
 {
+    // protected function buildDebatePrompt(string $debate_topic, string $opponent_topic, ?string $opponent_response): string
+    // {
+    //     if ($opponent_response === null) {
+    //         return "You are participating in a debate. Your position is: \"{$debate_topic}\". " .
+    //             "You are debating against: \"{$opponent_topic}\". " .
+    //             "Present a concise opening argument in 2-3 sentences. Be persuasive and focused.";
+    //     }
+
+    //     return "You are participating in a debate. Your position is: \"{$debate_topic}\". " .
+    //         "Your opponent argued: \"{$opponent_response}\"\n\n" .
+    //         "Respond to their argument in 2-3 sentences, defending your position and addressing their key points. " .
+    //         "Be concise and impactful.";
+    // }
+
     protected function buildDebatePrompt(string $debate_topic, string $opponent_topic, ?string $opponent_response): string
     {
         if ($opponent_response === null) {
-            return "You are participating in a debate. Your position is: \"{$debate_topic}\". " .
-                "You are debating against: \"{$opponent_topic}\". " .
-                "Present a concise opening argument in 2-3 sentences. Be persuasive and focused.";
+            return
+                <<<PROMPT
+                        You are participating in a formal debate as an expert on the topic: "{$debate_topic}".
+                        You are debating against someone who supports: "{$opponent_topic}".
+
+                        Task:
+                        - Write a clear and persuasive opening argument supporting your position.
+                        - Limit your response to 2-3 sentences.
+                        - Use strong reasoning and avoid emotional or vague statements.
+                        - If you’re unsure, respond with: “I don’t know”.
+                    PROMPT;
         }
 
-        return "You are participating in a debate. Your position is: \"{$debate_topic}\". " .
-            "Your opponent argued: \"{$opponent_response}\"\n\n" .
-            "Respond to their argument in 2-3 sentences, defending your position and addressing their key points. " .
-            "Be concise and impactful.";
+        return
+            <<<PROMPT
+                    You are continuing a formal AI-vs-AI debate.
+
+                    Your stance: "{$debate_topic}"
+                    Opponent's stance: "{$opponent_topic}"
+                    Opponent's argument: "{$opponent_response}"
+
+                    Task:
+                    - Craft a concise rebuttal (2-3 sentences).
+                    - Focus on defending your position while addressing the opponent's key claims.
+                    - Be direct, logical, and maintain a professional tone.
+                    - Do not repeat your previous arguments in exactly the same words.
+                    - If you’re unsure, respond with: “I don’t know”.
+                PROMPT;
     }
 
     protected function buildSummarizationPrompt(string $text_to_summarize): string
