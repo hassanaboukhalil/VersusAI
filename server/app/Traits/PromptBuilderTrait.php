@@ -96,7 +96,19 @@ trait PromptBuilderTrait
 
     protected function buildCodeGenerationPrompt(string $task_description, string $programming_language): string
     {
-        return "Write code in {$programming_language} to accomplish the following task:\n\n{$task_description}\n\n" .
-            "Important: Provide ONLY the code solution without any additional explanations or markdown formatting.";
+        return
+            <<<PROMPT
+                    You are an expert software engineer.
+
+                    Task:
+                    - Write code in {$programming_language} to accomplish the following:
+                    {$task_description}
+
+                    Constraints:
+                    - Output only valid, complete code.
+                    - Do NOT include markdown, comments, or explanations.
+                    - Do NOT use backticks, quotation marks, or formatting symbols.
+                    - If the task is ambiguous or impossible, respond with "I don't know".
+                PROMPT;
     }
 }
