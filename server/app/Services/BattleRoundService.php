@@ -29,6 +29,16 @@ class BattleRoundService
         ]);
     }
 
+    private function handleCodeGeneration($battle, $request, $round, $service)
+    {
+        $response_1 = $service->getCodeGenerationResponse($battle->ai_model_1->model_name, $request->description, $request->programming_language);
+        $response_2 = $service->getCodeGenerationResponse($battle->ai_model_2->model_name, $request->description, $request->programming_language);
+
+        return $this->storeResponsesAndFormatResult($battle, $round, $response_1, $response_2, 'code', [
+            'programming_language' => $request->programming_language
+        ]);
+    }
+
 
     public function createRoundAndResponses(Battle $battle, Request $request, int $round_number): array
     {
