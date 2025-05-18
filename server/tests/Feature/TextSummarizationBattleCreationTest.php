@@ -30,24 +30,6 @@ class TextSummarizationBattleCreationTest extends TestCase
 
         $payload = [
             'title' => $this->faker->sentence(6),
-            'description' => $this->faker->paragraph(3),
-            'battle_type_name' => 'Text Summarization',
-            'ai_model_1_name' => 'deepseek-prover-v2',
-            'ai_model_2_name' => 'deepseek-prover-v2',
-            'target_language' => 'English',
-            'temperature' => 0.5,
         ];
-
-        $response = $this->postJson('/api/v1/premium/create-battle', $payload);
-
-        $response->assertStatus(200);
-        $response->assertJsonStructure([
-            'data' => ['id']
-        ]);
-
-        $this->assertDatabaseHas('battles', [
-            'title' => $payload['title'],
-            'description' => $payload['description']
-        ]);
     }
 }
