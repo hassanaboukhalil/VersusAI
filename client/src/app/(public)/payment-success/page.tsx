@@ -41,7 +41,7 @@ const PaymentSuccessPage = () => {
         };
 
         verifyPayment();
-    }, [sessionId]);
+    }, [sessionId, router]);
 
     return (
         <Section className="p-10 text-center h-screen flex flex-col items-center justify-center gap-4">
