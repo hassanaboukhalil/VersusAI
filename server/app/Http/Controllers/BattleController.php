@@ -21,20 +21,29 @@ class BattleController extends Controller
 
     public function create(Request $request)
     {
-        $battle_service = new BattleService();
+        try {
+            $battle_service = new BattleService();
+            $battle = $battle_service->createBattle($request);
 
-        $battle = $battle_service->createBattle($request);
+            if ($battle) {
+                return $this->successResponse(
+                    [
+                        'id' => $battle['id']
+                    ],
+                    'Battle created successfully.'
+                );
+            }
 
-        if ($battle) {
-            return $this->successResponse(
-                [
-                    'id' => $battle['id']
-                ],
-                'Battle created successfully.'
-            );
+            return $this->errorResponse('Something went wrong, try again', 500);
+        } catch (\Exception $e) {
+            // Check if this is the specific AI response error
+            if (strpos($e->getMessage(), "AI models failed to generate") !== false) {
+                return $this->errorResponse($e->getMessage(), 422);
+            }
+
+            // Other errors
+            return $this->errorResponse('Error creating battle: ' . $e->getMessage(), 500);
         }
-
-        return $this->errorResponse('Something went wrong, try again', 500);
     }
 
     public function get(int $id)
