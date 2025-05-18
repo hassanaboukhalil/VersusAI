@@ -655,6 +655,15 @@ class BattleRoundService
         $text1 = is_array($res1) ? $res1[$key] : $res1;
         $text2 = is_array($res2) ? $res2[$key] : $res2;
 
+        // Check if any AI response is null or empty
+        if (empty($text1) || empty($text2)) {
+            // Delete the round and battle if responses are invalid
+            $round->delete();
+            $battle->delete();
+
+            throw new \Exception("One or more AI models failed to generate a valid response. Please try different AI models.");
+        }
+
         $r1 = BattleResponse::create([
             'battle_round_id' => $round->id,
             'ai_model_id' => $battle->ai_model_1_id,
