@@ -9,18 +9,22 @@ import {
     Legend,
     LineChart,
     Line,
+    TooltipProps,
 } from 'recharts';
 import { motion } from 'framer-motion';
-
 import React from 'react';
 
-const TooltipCard = ({ active, payload, label }: any) => {
+interface ChartDataItem extends Record<string, string | number> {
+    name: string;
+}
+
+const TooltipCard = ({ active, payload, label }: TooltipProps<number, string>) => {
     if (!active || !payload?.length) return null;
 
     return (
         <div className="rounded-lg border border-white/20 bg-black px-3 py-2 text-sm">
             <p className="font-semibold text-primary">{label}</p>
-            {payload.map((p: any) => (
+            {payload.map((p) => (
                 <p key={p.dataKey} className="flex items-center gap-2" style={{ color: p.color }}>
                     <span
                         className="inline-block h-2 w-2 rounded-full"
@@ -34,7 +38,7 @@ const TooltipCard = ({ active, payload, label }: any) => {
 };
 
 type Props = {
-    data: any[];
+    data: ChartDataItem[];
     modelNames: string[];
     getColor: (index: number) => string;
 };
@@ -44,8 +48,7 @@ const LineBattleChart: React.FC<Props> = ({ data, modelNames, getColor }) => {
         <motion.div
             className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl"
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ type: 'spring', stiffness: 70 }}
         >
             <h4 className="mb-5 text-xl font-semibold text-white">Response Time per Round</h4>
