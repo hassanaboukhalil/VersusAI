@@ -1,4 +1,6 @@
 import { TooltipProps } from 'recharts';
+import { useRef, useEffect } from 'react';
+import '../../../styles/tooltip.css';
 
 const TooltipCard = ({ active, payload, label }: TooltipProps<number, string>) => {
     if (!active || !payload?.length) return null;
@@ -8,23 +10,42 @@ const TooltipCard = ({ active, payload, label }: TooltipProps<number, string>) =
             <p className="font-semibold text-primary mb-1.5">{label}</p>
             <div className="space-y-1.5">
                 {payload.map((p) => (
-                    <p
-                        key={p.dataKey}
-                        className="flex items-center gap-2"
-                        style={{ color: p.color }}
-                    >
-                        <span
-                            className="inline-block h-2.5 w-2.5 rounded-full"
-                            style={{ background: p.color }}
-                        />
-                        <span className="font-medium" style={{ color: p.color }}>
-                            {p.name}:
-                        </span>
-                        <span style={{ color: p.color }}>{p.value}</span>
-                    </p>
+                    <TooltipItem
+                        key={String(p.dataKey)}
+                        color={String(p.color || '#fff')}
+                        name={String(p.name || '')}
+                        value={p.value ?? ''}
+                    />
                 ))}
             </div>
         </div>
+    );
+};
+
+// Separate component to handle each tooltip item
+const TooltipItem = ({
+    color,
+    name,
+    value,
+}: {
+    color: string;
+    name: string;
+    value: string | number;
+}) => {
+    const itemRef = useRef<HTMLParagraphElement>(null);
+
+    useEffect(() => {
+        if (itemRef.current) {
+            itemRef.current.style.setProperty('--item-color', color);
+        }
+    }, [color]);
+
+    return (
+        <p ref={itemRef} className="flex items-center gap-2">
+            <span className="tooltip-dot" />
+            <span className="font-medium tooltip-item">{name}:</span>
+            <span className="tooltip-item">{value}</span>
+        </p>
     );
 };
 
