@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import {
     ResponsiveContainer,
     CartesianGrid,
@@ -9,33 +10,13 @@ import {
     Legend,
     LineChart,
     Line,
-    TooltipProps,
 } from 'recharts';
-import { motion } from 'framer-motion';
-import React from 'react';
+import TooltipCard from './TooltipCard';
+import AnimatedCard from '../../ui/AnimatedCard';
 
 interface ChartDataItem extends Record<string, string | number> {
     name: string;
 }
-
-const TooltipCard = ({ active, payload, label }: TooltipProps<number, string>) => {
-    if (!active || !payload?.length) return null;
-
-    return (
-        <div className="rounded-lg border border-white/20 bg-black px-3 py-2 text-sm">
-            <p className="font-semibold text-primary">{label}</p>
-            {payload.map((p) => (
-                <p key={p.dataKey} className="flex items-center gap-2" style={{ color: p.color }}>
-                    <span
-                        className="inline-block h-2 w-2 rounded-full"
-                        style={{ background: p.color }}
-                    />
-                    {p.name}: {p.value}
-                </p>
-            ))}
-        </div>
-    );
-};
 
 type Props = {
     data: ChartDataItem[];
@@ -45,12 +26,7 @@ type Props = {
 
 const LineBattleChart: React.FC<Props> = ({ data, modelNames, getColor }) => {
     return (
-        <motion.div
-            className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: 'spring', stiffness: 70 }}
-        >
+        <AnimatedCard>
             <h4 className="mb-5 text-xl font-semibold text-white">Response Time per Round</h4>
 
             <ResponsiveContainer width="100%" height={420}>
@@ -58,14 +34,18 @@ const LineBattleChart: React.FC<Props> = ({ data, modelNames, getColor }) => {
                     <CartesianGrid stroke="#4b5563" strokeDasharray="3 3" />
                     <XAxis dataKey="name" stroke="#d1d5db" fontSize={12} />
                     <YAxis stroke="#d1d5db" fontSize={12} />
-                    <Tooltip content={<TooltipCard />} cursor={{ fill: 'transparent' }} />
+                    <Tooltip
+                        content={<TooltipCard />}
+                        cursor={{ fill: 'transparent' }}
+                        wrapperStyle={{ zIndex: 100, outline: 'none' }}
+                    />
                     <Legend />
                     {modelNames.map((name, i) => (
                         <Line
                             key={name}
                             type="monotone"
                             dataKey={`${name}_response`}
-                            name={`Response – ${name}`}
+                            name={`Response - ${name}`}
                             stroke={getColor(i)}
                             strokeWidth={3}
                             dot={{ r: 4 }}
@@ -76,7 +56,7 @@ const LineBattleChart: React.FC<Props> = ({ data, modelNames, getColor }) => {
                     ))}
                 </LineChart>
             </ResponsiveContainer>
-        </motion.div>
+        </AnimatedCard>
     );
 };
 
