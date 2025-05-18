@@ -355,28 +355,29 @@ const BattleDetailsPage = () => {
                 )}
 
             {/* Battle Rounds */}
-            <div className="border border-lime-300 p-4 space-y-8 rounded-md bg-dark-white">
+            <div className="border border-lime-300 p-6 space-y-10 rounded-xl bg-white/5 shadow-md">
                 {battle.rounds.map((round, i) => (
-                    <div key={`round-${round.id}-${i}`} className="my-8">
+                    <div key={`round-${round.id}-${i}`} className="space-y-6">
                         {battle.type !== 'Debate Challenge' && (
-                            <h3 className="text-lg font-semibold">Round {i + 1}</h3>
+                            <h3 className="text-xl font-bold text-lime-300">⚔️ Round {i + 1}</h3>
                         )}
 
                         <div
-                            className={`flex flex-col gap-4 ${battle.type === 'Debate Challenge' ? 'mt-0' : 'mt-6'}`}
+                            className={`flex flex-col gap-6 ${battle.type === 'Debate Challenge' ? 'mt-0' : 'mt-4'}`}
                         >
                             {/* First AI */}
                             {round.responses[0] && (
-                                <div className="flex w-full items-start gap-2">
-                                    <div className="relative flex items-center">
-                                        <span className="absolute left-[-65px] w-max rotate-[-90deg] text-primary text-[10px]">
+                                <div className="flex w-full items-start gap-4">
+                                    <div className="flex flex-col items-center gap-1">
+                                        <div className="text-xs text-center text-lime-200 bg-lime-800/20 px-2 py-1 rounded-full">
                                             {round.responses[0].ai_model_name}
-                                        </span>
+                                        </div>
                                         <Image
                                             src={getModelImage(round.responses[0].ai_model_name)}
                                             alt={round.responses[0].ai_model_name}
-                                            width={50}
-                                            height={50}
+                                            width={48}
+                                            height={48}
+                                            className="rounded-full border border-lime-300 shadow"
                                         />
                                     </div>
                                     {battle.type === 'Code Generation' ? (
@@ -389,7 +390,7 @@ const BattleDetailsPage = () => {
                                             />
                                         </div>
                                     ) : (
-                                        <div className="bg-white text-black p-3 rounded text-sm max-w-[85%]">
+                                        <div className="bg-white text-black p-4 rounded-lg text-sm max-w-[85%] shadow">
                                             {round.responses[0].response_text}
                                         </div>
                                     )}
@@ -398,18 +399,7 @@ const BattleDetailsPage = () => {
 
                             {/* Second AI */}
                             {round.responses[1] && (
-                                <div className="flex w-full items-start justify-start flex-row-reverse gap-2">
-                                    <div className="relative flex items-center">
-                                        <span className="absolute right-[-70px] rotate-[90deg] text-primary text-[10px]">
-                                            {round.responses[1].ai_model_name}
-                                        </span>
-                                        <Image
-                                            src={getModelImage(round.responses[1].ai_model_name)}
-                                            alt={round.responses[1].ai_model_name}
-                                            width={50}
-                                            height={50}
-                                        />
-                                    </div>
+                                <div className="flex w-full items-start justify-end gap-4">
                                     {battle.type === 'Code Generation' ? (
                                         <div className="w-[85%]">
                                             <CodeResponse
@@ -420,10 +410,22 @@ const BattleDetailsPage = () => {
                                             />
                                         </div>
                                     ) : (
-                                        <div className="bg-white text-black p-3 rounded text-sm w-[85%]">
+                                        <div className="bg-white text-black p-4 rounded-lg text-sm w-[85%] shadow">
                                             {round.responses[1].response_text}
                                         </div>
                                     )}
+                                    <div className="flex flex-col items-center gap-1">
+                                        <div className="text-xs text-center text-indigo-200 bg-indigo-800/20 px-2 py-1 rounded-full">
+                                            {round.responses[1].ai_model_name}
+                                        </div>
+                                        <Image
+                                            src={getModelImage(round.responses[1].ai_model_name)}
+                                            alt={round.responses[1].ai_model_name}
+                                            width={48}
+                                            height={48}
+                                            className="rounded-full border border-indigo-300 shadow"
+                                        />
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -500,10 +502,22 @@ const BattleDetailsPage = () => {
                                 ))
                             )}
                         </div>
-                        <p className="mt-4 text-gray-300">
-                            {battle?.ai_models[0].name}: {battle?.ai_models[0].votes || 0}
-                            &nbsp;&nbsp;&nbsp;
-                            {battle?.ai_models[1].name}: {battle?.ai_models[1].votes || 0}
+                        <div className="flex gap-4 mt-6 text-sm text-gray-300">
+                            {battle?.ai_models.map((model) => (
+                                <span
+                                    key={model.name}
+                                    className="px-3 py-1 bg-gray-800 rounded-full border border-gray-600"
+                                >
+                                    {model.name}: {model.votes || 0} vote
+                                    {(model.votes || 0) === 1 ? '' : 's'}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="mt-8">
+                        <p className="text-gray-300">
+                            Created by {battle?.user.first_name} {battle?.user.last_name}
                         </p>
                     </div>
 
@@ -518,20 +532,31 @@ const BattleDetailsPage = () => {
                             <Send color="black" className="absolute right-[8px]" />
                         </div>
                     </div>
+
                     {/* Static Comment */}
                     <div className="mt-6 space-y-4">
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
+                        <div className="bg-white/5 p-4 rounded-md border border-gray-600 shadow">
+                            <div className="flex items-center gap-4 mb-3">
                                 <Image
-                                    src="/images/no-user-profile-pic.jpeg"
-                                    alt="Jorge Katto"
-                                    width={32}
-                                    height={32}
-                                    className="rounded-full"
+                                    src={
+                                        battle?.user.profile_picture_url ||
+                                        '/images/no-user-profile-pic.jpeg'
+                                    }
+                                    alt={`${battle?.user.first_name} ${battle?.user.last_name}`}
+                                    width={40}
+                                    height={40}
+                                    className="rounded-full border border-white shadow-sm"
                                 />
-                                <span className="font-semibold">Jorge Katto</span>
+                                <div className="flex flex-col leading-tight">
+                                    <span className="font-semibold text-white text-sm">
+                                        {battle?.user.first_name} {battle?.user.last_name}
+                                    </span>
+                                    <span className="text-gray-400 text-xs mt-0.5">
+                                        @{battle?.user.username}
+                                    </span>
+                                </div>
                             </div>
-                            <p className="text-gray-400 text-sm">I liked the debate.</p>
+                            <p className="text-sm text-gray-300">I liked the debate.</p>
                         </div>
                     </div>
                 </>

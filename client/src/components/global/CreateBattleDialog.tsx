@@ -94,15 +94,14 @@ const CreateBattleDialog = ({ onSuccess }: { onSuccess: () => void }) => {
 
             if (res.data.success) {
                 const data = res.data.data;
-                onSuccess();
                 router.push(`/battles/${data.id}`);
+                onSuccess();
             } else {
                 toast.error('Failed to create battle');
             }
         } catch (err) {
             toast.error('Failed to create battle');
             console.error(err);
-        } finally {
             setLoading(false);
         }
     };

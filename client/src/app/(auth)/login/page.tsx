@@ -40,7 +40,6 @@ const LoginPage = () => {
                 const user = res.data.data;
                 setUser(user);
                 router.push(redirectPath);
-                toast.success('Login successful');
             } else {
                 toast.error(res.data.message);
             }
@@ -48,7 +47,6 @@ const LoginPage = () => {
             const message = 'Login failed';
             console.error('login failed:', error);
             toast.error(message);
-        } finally {
             setLoading(false);
         }
     };
@@ -96,7 +94,7 @@ const LoginPage = () => {
 
                 <div className="text-center text-white mt-6">
                     <p className="mb-2">
-                        Don't have an account?{' '}
+                        Don&apos;t have an account?{' '}
                         <Link className="text-primary" href="/signup">
                             Sign up
                         </Link>

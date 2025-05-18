@@ -8,6 +8,7 @@ import { cn } from '../../..//lib/utils';
 import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import Sidebar from '../../layout/Sidebar';
+import Link from 'next/link';
 
 const Hero = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -36,9 +37,11 @@ const Hero = () => {
                     summarizing text to debating opinions. Compare, vote, and discover which AI
                     performs best.
                 </p>
-                <Button variant="default">
-                    Get Started <ArrowRight />
-                </Button>
+                <Link href="/signup">
+                    <Button variant="default">
+                        Get Started <ArrowRight />
+                    </Button>
+                </Link>
             </div>
         </Section>
     );
