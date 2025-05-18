@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { isLoggedIn, getUser } from '../../lib/auth';
 import Link from 'next/link';
 import { Dialog, DialogTrigger } from '../ui/dialog';
-import CreateBattleDialog from '../global/CreateBattleDialog';
+import CreateBattleDialog from '../global/create-battle-dialog/CreateBattleDialog';
 // import NotificationBell from '../pages-components/notifications/NotificationBell';
 
 interface HeaderProps {
