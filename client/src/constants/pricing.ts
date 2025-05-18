@@ -8,7 +8,7 @@ export const PRICING_PLANS = [
     },
     {
         name: 'Premium',
-        price: 9.99,
+        price: 10,
         features: [
             'Explore battles',
             'Vote on AI responses',
