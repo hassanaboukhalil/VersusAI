@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import React from 'react';
 import {
     CartesianGrid,
@@ -9,12 +8,13 @@ import {
     Tooltip,
     XAxis,
     YAxis,
-    TooltipProps,
+    BarChart,
+    Bar,
+    LabelList,
+    Cell,
 } from 'recharts';
-import { BarChart } from 'recharts';
-import { Bar } from 'recharts';
-import { LabelList } from 'recharts';
-import { Cell } from 'recharts';
+import TooltipCard from './TooltipCard';
+import AnimatedCard from '../../ui/AnimatedCard';
 
 interface ChartDataItem extends Record<string, string | number> {
     name: string;
@@ -24,22 +24,29 @@ interface ChartMouseEvent {
     activeTooltipIndex?: number;
 }
 
-const TooltipCard = ({ active, payload, label }: TooltipProps<number, string>) => {
-    if (!active || !payload?.length) return null;
+// Custom label component for better control over label rendering
+interface CustomLabelProps {
+    x?: number;
+    y?: number;
+    width?: number;
+    value?: number | null;
+}
+
+const CustomLabel = ({ x = 0, y = 0, width = 0, value }: CustomLabelProps) => {
+    if (value === undefined || value === null) return null;
 
     return (
-        <div className="rounded-lg border border-white/20 bg-black px-3 py-2 text-sm">
-            <p className="font-semibold text-primary">{label}</p>
-            {payload.map((p) => (
-                <p key={p.dataKey} className="flex items-center gap-2" style={{ color: p.color }}>
-                    <span
-                        className="inline-block h-2 w-2 rounded-full"
-                        style={{ background: p.color }}
-                    />
-                    {p.name}: {p.value}
-                </p>
-            ))}
-        </div>
+        <text
+            x={x + width / 2}
+            y={y - 8}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fill="#ffffff"
+            fontSize="12"
+            fontWeight="bold"
+        >
+            {value}
+        </text>
     );
 };
 
@@ -53,18 +60,13 @@ type Props = {
 
 const BarBattleChart = ({ data, modelNames, getColor, hoveredRound, setHoveredRound }: Props) => {
     return (
-        <motion.div
-            className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: 'spring', stiffness: 70, delay: 0.15 }}
-        >
+        <AnimatedCard delay={0.15}>
             <h4 className="mb-5 text-xl font-semibold text-white">Completion Tokens per Round</h4>
 
             <ResponsiveContainer width="100%" height={420}>
                 <BarChart
                     data={data}
-                    margin={{ right: 32 }}
+                    margin={{ right: 32, top: 20 }}
                     barCategoryGap="20%"
                     barGap={6}
                     onMouseMove={(e: ChartMouseEvent) => {
@@ -93,14 +95,18 @@ const BarBattleChart = ({ data, modelNames, getColor, hoveredRound, setHoveredRo
                     <CartesianGrid stroke="#4b5563" strokeDasharray="3 3" />
                     <XAxis dataKey="name" stroke="#d1d5db" fontSize={12} />
                     <YAxis stroke="#d1d5db" fontSize={12} />
-                    <Tooltip content={<TooltipCard />} cursor={{ fill: 'transparent' }} />
+                    <Tooltip
+                        content={<TooltipCard />}
+                        cursor={{ fill: 'transparent' }}
+                        wrapperStyle={{ zIndex: 100, outline: 'none' }}
+                    />
                     <Legend />
 
                     {modelNames.map((name, i) => (
                         <Bar
                             key={name}
                             dataKey={`${name}_tokens`}
-                            name={`Tokens – ${name}`}
+                            name={`Tokens - ${name}`}
                             fill={`url(#grad-${i})`}
                             stroke={getColor(i)}
                             radius={[6, 6, 0, 0]}
@@ -112,6 +118,7 @@ const BarBattleChart = ({ data, modelNames, getColor, hoveredRound, setHoveredRo
                                     transform: 'translateY(-6px)',
                                 },
                             }}
+                            isAnimationActive={true}
                         >
                             {data.map((_, idx) => (
                                 <Cell
@@ -125,13 +132,17 @@ const BarBattleChart = ({ data, modelNames, getColor, hoveredRound, setHoveredRo
                                 dataKey={`${name}_tokens`}
                                 position="top"
                                 fill="#fff"
-                                formatter={(v: number) => v.toString()}
+                                formatter={(v: number | null) =>
+                                    v !== undefined && v !== null ? v.toString() : ''
+                                }
+                                content={<CustomLabel />}
+                                dy={-4}
                             />
                         </Bar>
                     ))}
                 </BarChart>
             </ResponsiveContainer>
-        </motion.div>
+        </AnimatedCard>
     );
 };
 
