@@ -1,10 +1,10 @@
 import {
     Home,
-    User,
+    // User,
     // MessageCircle,
     Crown,
-    Settings,
-    Bell,
+    // Settings,
+    // Bell,
     LogOut,
     // Sparkles,
     // DollarSign,

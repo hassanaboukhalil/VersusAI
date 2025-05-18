@@ -1,9 +1,6 @@
 'use client';
 
 import { Check, X } from 'lucide-react';
-import { Button } from '../ui/button';
-import { useEffect, useState } from 'react';
-import { getUser } from '../../lib/auth';
 import CheckoutButton from '../pages-components/pricing/CheckoutButton';
 
 export interface PricingPlan {
@@ -19,24 +16,6 @@ interface PricingCardPremiumps {
 }
 
 export const PricingCard = ({ plan }: PricingCardPremiumps) => {
-    const [isPremium, setIsPremium] = useState(false);
-    const [buttonText, setButtonText] = useState(plan.cta);
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    useEffect(() => {
-        const user = getUser();
-        const userIsPremium = user?.is_premium || false;
-        setIsPremium(userIsPremium);
-
-        if (userIsPremium && plan.name === 'Premium') {
-            setButtonText('Your current plan');
-        } else {
-            setButtonText(plan.cta);
-        }
-
-        setIsLoaded(true);
-    }, [plan.name, plan.cta]);
-
     return (
         <div className="bg-dark-white rounded-xl p-6 flex flex-col items-start shadow-md border border-white/10 w-72">
             <h3 className="text-3xl text-primary font-semibold">{plan.name}</h3>

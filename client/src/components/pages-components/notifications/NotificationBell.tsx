@@ -18,7 +18,7 @@ const NotificationBell = () => {
             dispatch(setNotifications(res.data.data));
             console.log(res.data);
         });
-    }, []);
+    }, [dispatch]);
 
     const notifications = useSelector((state: RootState) => state.notification.notifications);
 
