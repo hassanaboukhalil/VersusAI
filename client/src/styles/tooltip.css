@@ -1,0 +1,12 @@
+/* Tooltip card custom styles */
+.tooltip-item {
+  color: var(--item-color);
+}
+
+.tooltip-dot {
+  background-color: var(--item-color);
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-radius: 9999px;
+} 
