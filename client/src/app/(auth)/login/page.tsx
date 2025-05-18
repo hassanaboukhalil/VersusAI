@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import api from '../../../lib/axios';
 import Logo from '../../../components/layout/Logo';
@@ -10,7 +10,8 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { setUser } from '../../../lib/auth';
 
-const LoginPage = () => {
+// Client component that uses useSearchParams
+function LoginContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirectPath = searchParams.get('redirect') || '/explore';
@@ -79,9 +80,6 @@ const LoginPage = () => {
                         onChange={handleChange}
                         required
                     />
-                    {/* <Button type="submit" className="w-full bg-primary text-black hover:opacity-90">
-                        Login
-                    </Button> */}
                     <Button
                         type="submit"
                         className="w-full bg-primary text-black hover:opacity-90"
@@ -102,6 +100,21 @@ const LoginPage = () => {
                 </div>
             </div>
         </div>
+    );
+}
+
+// Main page component with Suspense boundary
+const LoginPage = () => {
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen bg-background flex justify-center items-center">
+                    Loading...
+                </div>
+            }
+        >
+            <LoginContent />
+        </Suspense>
     );
 };
 
