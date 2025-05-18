@@ -2,19 +2,35 @@
 
 import { motion } from 'framer-motion';
 import React from 'react';
-import { CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import {
+    CartesianGrid,
+    Legend,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+    TooltipProps,
+} from 'recharts';
 import { BarChart } from 'recharts';
 import { Bar } from 'recharts';
 import { LabelList } from 'recharts';
 import { Cell } from 'recharts';
 
-const TooltipCard = ({ active, payload, label }: any) => {
+interface ChartDataItem extends Record<string, string | number> {
+    name: string;
+}
+
+interface ChartMouseEvent {
+    activeTooltipIndex?: number;
+}
+
+const TooltipCard = ({ active, payload, label }: TooltipProps<number, string>) => {
     if (!active || !payload?.length) return null;
 
     return (
         <div className="rounded-lg border border-white/20 bg-black px-3 py-2 text-sm">
             <p className="font-semibold text-primary">{label}</p>
-            {payload.map((p: any) => (
+            {payload.map((p) => (
                 <p key={p.dataKey} className="flex items-center gap-2" style={{ color: p.color }}>
                     <span
                         className="inline-block h-2 w-2 rounded-full"
@@ -28,7 +44,7 @@ const TooltipCard = ({ active, payload, label }: any) => {
 };
 
 type Props = {
-    data: any[];
+    data: ChartDataItem[];
     modelNames: string[];
     getColor: (index: number) => string;
     hoveredRound: number | null;
@@ -40,8 +56,7 @@ const BarBattleChart = ({ data, modelNames, getColor, hoveredRound, setHoveredRo
         <motion.div
             className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl"
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ type: 'spring', stiffness: 70, delay: 0.15 }}
         >
             <h4 className="mb-5 text-xl font-semibold text-white">Completion Tokens per Round</h4>
@@ -52,7 +67,7 @@ const BarBattleChart = ({ data, modelNames, getColor, hoveredRound, setHoveredRo
                     margin={{ right: 32 }}
                     barCategoryGap="20%"
                     barGap={6}
-                    onMouseMove={(e: any) => {
+                    onMouseMove={(e: ChartMouseEvent) => {
                         if (e?.activeTooltipIndex !== undefined) {
                             setHoveredRound(e.activeTooltipIndex);
                         }
