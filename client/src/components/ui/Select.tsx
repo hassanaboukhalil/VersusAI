@@ -26,6 +26,7 @@ const Select: React.FC<SelectProps> = ({
                 className={`rounded bg-white text-black px-2 py-1 ${className || ''}`}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
+                aria-label={label || placeholder || 'Select option'}
             >
                 {placeholder && <option value="">{placeholder}</option>}
                 {options.map((option) => (

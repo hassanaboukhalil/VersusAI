@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\Http;
 
-trait HandlesAiModelCalls
+trait HandlesAiModelCallsTrait
 {
     public function callDeepSeekChat(string $prompt, string $model = 'deepseek-chat'): string
     {
@@ -57,17 +57,17 @@ trait HandlesAiModelCalls
         return $response->json('choices.0.message.content');
     }
 
-    public function callOpenRouterChat(string $prompt, string $model)
+    public function callOpenRouterChat(string $prompt, string $model, float $temperature = 0.2)
     {
         $model = match (true) {
-            $model === 'deepseek-prover-v2' => 'deepseek/deepseek-prover-v2:free',
-            str_contains($model, 'meta-llama') => $model,
-            str_contains($model, 'mixtral') => $model,
-            $model === 'Groq' => 'meta-llama/llama-4-scout-17b-16e-instruct',
-            default => throw new \Exception("Unsupported OpenRouter model: $model")
+            str_contains($model, 'deepseek-prover-v2') => 'deepseek/deepseek-prover-v2:free',
+            str_contains($model, 'meta-llama')      => $model,
+            str_contains($model, 'mixtral')         => $model,
+            $model === 'Groq'                       => 'meta-llama/llama-4-scout-17b-16e-instruct',
         };
 
-        $response = Http::withHeaders([
+        $start = microtime(true);
+        $http = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
             'Content-Type'  => 'application/json',
             'HTTP-Referer'  => env('OPENROUTER_REFERER', 'https://versusai.local'),
@@ -75,18 +75,31 @@ trait HandlesAiModelCalls
         ])->post('https://openrouter.ai/api/v1/chat/completions', [
             'model'    => $model,
             'messages' => [
-                [
-                    'role'    => 'user',
-                    'content' => $prompt,
-                ]
+                ['role' => 'user', 'content' => $prompt],
             ],
+            'temperature' => $temperature,
         ]);
+        $end = microtime(true);
 
-        if ($response->failed()) {
-            throw new \Exception('OpenRouter API call failed: ' . $response->body());
+        if ($http->failed()) {
+            throw new \Exception('OpenRouter API call failed: ' . $http->body());
         }
 
-        return $response->json('choices.0.message.content');
+        $json = $http->json();
+
+        $result = $json['choices'][0]['message']['content'] ?? null;
+
+        $promptTokens     = $json['usage']['prompt_tokens']     ?? null;
+        $completionTokens = $json['usage']['completion_tokens'] ?? null;
+
+        $data = [
+            'result' => $result,
+            'response_time_ms'  => (int)(($end - $start) * 1000),
+            'prompt_tokens'     => $promptTokens,
+            'completion_tokens' => $completionTokens,
+        ];
+
+        return $data;
     }
 
     public function callGroqChat(string $prompt, string $model = 'meta-llama/llama-4-scout-17b-16e-instruct'): string
@@ -112,14 +125,14 @@ trait HandlesAiModelCalls
     }
 
 
-    private function isOpenRouterModel(string $model): bool
-    {
-        return match (true) {
-            str_contains($model, 'deepseek-prover-v2') => true,
-            str_contains($model, 'meta-llama') => true,
-            str_contains($model, 'mixtral') => true,
-            $model === 'Groq' => true,
-            default => false,
-        };
-    }
+    // private function isOpenRouterModel(string $model): bool
+    // {
+    //     return match (true) {
+    //         str_contains($model, 'deepseek-prover-v2') => true,
+    //         str_contains($model, 'meta-llama') => true,
+    //         str_contains($model, 'mixtral') => true,
+    //         $model === 'Groq' => true,
+    //         default => false,
+    //     };
+    // }
 }

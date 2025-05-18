@@ -15,7 +15,7 @@ class BattleService
 {
     public function getAllBattles(): array
     {
-        $all_battles = Battle::where('is_active', false)->with('user', 'category', 'ai_model_1', 'ai_model_2', 'votes')->get();
+        $all_battles = Battle::where('is_active', false)->with('user', 'category', 'ai_model_1', 'ai_model_2', 'votes')->orderBy('created_at', 'desc')->get();
 
         $battles = [];
 
@@ -35,6 +35,7 @@ class BattleService
                 'id' => $battle->id,
                 'title' => $battle->title,
                 'type' => $battle->category->name,
+                'temperature' => $battle->temperature,
                 'ai_model_1_id' => $battle->ai_model_1_id,
                 'ai_model_2_id' => $battle->ai_model_2_id,
                 'ai_model_1_name' => $battle->ai_model_1->model_name,
@@ -64,6 +65,7 @@ class BattleService
             'category_id' => $category->id,
             'ai_model_1_id' => $ai_model_1->id,
             'ai_model_2_id' => $ai_model_2->id,
+            'temperature' => $request->temperature,
             'title' => $request->title,
             'description' => $request->description,
             'target_language' => $request->battle_type_name === 'Text Translation' ? $request->target_language : null,
@@ -100,6 +102,9 @@ class BattleService
                     return [
                         'ai_model_name' => $response->ai_model->model_name,
                         'response_text' => $response->response_text,
+                        'response_time_ms' => $response->response_time_ms,
+                        'prompt_tokens' => $response->prompt_tokens,
+                        'completion_tokens' => $response->completion_tokens,
                     ];
                 })->toArray()
             ];

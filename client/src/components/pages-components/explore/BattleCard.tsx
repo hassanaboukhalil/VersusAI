@@ -6,7 +6,7 @@ import Link from 'next/link';
 const BattleCard = ({ battle }: { battle: Battle }) => {
     return (
         <div className="bg-dark-white rounded-lg p-4 text-white border border-white/10 flex flex-col justify-between h-full gap-6">
-            <h3 className="text-primary text-2xl font-semibold">{battle.title}</h3>
+            <h3 className="text-primary text-xl font-semibold">{battle.title}</h3>
 
             <div className="w-full">
                 <p className="text-base font-medium mt-6">

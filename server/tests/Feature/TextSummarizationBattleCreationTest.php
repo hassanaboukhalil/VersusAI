@@ -34,6 +34,8 @@ class TextSummarizationBattleCreationTest extends TestCase
             'battle_type_name' => 'Text Summarization',
             'ai_model_1_name' => 'gemini-2.0-flash',
             'ai_model_2_name' => 'deepseek-prover-v2',
+            'target_language' => 'English',
+            'temperature' => 0.5,
         ];
 
         $response = $this->postJson('/api/v1/premium/create-battle', $payload);

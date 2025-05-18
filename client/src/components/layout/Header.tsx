@@ -7,7 +7,8 @@ import { useEffect, useState } from 'react';
 import { isLoggedIn, getUser } from '../../lib/auth';
 import Link from 'next/link';
 import { Dialog, DialogTrigger } from '../ui/dialog';
-import CreateBattleDialog from '../global/CreateBattleDialog';
+import CreateBattleDialog from '../global/create-battle-dialog/CreateBattleDialog';
+// import NotificationBell from '../pages-components/notifications/NotificationBell';
 
 interface HeaderProps {
     onToggleSidebar: () => void;
@@ -47,30 +48,31 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
                     <PanelLeft className="w-5 h-5 text-white" />
                 </Button>
             </div>
-            {loggedIn ? (
-                isPremium ? (
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                        <DialogTrigger className="bg-[#DEFE01] shadow-xs hover:bg-primary/90 text-[#000000] size-fit leading-0 cursor-pointer h-9 px-4 py-2 rounded-md">
-                            Create Battle
-                        </DialogTrigger>
-                        <CreateBattleDialog onSuccess={() => setIsDialogOpen(false)} />
-                    </Dialog>
+
+            <div className="flex gap-4">
+                {/* {loggedIn && <NotificationBell />} */}
+                {loggedIn ? (
+                    isPremium ? (
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                            <DialogTrigger className="bg-[#DEFE01] shadow-xs hover:bg-primary/90 text-[#000000] size-fit leading-0 cursor-pointer h-9 px-4 py-2 rounded-md">
+                                Create Battle
+                            </DialogTrigger>
+                            <CreateBattleDialog onSuccess={() => setIsDialogOpen(false)} />
+                        </Dialog>
+                    ) : (
+                        <Link href="/pricing">
+                            <Button variant="default">
+                                <Lock className="w-4 h-4 mr-2" />
+                                Create Battle
+                            </Button>
+                        </Link>
+                    )
                 ) : (
-                    <Link href="/pricing">
-                        <Button variant="default">
-                            <Lock className="w-4 h-4 mr-2" />
-                            Create Battle
-                        </Button>
-                    </Link>
-                )
-            ) : (
-                // <Link href="/login">
-                //     <Button variant="default">Login</Button>
-                // </Link>
-                <Button variant="default" href="/login">
-                    Login
-                </Button>
-            )}
+                    <Button variant="default" href="/login">
+                        Login
+                    </Button>
+                )}
+            </div>
         </div>
     );
 };

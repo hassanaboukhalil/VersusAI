@@ -2,6 +2,9 @@
 export interface Response {
     ai_model_name: string;
     response_text: string;
+    response_time_ms: number;
+    prompt_tokens: number;
+    completion_tokens: number;
 }
 
 // A round in a battle containing responses from both AIs
