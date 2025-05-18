@@ -6,6 +6,7 @@ WORKDIR /app/versusai-client
 
 # Copy dependency files first to leverage Docker cache
 COPY package*.json ./
+COPY .env .env
 
 # Install all dependencies (including devDependencies)
 RUN npm install
@@ -21,6 +22,8 @@ FROM node:20
 
 # Set the working directory in the final container
 WORKDIR /app/versusai-client
+
+COPY .env .env
 
 # Copy build output and necessary files from builder
 COPY --from=builder /app/versusai-client/.next .next
