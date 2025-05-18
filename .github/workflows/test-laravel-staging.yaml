@@ -1,9 +1,9 @@
 name: Laravel Tests
 
 on:
-  push:
-    branches:
-      - staging
+  # push:
+  #   branches:
+  #     - staging
   pull_request:
     branches:
       - staging
