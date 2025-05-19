@@ -2,7 +2,8 @@ import axios from 'axios';
 import { getUser } from './auth';
 
 // const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1`;
-const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL_STAGING}/api/v1`;
+// const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL_STAGING}/api/v1`;
+const BASE_URL = `http://13.38.78.117:8000/api/v1`;
 
 const api = axios.create({
     baseURL: BASE_URL,
