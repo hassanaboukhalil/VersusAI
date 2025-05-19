@@ -5,25 +5,33 @@
 <!-- project overview -->
 <img src="./readme/title2.svg"/>
 
-> VersusAI lets users create and explore AI battles across different tasks.
+> VersusAI is a project where users can create and explore battles between different AI models, vote on the best results, and see which AI performs better in different tasks.
 
 <br><br>
 
 <!-- System Design -->
 <img src="./readme/title3.svg"/>
 
-### Add Title Here
+### ER diagram
 
-- To be decided on later on.
+<img src="./readme/VersusAI-ER-diagram.png"/>
 
 <br><br>
 
 <!-- Project Highlights -->
 <img src="./readme/title4.svg"/>
 
-### Add Title Here
+### Some features included in VersusAI
 
-- List the sexy features.
+- Create Battles - Premium members, who upgrade through Stripe, can set up head-to-head contests between supported AI models.
+
+- Vote on Battles - Cast your vote and watch the results update instantly.
+
+- Explore Battles - Browse finished battles and catch up on the highlights.
+
+- See the Stats - Check analytics to see which model performed better and how quickly it responded.
+
+- Pay Securely - Subscribe through Stripe; every transaction is quick and safe.
 
 <br><br>
 
@@ -55,8 +63,23 @@
 
 <br><br>
 
-<!-- Deployment -->
+<!-- AI Development -->
 <img src="./readme/title7.svg"/>
+
+### Prompts
+
+| The prompt responsible for the code response    | The prompt responsible for the text translation response |
+| ----------------------------------------------- | -------------------------------------------------------- |
+| ![Landing](./readme/AI-development/prompt1.png) | ![fsdaf](./readme/AI-development/prompt2.png)            |
+
+### Using Prism
+
+![Landing](./readme/AI-development/prism.png)
+
+<br><br>
+
+<!-- Deployment -->
+<img src="./readme/title8.svg"/>
 
 ### Add Title Here
 
