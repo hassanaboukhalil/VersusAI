@@ -7,8 +7,8 @@ export const PRICING_PLANS = [
         cta: 'Get Started',
     },
     {
-        name: 'Pro',
-        price: 9.99,
+        name: 'Premium',
+        price: 10,
         features: [
             'Explore battles',
             'Vote on AI responses',

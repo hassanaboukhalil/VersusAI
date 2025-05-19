@@ -26,6 +26,13 @@
   }
 }
 
+
+.gradient-text {
+  background: linear-gradient(90deg,#22d3ee 0%,#c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 @layer base {
   :root {
     /* colors */
@@ -127,10 +134,10 @@
 
   /* ===== text sizes */
   .h1{
-    @apply text-5xl font-bold lg:text-6xl; /* 60px */
+    @apply text-4xl md:text-6xl font-bold lg:text-5xl; /* 60px */
   }
   .h2{
-    @apply text-4xl font-bold lg:text-5xl; /* 60px */
+    @apply text-4xl font-bold lg:text-4xl; /* 60px */
   }
 
   .body-1{
@@ -165,6 +172,10 @@ h4{
   font-size: 60px;
 } */
 
+button{
+  cursor: pointer;
+}
+
 .my-container {
   width: 100%;
   padding-right: var(--container-padding-x);
@@ -194,3 +205,23 @@ h4{
     @apply bg-background text-foreground;
   }
 } */
+
+
+@layer components {
+  .pulse-neon {
+    @apply relative rounded-md bg-[#2c2c2c] text-white transition
+      focus:outline-none focus:ring-2 focus:ring-lime-400/70;
+  }
+  .pulse-neon::before {
+    content: '';
+    @apply absolute inset-0 -z-10 rounded-md
+      bg-gradient-to-r from-lime-300 via-yellow-200 to-lime-400
+      opacity-0 blur-sm transition;
+  }
+  .pulse-neon:hover::before {
+    @apply opacity-75;
+  }
+  .pulse-neon:hover {
+    @apply scale-[1.03] text-black;
+  }
+}

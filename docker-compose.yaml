@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   server:
-    image: hsn129/versusai-laravel:production
+    image: hsn129/versusai-laravel:staging
     container_name: versusai-server
     restart: unless-stopped
     ports:
@@ -25,11 +25,20 @@ services:
       - db-data:/var/lib/mysql
 
   client:
-    image: hsn129/versusai-nextjs:production
+    image: hsn129/versusai-nextjs:staging
     container_name: versusai-client
     restart: unless-stopped
     ports:
       - "80:3000"
+    depends_on:
+      - server
+
+  realtime-server:
+    image: hsn129/versusai-realtime:staging
+    container_name: versusai-realtime
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
     depends_on:
       - server
 

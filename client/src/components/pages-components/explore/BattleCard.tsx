@@ -1,12 +1,14 @@
 import Image from 'next/image';
 import { Button } from '../../ui/button';
 import { Battle } from '../../../types/battle';
+import Link from 'next/link';
 
 const BattleCard = ({ battle }: { battle: Battle }) => {
     return (
-        <div className="bg-dark-white rounded-lg p-4 text-white border border-white/10 flex flex-col justify-between h-full">
-            <div>
-                <h3 className="text-primary text-2xl font-semibold">{battle.title}</h3>
+        <div className="bg-dark-white rounded-lg p-4 text-white border border-white/10 flex flex-col justify-between h-full gap-6">
+            <h3 className="text-primary text-xl font-semibold">{battle.title}</h3>
+
+            <div className="w-full">
                 <p className="text-base font-medium mt-6">
                     {battle.ai_model_1_name} vs {battle.ai_model_2_name}
                 </p>
@@ -39,13 +41,14 @@ const BattleCard = ({ battle }: { battle: Battle }) => {
                         </span>
                     </div>
                 </div>
-            </div>
-
-            <div className="flex w-full justify-between items-end mt-4">
-                <span className="text-sm text-white">{battle.created_at}</span>
-                <Button size="sm" className="bg-primary text-black">
-                    View
-                </Button>
+                <div className="flex w-full justify-between items-end mt-4">
+                    <span className="text-sm text-white">{battle.created_at}</span>
+                    <Link href={`/battles/${battle.id}`}>
+                        <Button size="sm" className="bg-primary text-black">
+                            View
+                        </Button>
+                    </Link>
+                </div>
             </div>
         </div>
     );

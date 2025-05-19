@@ -1,9 +1,9 @@
 name: Laravel Tests
 
 on:
-  push:
-    branches:
-      - staging
+  # push:
+  #   branches:
+  #     - staging
   pull_request:
     branches:
       - staging
@@ -45,7 +45,12 @@ jobs:
       - name: Set up Test Environment
         working-directory: ./server
         run: |
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env.testing
+          echo "OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}" >> .env.testing
+
           cp .env.testing .env
+
+          # Bootstrapping Laravel
           php artisan config:clear
           php artisan key:generate --env=testing
           php artisan jwt:secret --force --env=testing

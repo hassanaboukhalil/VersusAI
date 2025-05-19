@@ -9,15 +9,15 @@ class BattleResponse extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['battle_round_id', 'ai_model_id', 'response_text'];
+    protected $fillable = ['battle_round_id', 'ai_model_id', 'response_text', 'response_time_ms', 'prompt_tokens', 'completion_tokens'];
 
     public function round()
     {
         return $this->belongsTo(BattleRound::class, 'battle_round_id');
     }
 
-    public function aiModel()
+    public function ai_model()
     {
-        return $this->belongsTo(AiModel::class);
+        return $this->belongsTo(AiModel::class, 'ai_model_id');
     }
 }

@@ -2,20 +2,26 @@
 
 namespace App\Models;
 
+use App\Traits\VoteableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Battle extends Model
 {
-    use HasFactory;
+    use HasFactory, VoteableTrait;
 
     protected $fillable = [
         'user_id',
         'category_id',
-        'title',
-        'description',
         'ai_model_1_id',
         'ai_model_2_id',
+        'title',
+        'description',
+        'target_language',
+        'programming_language',
+        'debate_title_1',
+        'debate_title_2',
+        'temperature',
         'is_active'
     ];
 

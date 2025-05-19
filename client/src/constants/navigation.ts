@@ -1,10 +1,10 @@
 import {
     Home,
-    User,
+    // User,
     // MessageCircle,
     Crown,
-    Settings,
-    Bell,
+    // Settings,
+    // Bell,
     LogOut,
     // Sparkles,
     // DollarSign,
@@ -19,12 +19,12 @@ export interface NavItem {
 }
 
 export const AUTH_NAV_ITEMS: NavItem[] = [
-    { label: 'Explore', href: '/Explore', icon: Home },
-    { label: 'Profile', href: '/profile', icon: User },
+    { label: 'Explore', href: '/explore', icon: Home },
+    // { label: 'Profile', href: '/profile', icon: User },
     // { label: 'Chat with Neuronix', href: '/chat', icon: MessageCircle },
-    { label: 'Upgrade Plan', href: '/upgrade', icon: Crown },
-    { label: 'Settings', href: '/settings', icon: Settings },
-    { label: 'Notifications', href: '/notifications', icon: Bell },
+    { label: 'Upgrade Plan', href: '/pricing', icon: Crown },
+    // { label: 'Settings', href: '/settings', icon: Settings },
+    // { label: 'Notifications', href: '/notifications', icon: Bell },
     { label: 'Logout', href: '/logout', icon: LogOut },
 ];
 

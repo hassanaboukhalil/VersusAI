@@ -40,6 +40,7 @@ const FiltersAndCards = () => {
                 />
                 <select
                     className="bg-white rounded-md px-4 py-2 text-black"
+                    aria-label="Filter by battle type"
                     onChange={(e) => {
                         const value = e.target.value;
                         dispatch(
@@ -58,6 +59,7 @@ const FiltersAndCards = () => {
                 </select>
                 <select
                     className="bg-white rounded-md px-4 py-2 text-black"
+                    aria-label="Filter by date"
                     onChange={(e) => {
                         const value = e.target.value;
                         dispatch(
@@ -75,6 +77,7 @@ const FiltersAndCards = () => {
                 </select>
                 <select
                     className="bg-white rounded-md px-4 py-2 text-black"
+                    aria-label="Filter by AI model"
                     onChange={(e) => {
                         const value = e.target.value;
                         dispatch(

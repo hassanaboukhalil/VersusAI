@@ -4,17 +4,34 @@ import Link from 'next/link';
 import { X } from 'lucide-react';
 import Logo from './Logo';
 import { AUTH_NAV_ITEMS, PUBLIC_NAV_ITEMS } from '../../constants/navigation';
+import { useEffect, useState } from 'react';
+import { isLoggedIn } from '../../lib/auth';
 
 interface SidebarProps {
     open: boolean;
     onClose: () => void;
 }
 
-const isLoggedIn = false;
-
-const navItems = isLoggedIn ? AUTH_NAV_ITEMS : PUBLIC_NAV_ITEMS;
-
 export default function Sidebar({ open, onClose }: SidebarProps) {
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const [navItems, setNavItems] = useState(PUBLIC_NAV_ITEMS);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const loggedIn = isLoggedIn();
+            setIsUserLoggedIn(loggedIn);
+            setNavItems(loggedIn ? AUTH_NAV_ITEMS : PUBLIC_NAV_ITEMS);
+        }
+    }, []);
+
+    const handleLogout = () => {
+        if (typeof window === 'undefined') return;
+
+        // If the current item is a logout link
+        window.location.href = '/logout';
+        onClose();
+    };
+
     return (
         <>
             {/* Overlay */}
@@ -43,7 +60,19 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                 {/* Navigation */}
                 <nav className="flex flex-col px-4 py-6 gap-3">
                     {navItems.map(({ label, href, icon: Icon }) => (
-                        <Link href={href} key={label} className="flex items-center gap-3 px-3 py-2">
+                        <Link
+                            href={href}
+                            key={label}
+                            className="flex items-center gap-3 px-3 py-2 hover:bg-white/10 rounded-md transition-colors"
+                            onClick={(e) => {
+                                if (label === 'Logout') {
+                                    e.preventDefault();
+                                    handleLogout();
+                                } else {
+                                    onClose();
+                                }
+                            }}
+                        >
                             {Icon && <Icon className="w-5 h-5" />}
                             <span>{label}</span>
                         </Link>
