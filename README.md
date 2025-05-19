@@ -63,8 +63,23 @@
 
 <br><br>
 
-<!-- Deployment -->
+<!-- AI Development -->
 <img src="./readme/title7.svg"/>
+
+### Prompts
+
+| The prompt responsible for the code response    | The prompt responsible for the text translation response |
+| ----------------------------------------------- | -------------------------------------------------------- |
+| ![Landing](./readme/AI-development/prompt1.png) | ![fsdaf](./readme/AI-development/prompt2.png)            |
+
+### Using Prism
+
+![Landing](./readme/AI-development/prism.png)
+
+<br><br>
+
+<!-- Deployment -->
+<img src="./readme/title8.svg"/>
 
 ### Add Title Here
 
