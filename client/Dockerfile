@@ -5,11 +5,10 @@ FROM node:20 AS builder
 WORKDIR /app/versusai-client
 
 # Copy dependency files first to leverage Docker cache
-COPY package*.json ./
-COPY .env .env
+COPY package.json package-lock.json ./
 
 # Install all dependencies (including devDependencies)
-RUN npm install
+RUN npm ci
 
 # Copy the rest of the application files into the container
 COPY . ./
@@ -23,15 +22,11 @@ FROM node:20
 # Set the working directory in the final container
 WORKDIR /app/versusai-client
 
-COPY .env .env
-
 # Copy build output and necessary files from builder
 COPY --from=builder /app/versusai-client/.next .next
 COPY --from=builder /app/versusai-client/public ./public
-COPY --from=builder /app/versusai-client/package*.json ./
+COPY --from=builder /app/versusai-client/package.json ./
 COPY --from=builder /app/versusai-client/node_modules ./node_modules
-COPY --from=builder /app/versusai-client/next.config.js ./
-
 
 # Install only production dependencies to reduce size
 RUN npm install --omit=dev --ignore-scripts

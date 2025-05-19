@@ -1,0 +1,17 @@
+# Composer dependencies
+vendor
+
+# Laravel build artifacts
+node_modules
+public/storage
+storage/*.key
+.env
+.env.*.backup
+
+# tests & CI
+phpunit.xml
+docker-compose.*
+Dockerfile
+*.log
+.git
+.gitignore
