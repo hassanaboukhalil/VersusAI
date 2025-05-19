@@ -51,10 +51,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Create client/.env
+      - name: Prepare client build
+        working-directory: ./client
         run: |
-          cat <<EOF > client/.env
-          # NEXT_PUBLIC_BASE_URL=${{ secrets.NEXT_PUBLIC_BASE_URL }}
+          cat <<EOF > .env
           SOCKET_SERVER_URL=${{ secrets.SOCKET_SERVER_URL }}
           NEXT_PUBLIC_STRIPE_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLIC_KEY }}
           EOF
