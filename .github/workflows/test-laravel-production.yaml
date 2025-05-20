@@ -44,9 +44,7 @@ jobs:
         run: |
           cp .env.testing .env
 
-          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
-          echo "OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}" >> .env
-
+          # Bootstrapping Laravel
           php artisan config:clear
           php artisan key:generate --env=testing
           php artisan jwt:secret --force --env=testing
