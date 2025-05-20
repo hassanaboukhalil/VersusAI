@@ -14,7 +14,17 @@
 
 ### ER diagram
 
-<img src="./readme/VersusAI-ER-diagram.png"/>
+|                                                            |
+| ---------------------------------------------------------- |
+| ![Landing](./readme/system-design/VersusAI-ER-diagram.png) |
+|                                                            |
+
+### Component diagram
+
+|                                                                   |
+| ----------------------------------------------------------------- |
+| ![Landing](./readme/system-design/component-diagram_versusai.png) |
+|                                                                   |
 
 <br><br>
 
