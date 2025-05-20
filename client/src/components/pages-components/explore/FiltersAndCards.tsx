@@ -88,7 +88,7 @@ const FiltersAndCards = () => {
                         );
                     }}
                 >
-                    <option>AI Name Model</option>
+                    <option>AI Model Name</option>
                     <option>GPT-4</option>
                     <option>Claude 3</option>
                     <option>Gemini</option>
