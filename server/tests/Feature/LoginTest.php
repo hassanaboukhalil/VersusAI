@@ -21,9 +21,10 @@ class LoginTest extends TestCase
     public function test_user_cannot_login_with_incorrect_password()
     {
         $email = $this->faker->email();
+        $password = $this->faker->password();
         $user = User::factory()->create([
             'email' => $email,
-            'password' => bcrypt('password123')
+            'password' => bcrypt($password)
         ]);
 
         $response = $this->postJson('/api/v1/login', [
