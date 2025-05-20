@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-
 jobs:
   build-and-push-laravel:
     name: Build & Push Laravel Docker Image
@@ -26,6 +25,24 @@ jobs:
       - name: Push Laravel Docker Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:production
 
+  build-and-push-realtime:
+    name: Build & Push Realtime Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Build Realtime Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/versusai-realtime:production ./realtime-server
+      - name: Push Realtime Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-realtime:production
+
   build-and-push-nextjs:
     name: Build & Push Next.js Docker Image
     runs-on: ubuntu-latest
@@ -33,6 +50,14 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+
+      - name: Prepare client build
+        working-directory: ./client
+        run: |
+          cat <<EOF > .env
+          SOCKET_SERVER_URL=${{ secrets.SOCKET_SERVER_URL }}
+          NEXT_PUBLIC_STRIPE_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLIC_KEY }}
+          EOF
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -56,8 +81,9 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:production
 
   deploy-to-ec2:
-    name: Deploy to EC2 (Production)
-    needs: [build-and-push-laravel, build-and-push-nextjs]
+    name: Deploy to EC2 (production)
+    needs:
+      [build-and-push-laravel, build-and-push-realtime, build-and-push-nextjs]
     runs-on: ubuntu-latest
 
     steps:
@@ -83,6 +109,7 @@ jobs:
             cd /home/${{ secrets.EC2_USER }}/versusai
             docker-compose down
             docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-laravel:production || true
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-realtime:production || true
             docker rmi ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:production || true
             docker-compose pull
             docker-compose up -d --remove-orphans
