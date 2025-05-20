@@ -66,9 +66,17 @@
 | --------------------------------------------------- | -------------------------------------------------- |
 | ![Landing](./readme/demo/versusai_explore-page.gif) | ![fsdaf](./readme/demo/versusai_create-battle.gif) |
 
-| Response time                               | Completion tokens                              |
-| ------------------------------------------- | ---------------------------------------------- |
-| ![Landing](./readme/demo/response-time.png) | ![fsdaf](./readme/demo//completion-tokens.png) |
+| First round of the Text Summarization battle           | Second round of the Text Summarization battle          |
+| ------------------------------------------------------ | ------------------------------------------------------ |
+| ![Landing](./readme/demo/versusai-_battle-details.gif) | ![fsdaf](./readme/demo/versusai_battle-details-v2.gif) |
+
+| Analytics                                        | Response time                                    |
+| ------------------------------------------------ | ------------------------------------------------ |
+| ![Landing](./readme/demo/versusai_analytics.gif) | ![Landing](./readme/demo/versusai_analytics.gif) |
+
+| Completion tokens                                                                          | Completion tokens |
+| ------------------------------------------------------------------------------------------ | ----------------- |
+| ![fsdaf](./readme/demo//completion-tokens.png) ![fsdaf](./readme/demo/versusai_voting.gif) |
 
 <br><br>
 
