@@ -33,7 +33,7 @@ class TextSummarizationBattleCreationTest extends TestCase
             'description' => $this->faker->paragraph(3),
             'battle_type_name' => 'Text Summarization',
             'ai_model_1_name' => 'gemini-2.0-flash',
-            'ai_model_2_name' => 'deepseek-prover-v2',
+            'ai_model_2_name' => 'gemini-2.0-flash',
             'temperature' => 0.5,
         ];
 
