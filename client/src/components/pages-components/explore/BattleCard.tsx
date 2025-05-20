@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const BattleCard = ({ battle }: { battle: Battle }) => {
     return (
-        <div className="bg-dark-white rounded-lg p-4 text-white border border-white/10 flex flex-col justify-between h-full gap-6">
+        <div className="bg-dark-white rounded-lg p-4 text-white border border-white/10 flex flex-col justify-between h-full gap-6 transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:shadow-primary/30 hover:border-primary/50 hover:-translate-y-1 hover:rotate-[0.5deg] hover:bg-gradient-to-br hover:from-dark-white hover:to-dark-white/90">
             <h3 className="text-primary text-xl font-semibold">{battle.title}</h3>
 
             <div className="w-full">
