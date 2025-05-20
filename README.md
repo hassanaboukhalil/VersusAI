@@ -43,6 +43,8 @@
 
 - Pay Securely - Subscribe through Stripe; every transaction is quick and safe.
 
+![Landing](./readme/highlights/highlights.png)
+
 <br><br>
 
 <!-- Demo -->
