@@ -70,13 +70,17 @@
 | ------------------------------------------------------ | ------------------------------------------------------ |
 | ![Landing](./readme/demo/versusai-_battle-details.gif) | ![fsdaf](./readme/demo/versusai_battle-details-v2.gif) |
 
-| Analytics                                        | Response time                                    |
-| ------------------------------------------------ | ------------------------------------------------ |
-| ![Landing](./readme/demo/versusai_analytics.gif) | ![Landing](./readme/demo/versusai_analytics.gif) |
+| Real-time voting (updated directly in all pages) |
+| ------------------------------------------------ |
+| ![Landing](./readme/demo/versusai_analytics.gif) |
 
-| Completion tokens                                                                          | Completion tokens |
-| ------------------------------------------------------------------------------------------ | ----------------- |
-| ![fsdaf](./readme/demo//completion-tokens.png) ![fsdaf](./readme/demo/versusai_voting.gif) |
+| Response time graph                         | Completion tokens graph                       |
+| ------------------------------------------- | --------------------------------------------- |
+| ![Landing](./readme/demo/response-time.png) | ![fsdaf](./readme/demo/completion-tokens.png) |
+
+| Real-time voting (updated directly in all pages) |
+| ------------------------------------------------ |
+| ![Landing](./readme/demo/versusai_voting.gif)    |
 
 <br><br>
 
