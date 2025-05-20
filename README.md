@@ -43,6 +43,8 @@
 
 - Pay Securely - Subscribe through Stripe; every transaction is quick and safe.
 
+<br>
+
 ![Landing](./readme/highlights/highlights.png)
 
 <br><br>
@@ -69,7 +71,7 @@
 <!-- Development & Testing -->
 <img src="./readme/title6.svg"/>
 
-| Services                                                  | Validation                                                 | Testing                                                 |
+| Service                                                   | Validation                                                 | Testing                                                 |
 | --------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------- |
 | ![Landing](./readme/development-and-testing/service1.png) | ![fsdaf](./readme/development-and-testing/validation1.png) | ![fsdaf](./readme/development-and-testing/testing1.png) |
 
@@ -93,12 +95,14 @@
 <!-- Deployment -->
 <img src="./readme/title8.svg"/>
 
-### Add Title Here
+### Some API calls from Postman
 
-- Description here.
+| API to summarize a text                      |
+| -------------------------------------------- |
+| ![Landing](./readme/deployment/postman1.png) |
 
-| Postman API 1                           | Postman API 2                         | Postman API 3                         |
-| --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| API to create AI battle                    |
+| ------------------------------------------ |
+| ![fsdaf](./readme/deployment/postman2.png) |
 
 <br><br>
