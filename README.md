@@ -38,17 +38,15 @@
 <!-- Demo -->
 <img src="./readme/title5.svg"/>
 
-### User Screens (Mobile)
+### Screens (Web)
 
-| Login screen                            | Register screen                       | Register screen                       |
-| --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| Hero section in the landing page screen     |
+| ------------------------------------------- |
+| ![Landing](./readme/demo/versusai_hero.gif) |
 
-### Admin Screens (Web)
-
-| Login screen                            | Register screen                       |
-| --------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| Login screen                              | Register screen                        |
+| ----------------------------------------- | -------------------------------------- |
+| ![Landing](./readme/demo/signup-page.png) | ![fsdaf](./readme/demo/login-page.png) |
 
 <br><br>
 
