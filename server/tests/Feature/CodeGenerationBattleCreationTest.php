@@ -29,7 +29,7 @@ class CodeGenerationBattleCreationTest extends TestCase
             'description' => $this->faker->paragraph(3),
             'battle_type_name' => 'Code Generation',
             'ai_model_1_name' => 'gemini-2.0-flash',
-            'ai_model_2_name' => 'deepseek-prover-v2',
+            'ai_model_2_name' => 'gemini-2.0-flash',
             'target_language' => 'Python',
             'temperature' => 0.2,
             'programming_language' => 'Python',
