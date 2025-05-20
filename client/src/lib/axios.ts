@@ -3,7 +3,9 @@ import { getUser } from './auth';
 
 // const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1`;
 // const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL_STAGING}/api/v1`;
-const BASE_URL = `http://16.171.31.119:8000/api/v1`;
+
+const origin = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+const BASE_URL = `http://${origin}:8000/api/v1`;
 
 const api = axios.create({
     baseURL: BASE_URL,
