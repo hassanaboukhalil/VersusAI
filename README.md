@@ -62,9 +62,11 @@
 | ----------------------------------------- | -------------------------------------- |
 | ![Landing](./readme/demo/signup-page.png) | ![fsdaf](./readme/demo/login-page.png) |
 
+
 | Explore battles page                                | Create a battle                                    |
 | --------------------------------------------------- | -------------------------------------------------- |
 | ![Landing](./readme/demo/versusai_explore-page.gif) | ![fsdaf](./readme/demo/versusai_create-battle.gif) |
+
 
 | Response time                               | Completion tokens                              |
 | ------------------------------------------- | ---------------------------------------------- |
