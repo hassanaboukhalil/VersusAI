@@ -62,9 +62,25 @@
 | ----------------------------------------- | -------------------------------------- |
 | ![Landing](./readme/demo/signup-page.png) | ![fsdaf](./readme/demo/login-page.png) |
 
-| Response time                               | Completion tokens                              |
-| ------------------------------------------- | ---------------------------------------------- |
-| ![Landing](./readme/demo/response-time.png) | ![fsdaf](./readme/demo//completion-tokens.png) |
+| Explore battles page                                | Create a battle                                    |
+| --------------------------------------------------- | -------------------------------------------------- |
+| ![Landing](./readme/demo/versusai_explore-page.gif) | ![fsdaf](./readme/demo/versusai_create-battle.gif) |
+
+| First round of the Text Summarization battle           | Second round of the Text Summarization battle          |
+| ------------------------------------------------------ | ------------------------------------------------------ |
+| ![Landing](./readme/demo/versusai-_battle-details.gif) | ![fsdaf](./readme/demo/versusai_battle-details-v2.gif) |
+
+| Real-time voting (updated directly in all pages) |
+| ------------------------------------------------ |
+| ![Landing](./readme/demo/versusai_analytics.gif) |
+
+| Response time graph                         | Completion tokens graph                       |
+| ------------------------------------------- | --------------------------------------------- |
+| ![Landing](./readme/demo/response-time.png) | ![fsdaf](./readme/demo/completion-tokens.png) |
+
+| Real-time voting (updated directly in all pages) |
+| ------------------------------------------------ |
+| ![Landing](./readme/demo/versusai_voting.gif)    |
 
 <br><br>
 
