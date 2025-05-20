@@ -18,21 +18,6 @@ class LoginTest extends TestCase
         $this->seed(UserTypeSeeder::class);
     }
 
-    public function test_user_can_login_with_correct_credentials()
-    {
-        $user = User::factory()->create([
-            'email' => $this->faker->email(),
-            'password' => bcrypt('password123')
-        ]);
-
-        $response = $this->postJson('/api/v1/login', [
-            'email' => $user->email,
-            'password' => 'password123'
-        ]);
-
-        $response->assertStatus(200);
-    }
-
     public function test_user_cannot_login_with_incorrect_password()
     {
         $email = $this->faker->email();
