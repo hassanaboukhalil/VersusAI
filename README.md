@@ -58,6 +58,10 @@
 | ----------------------------------------- | -------------------------------------- |
 | ![Landing](./readme/demo/signup-page.png) | ![fsdaf](./readme/demo/login-page.png) |
 
+| Response time                               | Completion tokens                              |
+| ------------------------------------------- | ---------------------------------------------- |
+| ![Landing](./readme/demo/response-time.png) | ![fsdaf](./readme/demo//completion-tokens.png) |
+
 <br><br>
 
 <!-- Development & Testing -->
