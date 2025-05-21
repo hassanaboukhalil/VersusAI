@@ -14,7 +14,17 @@
 
 ### ER diagram
 
-<img src="./readme/VersusAI-ER-diagram.png"/>
+|                                                            |
+| ---------------------------------------------------------- |
+| ![Landing](./readme/system-design/VersusAI-ER-diagram.png) |
+|                                                            |
+
+### Component diagram
+
+|                                                                   |
+| ----------------------------------------------------------------- |
+| ![Landing](./readme/system-design/component-diagram_versusai.png) |
+|                                                                   |
 
 <br><br>
 
@@ -33,33 +43,53 @@
 
 - Pay Securely - Subscribe through Stripe; every transaction is quick and safe.
 
+<br>
+
+![Landing](./readme/highlights/highlights.png)
+
 <br><br>
 
 <!-- Demo -->
 <img src="./readme/title5.svg"/>
 
-### User Screens (Mobile)
+### Screens (Web)
 
-| Login screen                            | Register screen                       | Register screen                       |
-| --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| Hero section in the landing page screen     |
+| ------------------------------------------- |
+| ![Landing](./readme/demo/versusai_hero.gif) |
 
-### Admin Screens (Web)
+| Login screen                              | Register screen                        |
+| ----------------------------------------- | -------------------------------------- |
+| ![Landing](./readme/demo/signup-page.png) | ![fsdaf](./readme/demo/login-page.png) |
 
-| Login screen                            | Register screen                       |
-| --------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| Explore battles page                                | Create a battle                                    |
+| --------------------------------------------------- | -------------------------------------------------- |
+| ![Landing](./readme/demo/versusai_explore-page.gif) | ![fsdaf](./readme/demo/versusai_create-battle.gif) |
+
+| First round of the Text Summarization battle           | Second round of the Text Summarization battle          |
+| ------------------------------------------------------ | ------------------------------------------------------ |
+| ![Landing](./readme/demo/versusai-_battle-details.gif) | ![fsdaf](./readme/demo/versusai_battle-details-v2.gif) |
+
+| Real-time voting (updated directly in all pages) |
+| ------------------------------------------------ |
+| ![Landing](./readme/demo/versusai_analytics.gif) |
+
+| Response time graph                         | Completion tokens graph                       |
+| ------------------------------------------- | --------------------------------------------- |
+| ![Landing](./readme/demo/response-time.png) | ![fsdaf](./readme/demo/completion-tokens.png) |
+
+| Real-time voting (updated directly in all pages) |
+| ------------------------------------------------ |
+| ![Landing](./readme/demo/versusai_voting.gif)    |
 
 <br><br>
 
 <!-- Development & Testing -->
 <img src="./readme/title6.svg"/>
 
-### Add Title Here
-
-| Services                                | Validation                            | Testing                               |
-| --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| Service                                                   | Validation                                                 | Testing                                                 |
+| --------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------- |
+| ![Landing](./readme/development-and-testing/service1.png) | ![fsdaf](./readme/development-and-testing/validation1.png) | ![fsdaf](./readme/development-and-testing/testing1.png) |
 
 <br><br>
 
@@ -81,12 +111,14 @@
 <!-- Deployment -->
 <img src="./readme/title8.svg"/>
 
-### Add Title Here
+### Some API calls from Postman
 
-- Description here.
+| API to summarize a text                      |
+| -------------------------------------------- |
+| ![Landing](./readme/deployment/postman1.png) |
 
-| Postman API 1                           | Postman API 2                         | Postman API 3                         |
-| --------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Landing](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) | ![fsdaf](./readme/demo/1440x1024.png) |
+| API to create AI battle                    |
+| ------------------------------------------ |
+| ![fsdaf](./readme/deployment/postman2.png) |
 
 <br><br>
