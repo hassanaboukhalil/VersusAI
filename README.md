@@ -90,6 +90,7 @@ docker compose up -d
 
 # Backend
 cd api && cp .env.example .env
+composer install && php artisan key:generate && php artisan migrate --seed
 ```
 
 <br><br>
