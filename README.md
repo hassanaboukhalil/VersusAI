@@ -72,7 +72,7 @@ cd ../web && pnpm install && pnpm dev
 
 | Frontend | Backend | Database | Payments | Containerization |
 | -------- | ------- | -------- | -------- | ---------------- |
-| Next.js  | Laravel | MySQL    | Stripe   |
+| Next.js  | Laravel | MySQL    | Stripe   | Docker Compose   |
 
 <br>
 
