@@ -50,6 +50,8 @@ cd ../web && pnpm install && pnpm dev
 <!-- Project Highlights -->
 <img src="./readme/title4.svg"/>
 
+<br>
+
 ![Landing](./readme/highlights/highlights.png)
 
 ## ✨ Features
