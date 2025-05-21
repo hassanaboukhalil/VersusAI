@@ -87,13 +87,9 @@ cd ../web && pnpm install && pnpm dev
 
 ### Screens (Web)
 
-<details open> <summary>30-second walkthrough (GIF)</summary>
-
 | Hero section in the landing page screen     |
 | ------------------------------------------- |
 | ![Landing](./readme/demo/versusai_hero.gif) |
-
-</details>
 
 | Login screen                              | Register screen                        |
 | ----------------------------------------- | -------------------------------------- |
