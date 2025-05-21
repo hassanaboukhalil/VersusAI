@@ -105,7 +105,6 @@ cd ../web && pnpm install && pnpm dev
 | ------------------------------------------------ |
 | ![Landing](./readme/demo/versusai_voting.gif)    | -->
 
-Login
 <img src="./readme/demo/signup-page.png" width="320" /> <img src="./readme/demo/login-page.png" width="320" />
 
 <br><br>
