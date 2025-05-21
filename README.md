@@ -50,6 +50,8 @@ cd ../web && pnpm install && pnpm dev
 <!-- Project Highlights -->
 <img src="./readme/title4.svg"/>
 
+![Landing](./readme/highlights/highlights.png)
+
 ## ✨ Features
 
 - ⚔️ **Create Battles** – Premium members can set up head-to-head contests between supported AI models.
@@ -75,8 +77,6 @@ cd ../web && pnpm install && pnpm dev
 | Next.js  | Laravel | MySQL    | Stripe   | Docker Compose   |
 
 <br>
-
-![Landing](./readme/highlights/highlights.png)
 
 <br><br>
 
