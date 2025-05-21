@@ -81,7 +81,7 @@ cd ../web && pnpm install && pnpm dev
 
 </details>
 
-<!-- | Login screen                              | Register screen                        |
+| Login screen                              | Register screen                        |
 | ----------------------------------------- | -------------------------------------- |
 | ![Landing](./readme/demo/signup-page.png) | ![fsdaf](./readme/demo/login-page.png) |
 
@@ -103,9 +103,7 @@ cd ../web && pnpm install && pnpm dev
 
 | Real-time voting (updated directly in all pages) |
 | ------------------------------------------------ |
-| ![Landing](./readme/demo/versusai_voting.gif)    | -->
-
-<img src="./readme/demo/signup-page.png" width="320" /> <img src="./readme/demo/login-page.png" width="320" />
+| ![Landing](./readme/demo/versusai_voting.gif)    |
 
 <br><br>
 
