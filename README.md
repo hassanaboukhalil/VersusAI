@@ -82,6 +82,10 @@ cd ../web && pnpm install && pnpm dev
 
 ## ⚡ Quick Start
 
+```bash
+
+```
+
 <br><br>
 
 <!-- Demo -->
