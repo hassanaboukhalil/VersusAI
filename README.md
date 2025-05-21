@@ -98,6 +98,8 @@ cd ../web && pnpm install && pnpm dev
 
 ```
 
+## 🖥️ Requirements
+
 <br><br>
 
 <!-- Demo -->
