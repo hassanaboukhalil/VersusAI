@@ -43,46 +43,45 @@ jobs:
       - name: Push Realtime Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-realtime:production
 
-  build-and-push-nextjs:
-    name: Build & Push Next.js Docker Image
-    runs-on: ubuntu-latest
+  # build-and-push-nextjs:
+  #   name: Build & Push Next.js Docker Image
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v3
 
-      - name: Prepare client build
-        working-directory: ./client
-        run: |
-          cat <<EOF > .env
-          NEXT_PUBLIC_STRIPE_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLIC_KEY }}
-          EOF
+  #     - name: Prepare client build
+  #       working-directory: ./client
+  #       run: |
+  #         cat <<EOF > .env
+  #         NEXT_PUBLIC_STRIPE_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLIC_KEY }}
+  #         EOF
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 20
 
-      - name: Install Dependencies
-        working-directory: ./client
-        run: npm install
+  #     - name: Install Dependencies
+  #       working-directory: ./client
+  #       run: npm install
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
+  #     - name: Login to Docker Hub
+  #       uses: docker/login-action@v3
+  #       with:
+  #         username: ${{ secrets.DOCKER_USERNAME }}
+  #         password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build Next.js Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:production ./client
+  #     - name: Build Next.js Docker Image
+  #       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:production ./client
 
-      - name: Push Next.js Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:production
+  #     - name: Push Next.js Docker Image
+  #       run: docker push ${{ secrets.DOCKER_USERNAME }}/versusai-nextjs:production
 
   deploy-to-ec2:
     name: Deploy to EC2 (production)
-    needs:
-      [build-and-push-laravel, build-and-push-realtime, build-and-push-nextjs]
+    needs: [build-and-push-laravel, build-and-push-realtime]
     runs-on: ubuntu-latest
 
     steps:
