@@ -52,7 +52,7 @@ cd ../web && pnpm install && pnpm dev
 
 ## ✨ Features
 
-- Create Battles - Premium members, who upgrade through Stripe, can set up head-to-head contests between supported AI models.
+- ⚔️ **Create Battles** – Premium members can set up head-to-head contests between supported AI models.
 
 - Vote on Battles - Cast your vote and watch the results update instantly.
 
