@@ -71,6 +71,8 @@ cd ../web && pnpm install && pnpm dev
 ## 🛠️ Tech Stack
 
 | Frontend | Backend | Database | Payments | Containerization |
+| -------- | ------- | -------- | -------- | ---------------- |
+| Next.js  |
 
 <br>
 
