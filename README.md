@@ -89,6 +89,7 @@ docker compose up -d
 # open http://localhost:3000
 
 # Backend
+cd api && cp .env.example .env
 ```
 
 <br><br>
