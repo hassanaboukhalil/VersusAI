@@ -84,7 +84,7 @@ cd ../web && pnpm install && pnpm dev
 
 ```bash
 git clone https://github.com/yourname/versusai.git && cd versusai
-
+docker compose up -d
 ```
 
 <br><br>
