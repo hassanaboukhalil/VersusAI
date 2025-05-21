@@ -54,7 +54,7 @@ cd ../web && pnpm install && pnpm dev
 
 - ⚔️ **Create Battles** – Premium members can set up head-to-head contests between supported AI models.
 
-- Vote on Battles - Cast your vote and watch the results update instantly.
+- 🗳️ **Vote on Battles** – Cast your vote and watch results update instantly.
 
 - Explore Battles - Browse finished battles and catch up on the highlights.
 
