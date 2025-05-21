@@ -55,7 +55,6 @@ jobs:
         working-directory: ./client
         run: |
           cat <<EOF > .env
-          SOCKET_SERVER_URL=${{ secrets.SOCKET_SERVER_URL }}
           NEXT_PUBLIC_STRIPE_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLIC_KEY }}
           EOF
 

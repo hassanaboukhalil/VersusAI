@@ -8,19 +8,6 @@ done
 
 echo "✅ MySQL is ready."
 
-# If .env doesn't exist, create it from example
-# if [ ! -f .env ]; then
-# #   echo "Creating .env from .env.example"
-# #   cp .env.example .env
-# #   php artisan key:generate
-# #   php artisan jwt:secret --force
-
-# #   # Inject the values from environment variables into .env
-# #   echo "Injecting environment variables into .env"
-# # else
-# #   echo ".env already exists"
-# fi
-
 echo "Using existing .env"
 
 # Cache config and routes
@@ -30,7 +17,12 @@ php artisan route:cache
 # Run any new migrations (use --force to avoid prompt)
 php artisan migrate --force
 
+# Seed your lookup tables
+php artisan db:seed --class=UserTypeSeeder --force
+php artisan db:seed --class=CategorySeeder --force
+php artisan db:seed --class=AiModelSeeder --force
+
 echo "✅ Laravel setup complete. Starting Apache..."
 
-# Start Apache in the foreground (container will stay running)
+# Start Apache in the foreground
 exec apache2-foreground
