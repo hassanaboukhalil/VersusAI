@@ -62,6 +62,8 @@ cd ../web && pnpm install && pnpm dev
 
 - 💳 **Pay Securely** – Subscribe through Stripe; every transaction is quick and safe.
 
+- ⏱️ **Real-Time** – All updates and analytics are live.
+
 <br>
 
 ![Landing](./readme/highlights/highlights.png)
