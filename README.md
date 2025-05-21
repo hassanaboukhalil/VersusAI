@@ -38,7 +38,7 @@ cd ../web && pnpm install && pnpm dev
 <!-- System Design -->
 <img src="./readme/title3.svg"/>
 
-### ER diagram
+### ER Diagram
 
 <p align="center"> <img src="./readme/system-design/VersusAI-ER-diagram.png" width="75%" alt="VersusAI ER diagram" /> </p>
 
