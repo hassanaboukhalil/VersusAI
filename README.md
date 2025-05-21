@@ -64,6 +64,8 @@ cd ../web && pnpm install && pnpm dev
 
 - ⏱️ **Real-Time** – All updates and analytics are live.
 
+- 🖼️ **Rich Visuals** – Diagrams, charts, and GIFs for every step.
+
 <br>
 
 ![Landing](./readme/highlights/highlights.png)
