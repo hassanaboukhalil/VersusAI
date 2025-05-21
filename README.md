@@ -68,6 +68,10 @@ cd ../web && pnpm install && pnpm dev
 
 <br>
 
+## 🛠️ Tech Stack
+
+| Frontend | Backend | Database | Payments | Containerization |
+
 <br>
 
 ![Landing](./readme/highlights/highlights.png)
