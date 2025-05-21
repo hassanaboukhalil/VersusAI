@@ -58,7 +58,7 @@ cd ../web && pnpm install && pnpm dev
 
 - 🔍 **Explore Battles** – Browse finished battles and highlights
 
-- See the Stats - Check analytics to see which model performed better and how quickly it responded.
+- 📊 **See the Stats** – Analytics on model performance and response times.
 
 - Pay Securely - Subscribe through Stripe; every transaction is quick and safe.
 
