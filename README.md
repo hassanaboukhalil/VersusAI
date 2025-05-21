@@ -56,7 +56,7 @@ cd ../web && pnpm install && pnpm dev
 
 - 🗳️ **Vote on Battles** – Cast your vote and watch results update instantly.
 
-- Explore Battles - Browse finished battles and catch up on the highlights.
+- 🔍 **Explore Battles** – Browse finished battles and highlights
 
 - See the Stats - Check analytics to see which model performed better and how quickly it responded.
 
