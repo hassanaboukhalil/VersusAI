@@ -83,6 +83,7 @@ cd ../web && pnpm install && pnpm dev
 ## ⚡ Quick Start
 
 ```bash
+
 git clone https://github.com/yourname/versusai.git && cd versusai
 docker compose up -d
 
@@ -91,6 +92,10 @@ docker compose up -d
 # Backend
 cd api && cp .env.example .env
 composer install && php artisan key:generate && php artisan migrate --seed
+
+# Frontend
+cd ../web && pnpm install && pnpm dev
+
 ```
 
 <br><br>
