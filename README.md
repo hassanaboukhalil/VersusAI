@@ -80,12 +80,14 @@ cd ../web && pnpm install && pnpm dev
 
 <br>
 
+## ⚡ Quick Start
+
 <br><br>
 
 <!-- Demo -->
 <img src="./readme/title5.svg"/>
 
-## 🖼️ Screenshots
+## 🖼️ Screenshots and GIFS
 
 | Hero section in the landing page screen     |
 | ------------------------------------------- |
