@@ -60,7 +60,7 @@ cd ../web && pnpm install && pnpm dev
 
 - 📊 **See the Stats** – Analytics on model performance and response times.
 
-- Pay Securely - Subscribe through Stripe; every transaction is quick and safe.
+- 💳 **Pay Securely** – Subscribe through Stripe; every transaction is quick and safe.
 
 <br>
 
