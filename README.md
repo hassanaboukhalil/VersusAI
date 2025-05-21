@@ -85,7 +85,7 @@ cd ../web && pnpm install && pnpm dev
 <!-- Demo -->
 <img src="./readme/title5.svg"/>
 
-### Screens (Web)
+## 🖼️ Screenshots
 
 | Hero section in the landing page screen     |
 | ------------------------------------------- |
