@@ -50,7 +50,7 @@ cd ../web && pnpm install && pnpm dev
 <!-- Project Highlights -->
 <img src="./readme/title4.svg"/>
 
-### Some features included in VersusAI
+## ✨ Features
 
 - Create Battles - Premium members, who upgrade through Stripe, can set up head-to-head contests between supported AI models.
 
