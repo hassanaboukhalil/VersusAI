@@ -1,5 +1,31 @@
 <img src="./readme/title1.svg"/>
 
+# VersusAI – Battle of the LLMs 🤺
+
+[![License](https://img.shields.io/github/license/hassanaboukhalil/versusai)](LICENSE)
+
+> **VersusAI** – pit today’s top LLMs against each other in real-time battles with live voting & analytics.
+> <br><br>
+
+## Quick Start
+
+```bash
+# Clone & bootstrap
+git clone https://github.com/yourname/versusai.git && cd versusai
+docker compose up -d        # spins up Laravel + MySQL + Next.js
+
+# Browse the app
+open http://localhost:3000  # or just click the link
+
+# Backend
+cd api && cp .env.example .env
+composer install && php artisan key:generate && php artisan migrate --seed
+
+# Frontend
+cd ../web && pnpm install && pnpm dev
+
+```
+
 <br><br>
 
 <!-- project overview -->
@@ -14,18 +40,11 @@
 
 ### ER diagram
 
-|                                                            |
-| ---------------------------------------------------------- |
-| ![Landing](./readme/system-design/VersusAI-ER-diagram.png) |
-|                                                            |
+<p align="center"> <img src="./readme/system-design/VersusAI-ER-diagram.png" width="75%" alt="VersusAI ER diagram" /> </p>
 
 ### Component diagram
 
-|                                                                   |
-| ----------------------------------------------------------------- |
-| ![Landing](./readme/system-design/component-diagram_versusai.png) |
-|                                                                   |
-
+<p align="center"> <img src="./readme/system-design/component-diagram_versusai.png" width="75%" alt="VersusAI component diagram" /> </p>
 <br><br>
 
 <!-- Project Highlights -->
@@ -54,11 +73,15 @@
 
 ### Screens (Web)
 
+<details open> <summary>30-second walkthrough (GIF)</summary>
+
 | Hero section in the landing page screen     |
 | ------------------------------------------- |
 | ![Landing](./readme/demo/versusai_hero.gif) |
 
-| Login screen                              | Register screen                        |
+</details>
+
+<!-- | Login screen                              | Register screen                        |
 | ----------------------------------------- | -------------------------------------- |
 | ![Landing](./readme/demo/signup-page.png) | ![fsdaf](./readme/demo/login-page.png) |
 
@@ -80,7 +103,10 @@
 
 | Real-time voting (updated directly in all pages) |
 | ------------------------------------------------ |
-| ![Landing](./readme/demo/versusai_voting.gif)    |
+| ![Landing](./readme/demo/versusai_voting.gif)    | -->
+
+Login
+<img src="./readme/demo/signup-page.png" width="320" /> <img src="./readme/demo/login-page.png" width="320" />
 
 <br><br>
 
