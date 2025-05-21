@@ -68,6 +68,8 @@ cd ../web && pnpm install && pnpm dev
 
 <br>
 
+<br>
+
 ![Landing](./readme/highlights/highlights.png)
 
 <br><br>
