@@ -4,36 +4,19 @@
 
 [![License](https://img.shields.io/github/license/hassanaboukhalil/versusai)](LICENSE)
 
-> **VersusAI** – pit today’s top LLMs against each other in real-time battles with live voting & analytics.
-> <br><br>
-
-## Quick Start
-
-```bash
-# Clone & bootstrap
-git clone https://github.com/yourname/versusai.git && cd versusai
-docker compose up -d        # spins up Laravel + MySQL + Next.js
-
-# Browse the app
-open http://localhost:3000  # or just click the link
-
-# Backend
-cd api && cp .env.example .env
-composer install && php artisan key:generate && php artisan migrate --seed
-
-# Frontend
-cd ../web && pnpm install && pnpm dev
-
-```
-
-<br><br>
+> **VersusAI** – pit today's top LLMs against each other in real-time battles with live voting & analytics.
+> <br>
 
 <!-- project overview -->
 <img src="./readme/title2.svg"/>
 
 > VersusAI is a project where users can create and explore battles between different AI models, vote on the best results, and see which AI performs better in different tasks.
 
-<br><br>
+<br>
+
+<p align="center"> <img src="./readme/cover-image.png" width="75%" alt="VersusAI component diagram" /> </p>
+
+<br>
 
 <!-- System Design -->
 <img src="./readme/title3.svg"/>
@@ -79,26 +62,6 @@ cd ../web && pnpm install && pnpm dev
 | Next.js  | Laravel | MySQL    | Stripe   | Docker Compose   |
 
 <br>
-
-## ⚡ Quick Start
-
-```bash
-
-git clone https://github.com/yourname/versusai.git && cd versusai
-docker compose up -d
-
-# open http://localhost:3000
-
-# Backend
-cd api && cp .env.example .env
-composer install && php artisan key:generate && php artisan migrate --seed
-
-# Frontend
-cd ../web && pnpm install && pnpm dev
-
-```
-
-<br><br>
 
 <!-- Demo -->
 <img src="./readme/title5.svg"/>
@@ -157,7 +120,7 @@ cd ../web && pnpm install && pnpm dev
 | -------------------------------------------------------- |
 | ![fsdaf](./readme/AI-development/prompt2.png)            |
 
-### Using Prism
+### AI Integration Using Prism
 
 ![Landing](./readme/AI-development/prism.png)
 
