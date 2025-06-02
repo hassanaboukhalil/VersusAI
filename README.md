@@ -121,7 +121,7 @@ cd ../web && pnpm install && pnpm dev
 | ------------------------------------------------------ | ------------------------------------------------------ |
 | ![Landing](./readme/demo/versusai-_battle-details.gif) | ![fsdaf](./readme/demo/versusai_battle-details-v2.gif) |
 
-| Real-time voting (updated directly in all pages) |
+| Statistics                                       |
 | ------------------------------------------------ |
 | ![Landing](./readme/demo/versusai_analytics.gif) |
 
@@ -149,9 +149,13 @@ cd ../web && pnpm install && pnpm dev
 
 ### Prompts
 
-| The prompt responsible for the code response    | The prompt responsible for the text translation response |
-| ----------------------------------------------- | -------------------------------------------------------- |
-| ![Landing](./readme/AI-development/prompt1.png) | ![fsdaf](./readme/AI-development/prompt2.png)            |
+| The prompt responsible for the code response    |
+| ----------------------------------------------- |
+| ![Landing](./readme/AI-development/prompt1.png) |
+
+| The prompt responsible for the text translation response |
+| -------------------------------------------------------- |
+| ![fsdaf](./readme/AI-development/prompt2.png)            |
 
 ### Using Prism
 
