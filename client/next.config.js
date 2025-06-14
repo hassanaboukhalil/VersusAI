@@ -13,7 +13,8 @@ const nextConfig = {
         return [
             {
                 source: '/api/:path*',
-                destination: 'http://13.51.158.192:8000/api/:path*',
+                // destination: 'http://13.51.158.192:8000/api/:path*',
+                destination: process.env.NEXT_PUBLIC_BACKEND_URL + '/api/:path*',
             },
         ];
     },
