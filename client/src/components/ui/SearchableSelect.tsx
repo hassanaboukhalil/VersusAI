@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from './input';
-import { Search } from 'lucide-react';
+import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 
 interface SearchableSelectProps {
     label?: string;
@@ -63,21 +63,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <div className="flex-1 truncate">{displayValue}</div>
-                <div className="ml-2">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d={isOpen ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6'} />
-                    </svg>
-                </div>
+                <div className="ml-2">{isOpen ? <ChevronUp /> : <ChevronDown />}</div>
             </div>
 
             {isOpen && (
