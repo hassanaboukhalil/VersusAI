@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
     fetchBattlesStart,
     fetchBattlesSuccess,
@@ -13,11 +13,19 @@ import BattleCards from './BattleCards';
 import { Input } from '../../../components/ui/input';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
+import Select from '../../ui/Select';
+import SearchableSelect from '../../ui/SearchableSelect';
+import { AI_MODELS } from '../../../constants/aiModels';
 
 const FiltersAndCards = () => {
+    const [model, setModel] = useState('');
     const dispatch = useDispatch();
     const battles = useSelector(selectFilteredBattles);
     const loading = useSelector((state: RootState) => state.explore.loading);
+
+    const handleModelChange = (value: string) => {
+        setModel(value);
+    };
 
     useEffect(() => {
         dispatch(fetchBattlesStart());
@@ -75,7 +83,7 @@ const FiltersAndCards = () => {
                     <option>This week</option>
                     <option>This month</option>
                 </select>
-                <select
+                {/* <select
                     className="bg-white rounded-md px-4 py-2 text-black"
                     aria-label="Filter by AI model"
                     onChange={(e) => {
@@ -92,7 +100,14 @@ const FiltersAndCards = () => {
                     <option>GPT-4</option>
                     <option>Claude 3</option>
                     <option>Gemini</option>
-                </select>
+                </select> */}
+                <SearchableSelect
+                    value={model}
+                    onChange={handleModelChange}
+                    options={AI_MODELS}
+                    placeholder="Select AI Model"
+                    className="w-full md:w-[15rem]"
+                />
             </div>
 
             {loading ? (
