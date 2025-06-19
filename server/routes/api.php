@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AIModelController;
 use App\Http\Controllers\BattleController;
 use App\Http\Controllers\BattleRoundController;
 use App\Http\Controllers\NotificationController;
@@ -18,7 +19,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1'], function () {
     Route::group(["middleware" => "auth:api"], function () {
-        Route::get('/battles', [BattleController::class, 'getAllBattles']);
+        // Protected routes
+        Route::get('/ai-models', [AIModelController::class, 'index']);
+        // Route::get('/battles', [BattleController::class, 'getAllBattles']);
+
+        Route::get('/battles', [BattleController::class, 'index']);
+
         Route::get('/get-battle/{id}', [BattleController::class, 'get']);
         Route::post('/battles/vote', [VoteController::class, 'vote']);
         Route::post('/battles/unvote', [VoteController::class, 'unvote']);
