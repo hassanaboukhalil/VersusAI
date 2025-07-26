@@ -45,11 +45,8 @@ const exploreSlice = createSlice({
         ) {
             state.filters[action.payload.key] = action.payload.value;
         },
-        setSortBy(
-            state,
-            action: PayloadAction<{ key: keyof ExploreState['sortBy']; value: string }>
-        ) {
-            state.sortBy = action.payload.value;
+        setSortBy(state, action: PayloadAction<string>) {
+            state.sortBy = action.payload;
         },
         resetFilters(state) {
             state.filters = initialState.filters;
