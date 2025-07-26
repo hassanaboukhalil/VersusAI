@@ -21,9 +21,9 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(["middleware" => "auth:api"], function () {
         // Protected routes
         Route::get('/ai-models', [AIModelController::class, 'index']);
-        // Route::get('/battles', [BattleController::class, 'getAllBattles']);
+        Route::get('/battles', [BattleController::class, 'getAllBattles']);
 
-        Route::get('/battles', [BattleController::class, 'index']);
+        // Route::get('/battles', [BattleController::class, 'index']);
 
         Route::get('/get-battle/{id}', [BattleController::class, 'get']);
         Route::post('/battles/vote', [VoteController::class, 'vote']);
