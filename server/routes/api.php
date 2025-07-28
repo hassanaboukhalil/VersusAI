@@ -31,6 +31,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/battles/{battleId}/user-vote', [VoteController::class, 'getUserVote']);
         Route::post('/pay', [PaymentController::class, 'pay']);
         Route::get('/notifications', [NotificationController::class, 'getNotifications']);
+        Route::post('/refresh', [AuthController::class, 'refresh']);
 
         // Premium Routes
         Route::group(['prefix' => "premium"], function () {
