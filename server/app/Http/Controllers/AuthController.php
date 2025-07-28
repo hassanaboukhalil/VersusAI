@@ -36,4 +36,16 @@ class AuthController extends Controller
             return $this->errorResponse($e->getMessage(), 500);
         }
     }
+
+    public function refresh()
+    {
+        try {
+            $authService = new AuthService();
+            $token = $authService->refresh();
+
+            return $this->successResponse($token, 'Token refreshed successfully');
+        } catch (\Exception $e) {
+            return $this->errorResponse('Token refresh failed', 401);
+        }
+    }
 }
