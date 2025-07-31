@@ -15,12 +15,12 @@ export function getUser(): User | null {
 }
 
 export function setUser(user: User) {
-    if (typeof window === 'undefined') return; // Server-side guard
+    if (typeof window === 'undefined') return;
 
     localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
 
-    // Also set auth token in cookie for middleware
-    document.cookie = `auth_token=${user.token}; path=/; max-age=${60 * 60 * 24 * 30}`; // 30 days
+    // Set cookie to expire in ~1 hour (matching JWT TTL)
+    document.cookie = `auth_token=${user.token}; path=/; max-age=${60 * 60}`; // 1 hour
 }
 
 export function isLoggedIn(): boolean {
