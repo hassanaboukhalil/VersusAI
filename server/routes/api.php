@@ -18,8 +18,22 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['prefix' => 'v1'], function () {
-    Route::group(["middleware" => "auth:api"], function () {
-        // Protected routes
+    // Route::middleware(['attach.jwt.cookie', 'auth:api'])->get('/me', fn() => auth('api')->user());
+
+    //Unauthenticated Routes
+    Route::post('/signup', [AuthController::class, 'signup']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/payment-success', [PaymentController::class, 'paymentSuccess']);
+    // Route::post('/refresh', [AuthController::class, 'refresh']);
+
+
+
+    // Protected routes
+    // Route::group(["middleware" => ["attach.jwt.cookie", "auth:api"]], function () {
+    Route::middleware(['auth:sanctum'])->group(function () {
+        // User info route
+        Route::get('/user', [AuthController::class, 'user']);
+
         Route::get('/ai-models', [AIModelController::class, 'index']);
         Route::get('/battles', [BattleController::class, 'getAllBattles']);
 
@@ -31,7 +45,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/battles/{battleId}/user-vote', [VoteController::class, 'getUserVote']);
         Route::post('/pay', [PaymentController::class, 'pay']);
         Route::get('/notifications', [NotificationController::class, 'getNotifications']);
-        Route::post('/refresh', [AuthController::class, 'refresh']);
+        Route::post('/logout', [AuthController::class, 'logout']);
 
         // Premium Routes
         Route::group(['prefix' => "premium"], function () {
@@ -42,10 +56,4 @@ Route::group(['prefix' => 'v1'], function () {
             Route::patch('/battles/{id}/end', [BattleController::class, 'end']);
         });
     });
-
-
-    //Unauthenticated Routes
-    Route::post('/signup', [AuthController::class, 'signup']);
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/payment-success', [PaymentController::class, 'paymentSuccess']);
 });
