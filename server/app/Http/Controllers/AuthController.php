@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
 use App\Services\AuthService;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -37,15 +38,31 @@ class AuthController extends Controller
         }
     }
 
-    public function refresh()
+    public function user()
     {
         try {
             $authService = new AuthService();
-            $token = $authService->refresh();
+            $user = $authService->user();
 
-            return $this->successResponse($token, 'Token refreshed successfully');
+            if ($user) {
+                return $this->successResponse($user, 'User retrieved successfully');
+            }
+
+            return $this->errorResponse('User not authenticated', 401);
         } catch (\Exception $e) {
-            return $this->errorResponse('Token refresh failed', 401);
+            return $this->errorResponse('Failed to retrieve user', 500);
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+            $authService = new AuthService();
+            $data = $authService->logout($request);
+
+            return $this->successResponse($data, 'Logged out successfully');
+        } catch (\Exception $e) {
+            return $this->errorResponse('Logout failed', 500);
         }
     }
 }
