@@ -1,9 +1,10 @@
 import { User } from '../types/user';
 import { STORAGE_KEYS } from '../constants/storage';
+import api, { getCsrfToken } from './axios';
 
 export function getUser(): User | null {
     if (typeof window === 'undefined') {
-        return null; // Can't access localStorage on the server
+        return null;
     }
 
     const stored = localStorage.getItem(STORAGE_KEYS.USER);
@@ -16,16 +17,63 @@ export function getUser(): User | null {
 
 export function setUser(user: User) {
     if (typeof window === 'undefined') return;
-
     localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
-
-    // Set cookie to expire in ~1 hour (matching JWT TTL)
-    document.cookie = `auth_token=${user.token}; path=/; max-age=${60 * 60}`; // 1 hour
 }
 
-export function isLoggedIn(): boolean {
-    if (typeof window === 'undefined') return false;
-    return !!getUser();
+export async function login(email: string, password: string) {
+    try {
+        // Get CSRF token before authentication
+        await getCsrfToken();
+
+        const response = await api.post('/login', { email, password });
+        const user = response.data.data;
+
+        setUser(user);
+        return user;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function signup(userData: any) {
+    try {
+        // Get CSRF token before authentication
+        await getCsrfToken();
+
+        const response = await api.post('/signup', userData);
+        const user = response.data.data;
+
+        setUser(user);
+        return user;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function logout() {
+    try {
+        // Call logout API (clears session)
+        await api.post('/logout');
+    } catch {
+        // Continue even if API fails
+    } finally {
+        // Clear user data from localStorage
+        removeUser();
+        // Redirect to login
+        window.location.href = '/login';
+    }
+}
+
+export async function fetchUser() {
+    try {
+        const response = await api.get('/user');
+        const user = response.data.data;
+        setUser(user);
+        return user;
+    } catch {
+        removeUser();
+        return null;
+    }
 }
 
 export function setPremium(isPremium: boolean) {
@@ -40,14 +88,6 @@ export function setPremium(isPremium: boolean) {
 }
 
 export function removeUser() {
-    if (typeof window === 'undefined') return; // Server-side guard
-
+    if (typeof window === 'undefined') return;
     localStorage.removeItem(STORAGE_KEYS.USER);
-
-    // Remove auth token cookie
-    document.cookie = 'auth_token=; path=/; max-age=0';
-}
-
-export function getToken(): string | null {
-    return getUser()?.token ?? null;
 }
