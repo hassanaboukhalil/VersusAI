@@ -8,7 +8,7 @@ import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { setUser } from '../../../lib/auth';
+import { setUser, signup } from '../../../lib/auth';
 
 const SignupPage = () => {
     const router = useRouter();
@@ -34,14 +34,21 @@ const SignupPage = () => {
 
         try {
             setLoading(true);
-            const res = await api.post('/signup', formData);
+            // const res = await api.post('/signup', formData);
+            const res = await signup(formData);
 
-            if (res.data.success) {
-                const user = res.data.data;
-                setUser(user);
+            // if (res.data.success) {
+            //     const user = res.data.data;
+            //     setUser(user);
+            //     router.push('/explore');
+            // } else {
+            //     toast.error(res.data.message);
+            // }
+
+            if (res) {
                 router.push('/explore');
             } else {
-                toast.error(res.data.message);
+                toast.error('Signup failed');
             }
         } catch {
             const message = 'Signup failed';
