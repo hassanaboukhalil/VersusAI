@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        // 'guard' => env('AUTH_GUARD', 'web'),
-        'guard' => 'api',
+        'guard' => 'web', // Switch back to web guard for SPA authentication
+        // 'guard' => 'api', // Switch to api guard for API authentication and jwt
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -42,7 +42,7 @@ return [
             'provider' => 'users',
         ],
         'api' => [
-            'driver' => 'jwt',
+            'driver' => 'sanctum',
             'provider' => 'users',
         ],
     ],
