@@ -1,68 +1,42 @@
 import axios from 'axios';
-import { getUser, setUser, removeUser } from './auth';
+import { removeUser, setUser } from './auth';
 
-// const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL_PRODUCTION}/api/v1`;
-// const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL_STAGING}/api/v1`;
-
-// const origin = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
-// const BASE_URL = `http://${origin}:8000/api/v1`;
-
-// const api = axios.create({
-//     baseURL: BASE_URL,
-//     headers: {
-//         'Content-Type': 'application/json',
-//     },
-// });
+const BASE_URL = `http://localhost:8000/api/v1`;
+const SANCTUM_BASE_URL = `http://localhost:8000`;
 
 const api = axios.create({
-    baseURL: '/api/v1',
+    baseURL: BASE_URL,
     headers: {
         'Content-Type': 'application/json',
+        Accept: 'application/json',
     },
-    withCredentials: true,
+    withCredentials: true, // Essential for session-based auth
 });
 
-if (typeof window !== 'undefined') {
-    // Request interceptor
-    api.interceptors.request.use((config) => {
-        const user = getUser();
-        if (user?.token) {
-            config.headers.Authorization = `Bearer ${user.token}`;
-        }
-        return config;
-    });
+// Function to get CSRF token before authentication requests
+export const getCsrfToken = async () => {
+    try {
+        await axios.get(`${SANCTUM_BASE_URL}/sanctum/csrf-cookie`, {
+            withCredentials: true,
+        });
+    } catch (error) {
+        console.error('Failed to get CSRF token:', error);
+    }
+};
 
-    // Response interceptor for handling 401s
-    api.interceptors.response.use(
-        (response) => response,
-        async (error) => {
-            const originalRequest = error.config;
-
-            if (error.response?.status === 401 && !originalRequest._retry) {
-                originalRequest._retry = true;
-
-                try {
-                    const user = getUser();
-                    if (user?.token) {
-                        const response = await api.post('/refresh');
-                        const newUserData = response.data.data;
-                        setUser(newUserData);
-
-                        // Retry original request with new token
-                        originalRequest.headers.Authorization = `Bearer ${newUserData.token}`;
-                        return api(originalRequest);
-                    }
-                } catch (refreshError) {
-                    // Refresh failed, logout user
-                    removeUser();
-                    window.location.href = '/login';
-                    return Promise.reject(refreshError);
-                }
-            }
-
-            return Promise.reject(error);
-        }
-    );
-}
+// if (typeof window !== 'undefined') {
+//     // Simple 401 error handling for session-based auth
+//     api.interceptors.response.use(
+//         (response) => response,
+//         async (error) => {
+//             if (error.response?.status === 401) {
+//                 // Session expired or user not authenticated
+//                 removeUser();
+//                 window.location.href = '/login';
+//             }
+//             return Promise.reject(error);
+//         }
+//     );
+// }
 
 export default api;
