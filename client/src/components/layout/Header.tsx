@@ -4,7 +4,7 @@ import { PanelLeft, Lock } from 'lucide-react';
 import { Button } from '../ui/button';
 import Logo from './Logo';
 import { useEffect, useState } from 'react';
-import { isLoggedIn, getUser } from '../../lib/auth';
+import { getUser } from '../../lib/auth';
 import Link from 'next/link';
 import { Dialog, DialogTrigger } from '../ui/dialog';
 import CreateBattleDialog from '../global/create-battle-dialog/CreateBattleDialog';
@@ -22,12 +22,12 @@ const Header = ({ className, onToggleSidebar }: HeaderProps) => {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const isUserLoggedIn = isLoggedIn();
-            setLoggedIn(isUserLoggedIn);
-
-            if (isUserLoggedIn) {
-                const user = getUser();
+            const user = getUser();
+            if (user) {
+                setLoggedIn(!!user);
                 setIsPremium(user?.is_premium || false);
+            } else {
+                setLoggedIn(false);
             }
         }
     }, []);
