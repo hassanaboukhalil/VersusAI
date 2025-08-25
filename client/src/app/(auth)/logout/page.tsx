@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { removeUser } from '../../../lib/auth';
 import { toast } from 'sonner';
+import api from '../../../lib/axios';
 
 export default function LogoutPage() {
     const router = useRouter();
@@ -12,6 +13,7 @@ export default function LogoutPage() {
         // Perform logout
         if (typeof window !== 'undefined') {
             removeUser();
+            api.get('/logout');
 
             // Redirect to home page
             setTimeout(() => {
