@@ -101,7 +101,7 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL', 15), // Keep access token short: 15 minutes
+    'ttl' => env('JWT_TTL', 60 * 24), // Keep access token short: 1 day
 
     /*
     |--------------------------------------------------------------------------
