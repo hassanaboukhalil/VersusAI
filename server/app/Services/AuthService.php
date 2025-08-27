@@ -5,8 +5,12 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\ResponseTrait;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
@@ -22,10 +26,20 @@ class AuthService
             'password' => Hash::make($request['password']),
         ]);
 
-        // Log the user in using Laravel's session authentication
-        Auth::login($user);
+        $credentials = [
+            'email' => $request['email'],
+            'password' => $request['password']
+        ];
 
-        return $this->getUserData($user);
+        $token = Auth::attempt($credentials);
+
+        if (!$token) {
+            return null;
+        }
+
+        $user = Auth::user();
+
+        return $this->getUserData($user, $token);
     }
 
     public function login(Request $request)
@@ -35,33 +49,60 @@ class AuthService
             'password' => $request['password']
         ];
 
-        if (!Auth::attempt($credentials)) {
+        $token = Auth::attempt($credentials);
+
+        if (!$token) {
             return null;
         }
 
-        return $this->getUserData(Auth::user());
+        $user = Auth::user();
+
+        return $this->getUserData($user, $token);
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
         Auth::logout();
-
-        // Invalidate the session
-        $request->session()->invalidate();
-
-        // Regenerate the CSRF token
-        $request->session()->regenerateToken();
 
         return ['message' => 'Logged out successfully'];
     }
 
-    public function user()
+    public function me(): Authenticatable
     {
         $user = Auth::user();
-        return $user ? $this->getUserData($user) : null;
+
+        if (! $user) {
+            throw new AuthenticationException('User not authenticated');
+        }
+
+        return $user;
     }
 
-    private function getUserData($user)
+
+
+    /**
+     * Refresh the token.
+     *
+     * @return string New JWT token
+     *
+     * @throws AuthenticationException If token refresh fails
+     */
+    public function refresh(): string
+    {
+        try {
+            $token = Auth::refresh();
+
+            if (! $token) {
+                throw new AuthenticationException('Failed to refresh token');
+            }
+
+            return $token;
+        } catch (JWTException $e) {
+            throw new AuthenticationException('Failed to refresh token: ' . $e->getMessage());
+        }
+    }
+
+    private function getUserData($user, $token)
     {
         return [
             'id' => $user->id,
@@ -72,7 +113,18 @@ class AuthService
             'is_premium' => $user->is_premium,
             'bio' => $user->bio,
             'profile_picture_url' => $user->profile_picture_url,
-            'bg_picture_url' => $user->bg_picture_url
+            'bg_picture_url' => $user->bg_picture_url,
+            'token' => $token,
         ];
     }
+
+    // private function prepareUserWithToken(User $user, $token)
+    // {
+    //     return [
+    //         'user' => $this->getUserData($user, $token),
+    //         // 'token' => $token ?? $user->token, // TODO: check if this is correct
+    //         // 'token' => $token,
+    //         'token_type' => 'bearer',
+    //     ];
+    // }
 }
