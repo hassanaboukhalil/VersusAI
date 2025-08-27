@@ -7,6 +7,7 @@ use App\Http\Requests\SignupRequest;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cookie;
 
 class AuthController extends Controller
 {
@@ -52,11 +53,8 @@ class AuthController extends Controller
     {
         $this->authService->logout();
 
-        // Clear the cookie
-        $cookie = $this->removeTokenFromCookie();
-
         return $this->successResponse(['message' => 'Successfully logged out'])
-            ->withCookie($cookie);
+            ->withCookie(Cookie::forget('token'));
     }
 
 
@@ -76,13 +74,6 @@ class AuthController extends Controller
     public function addTokenToCookie($token)
     {
         $cookie = cookie('token', $token, 60 * 24 * 7, '/', null, true, true);
-
-        return $cookie;
-    }
-
-    public function removeTokenFromCookie()
-    {
-        $cookie = cookie('token', '', -1);
 
         return $cookie;
     }
