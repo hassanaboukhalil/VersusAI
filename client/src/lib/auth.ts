@@ -1,6 +1,7 @@
 import { User } from '../types/user';
 import { STORAGE_KEYS } from '../constants/storage';
-import api, { getCsrfToken } from './axios';
+import api from './axios';
+// import { getCsrfToken } from './axios';
 
 export function getUser(): User | null {
     if (typeof window === 'undefined') {
@@ -23,7 +24,7 @@ export function setUser(user: User) {
 export async function login(email: string, password: string) {
     try {
         // Get CSRF token before authentication
-        await getCsrfToken();
+        // await getCsrfToken();
 
         const response = await api.post('/login', { email, password });
         const user = response.data.data;
@@ -38,7 +39,7 @@ export async function login(email: string, password: string) {
 export async function signup(userData: any) {
     try {
         // Get CSRF token before authentication
-        await getCsrfToken();
+        // await getCsrfToken();
 
         const response = await api.post('/signup', userData);
         const user = response.data.data;
