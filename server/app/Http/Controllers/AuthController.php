@@ -19,7 +19,10 @@ class AuthController extends Controller
         try {
             $data = $this->authService->signup($request);
             if ($data) {
-                return $this->successResponse($data, 'Signup successful');
+                $cookie = $this->addTokenToCookie($data['token']);
+
+                return $this->successResponse($data, 'Signup successful')
+                    ->withCookie($cookie);
             }
             return $this->errorResponse("Invalid request", 400);
         } catch (\Exception $e) {
@@ -33,7 +36,11 @@ class AuthController extends Controller
             $data = $this->authService->login($request);
 
             if ($data) {
-                return $this->successResponse($data, 'Login successful');
+                // Set HTTP-only cookie with the token
+                $cookie = $this->addTokenToCookie($data['token']);
+
+                return $this->successResponse($data, 'Login successful')
+                    ->withCookie($cookie);
             }
             return $this->errorResponse('Invalid credentials', 401);
         } catch (\Exception $e) {
@@ -45,7 +52,11 @@ class AuthController extends Controller
     {
         $this->authService->logout();
 
-        return $this->successResponse(['message' => 'Successfully logged out']);
+        // Clear the cookie
+        $cookie = $this->removeTokenFromCookie();
+
+        return $this->successResponse(['message' => 'Successfully logged out'])
+            ->withCookie($cookie);
     }
 
 
@@ -60,5 +71,19 @@ class AuthController extends Controller
             'token' => $token,
             'token_type' => 'bearer',
         ]);
+    }
+
+    public function addTokenToCookie($token)
+    {
+        $cookie = cookie('token', $token, 60 * 24 * 7, '/', null, true, true);
+
+        return $cookie;
+    }
+
+    public function removeTokenFromCookie()
+    {
+        $cookie = cookie('token', '', -1);
+
+        return $cookie;
     }
 }
