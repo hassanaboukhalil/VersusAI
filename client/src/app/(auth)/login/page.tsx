@@ -43,14 +43,6 @@ function LoginContent() {
             } else {
                 toast.error('Login failed');
             }
-
-            // if (res.data.success) {
-            //     const user = res.data.data;
-            //     setUser(user);
-            //     router.push(redirectPath);
-            // } else {
-            //     toast.error(res.data.message);
-            // }
         } catch (error) {
             const message = 'Login failed';
             console.error('login failed:', error);
