@@ -1,42 +1,28 @@
 import axios from 'axios';
-import { removeUser, setUser } from './auth';
+import { getUser } from './auth';
 
 const BASE_URL = `http://localhost:8000/api/v1`;
-const SANCTUM_BASE_URL = `http://localhost:8000`;
 
 const api = axios.create({
     baseURL: BASE_URL,
     headers: {
+        // 'X-Requested-With': 'XMLHttpRequest',
+        // Authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        // Accept: 'application/json',
     },
-    withCredentials: true, // Essential for session-based auth
+    withCredentials: true,
+    // withXSRFToken: true,
 });
 
-// Function to get CSRF token before authentication requests
-export const getCsrfToken = async () => {
-    try {
-        await axios.get(`${SANCTUM_BASE_URL}/sanctum/csrf-cookie`, {
-            withCredentials: true,
-        });
-    } catch (error) {
-        console.error('Failed to get CSRF token:', error);
-    }
-};
-
-// if (typeof window !== 'undefined') {
-//     // Simple 401 error handling for session-based auth
-//     api.interceptors.response.use(
-//         (response) => response,
-//         async (error) => {
-//             if (error.response?.status === 401) {
-//                 // Session expired or user not authenticated
-//                 removeUser();
-//                 window.location.href = '/login';
-//             }
-//             return Promise.reject(error);
-//         }
-//     );
-// }
+if (typeof window !== 'undefined') {
+    api.interceptors.request.use((config) => {
+        const user = getUser();
+        if (user?.token) {
+            config.headers.Authorization = `Bearer ${user.token}`;
+        }
+        return config;
+    });
+}
 
 export default api;
