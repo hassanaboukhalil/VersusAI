@@ -6,16 +6,20 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
-    function signup(SignupRequest $request)
+    public function __construct(
+        private readonly AuthService $authService
+    ) {}
+
+    public function signup(SignupRequest $request): JsonResponse
     {
         try {
-            $authService = new AuthService();
-            $user = $authService->signup($request);
-            if ($user) {
-                return $this->successResponse($user);
+            $data = $this->authService->signup($request);
+            if ($data) {
+                return $this->successResponse($data, 'Signup successful');
             }
             return $this->errorResponse("Invalid request", 400);
         } catch (\Exception $e) {
@@ -23,11 +27,10 @@ class AuthController extends Controller
         }
     }
 
-    function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         try {
-            $authService = new AuthService();
-            $data = $authService->login($request);
+            $data = $this->authService->login($request);
 
             if ($data) {
                 return $this->successResponse($data, 'Login successful');
@@ -38,31 +41,24 @@ class AuthController extends Controller
         }
     }
 
-    public function user()
+    public function logout(): JsonResponse
     {
-        try {
-            $authService = new AuthService();
-            $user = $authService->user();
+        $this->authService->logout();
 
-            if ($user) {
-                return $this->successResponse($user, 'User retrieved successfully');
-            }
-
-            return $this->errorResponse('User not authenticated', 401);
-        } catch (\Exception $e) {
-            return $this->errorResponse('Failed to retrieve user', 500);
-        }
+        return $this->successResponse(['message' => 'Successfully logged out']);
     }
 
-    public function logout(Request $request)
-    {
-        try {
-            $authService = new AuthService();
-            $data = $authService->logout($request);
 
-            return $this->successResponse($data, 'Logged out successfully');
-        } catch (\Exception $e) {
-            return $this->errorResponse('Logout failed', 500);
-        }
+    /**
+     * Refresh the token.
+     */
+    public function refresh(): JsonResponse
+    {
+        $token = $this->authService->refresh();
+
+        return $this->successResponse([
+            'token' => $token,
+            'token_type' => 'bearer',
+        ]);
     }
 }
