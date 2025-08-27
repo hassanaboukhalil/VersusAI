@@ -7,6 +7,7 @@ use App\Http\Controllers\BattleRoundController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Premium\BattleResponseController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoteController;
 use App\Models\Battle;
 use Illuminate\Http\Request;
@@ -24,15 +25,22 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('/signup', [AuthController::class, 'signup']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/payment-success', [PaymentController::class, 'paymentSuccess']);
-    // Route::post('/refresh', [AuthController::class, 'refresh']);
 
 
 
     // Protected routes
     // Route::group(["middleware" => ["attach.jwt.cookie", "auth:api"]], function () {
-    Route::middleware(['auth:sanctum'])->group(function () {
+    Route::group(['middleware' => 'auth:api'], function () {
         // User info route
-        Route::get('/user', [AuthController::class, 'user']);
+        // Route::get('/user', [AuthController::class, 'user']);
+        Route::get('/user', [UserController::class, 'index']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/refresh', [AuthController::class, 'refresh']);
+        // Route::get('me', [AuthController::class, 'me'])->name('me');
+        Route::get('me', [AuthController::class, 'me']);
+
+
+
 
         Route::get('/ai-models', [AIModelController::class, 'index']);
         Route::get('/battles', [BattleController::class, 'getAllBattles']);
@@ -45,7 +53,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/battles/{battleId}/user-vote', [VoteController::class, 'getUserVote']);
         Route::post('/pay', [PaymentController::class, 'pay']);
         Route::get('/notifications', [NotificationController::class, 'getNotifications']);
-        Route::post('/logout', [AuthController::class, 'logout']);
 
         // Premium Routes
         Route::group(['prefix' => "premium"], function () {
