@@ -65,10 +65,16 @@ class AuthController extends Controller
     {
         $token = $this->authService->refresh();
 
-        return $this->successResponse([
-            'token' => $token,
-            'token_type' => 'bearer',
-        ]);
+        if ($token) {
+
+            $cookie = $this->addTokenToCookie($token);
+            return $this->successResponse([
+                'token' => $token,
+                'token_type' => 'bearer',
+            ])->withCookie($cookie);
+        }
+
+        return $this->errorResponse('Failed to refresh token', 401);
     }
 
     public function addTokenToCookie($token)
