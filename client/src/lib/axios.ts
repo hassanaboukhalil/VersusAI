@@ -29,14 +29,14 @@ const api = axios.create({
 // Response interceptor to handle token refresh
 api.interceptors.response.use(
     (response) => {
-        // Check if server sent a new token
-        const newToken = response.headers['new-token'];
-        if (newToken) {
-            const user = getUser();
-            if (user) {
-                setUser({ ...user, token: newToken });
-            }
-        }
+        // // Check if server sent a new token
+        // const newToken = response.headers['new-token'];
+        // if (newToken) {
+        //     const user = getUser();
+        //     if (user) {
+        //         setUser({ ...user, token: newToken });
+        //     }
+        // }
         return response;
     },
     async (error: AxiosError) => {
@@ -46,23 +46,28 @@ api.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                // Try to refresh the token
-                const refreshResponse = await axios.post(
-                    `${BASE_URL}/refresh`,
-                    {},
-                    { withCredentials: true }
-                );
+                // - Method 1
+                await axios.post(`${BASE_URL}/refresh`, {}, { withCredentials: true });
+                return api(originalRequest);
 
-                const newToken = refreshResponse.data.data.token;
-                const user = getUser();
+                // - Method 2: using local storage to save the token
+                // // Try to refresh the token
+                // const refreshResponse = await axios.post(
+                //     `${BASE_URL}/refresh`,
+                //     {},
+                //     { withCredentials: true }
+                // );
 
-                if (user && newToken) {
-                    setUser({ ...user, token: newToken });
+                // const newToken = refreshResponse.data.data.token;
+                // const user = getUser();
 
-                    // Retry the original request with new token
-                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
-                    return api(originalRequest);
-                }
+                // if (user && newToken) {
+                //     setUser({ ...user, token: newToken });
+
+                //     // Retry the original request with new token
+                //     originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                //     return api(originalRequest);
+                // }
             } catch (refreshError) {
                 // Refresh failed, logout user
                 removeUser();
