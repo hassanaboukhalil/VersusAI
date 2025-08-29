@@ -105,8 +105,9 @@ class AuthController extends Controller
 
             $cookie = $this->addTokenToCookie($token);
             return $this->successResponse([
-                'token' => $token,
-                'token_type' => 'bearer',
+                // 'token' => $token,
+                // 'token_type' => 'bearer',
+                'message' => 'Token refreshed successfully'
             ])->withCookie($cookie);
         }
 
