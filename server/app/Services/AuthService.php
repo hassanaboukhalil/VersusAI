@@ -87,7 +87,7 @@ class AuthService
      *
      * @throws AuthenticationException If token refresh fails
      */
-    public function refresh(): string
+    public function refresh()
     {
         try {
             $token = Auth::refresh();
@@ -96,6 +96,9 @@ class AuthService
                 throw new AuthenticationException('Failed to refresh token');
             }
 
+            // $user = Auth::user();
+
+            // return $this->getUserData($user, $token);
             return $token;
         } catch (JWTException $e) {
             throw new AuthenticationException('Failed to refresh token: ' . $e->getMessage());
