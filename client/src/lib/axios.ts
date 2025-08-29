@@ -63,7 +63,7 @@ api.interceptors.response.use(
             } catch (refreshError) {
                 // Refresh failed, logout user
                 removeUser();
-                window.location.href = '/';
+                window.location.href = '/login';
                 return Promise.reject(refreshError);
                 // console.log(refreshError);
             }
