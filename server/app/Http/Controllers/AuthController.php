@@ -22,6 +22,9 @@ class AuthController extends Controller
             if ($data) {
                 $cookie = $this->addTokenToCookie($data['token']);
 
+                // --> comment it if you want to use Postman for testing to be able to take it and put it in the Authorization header in Postman
+                unset($data['token']);
+
                 return $this->successResponse($data, 'Signup successful')
                     ->withCookie($cookie);
             }
@@ -39,6 +42,9 @@ class AuthController extends Controller
             if ($data) {
                 // Set HTTP-only cookie with the token
                 $cookie = $this->addTokenToCookie($data['token']);
+
+                // --> comment it if you want to use Postman for testing to be able to take it and put it in the Authorization header in Postman
+                unset($data['token']);
 
                 return $this->successResponse($data, 'Login successful')
                     ->withCookie($cookie);
@@ -61,6 +67,36 @@ class AuthController extends Controller
     /**
      * Refresh the token.
      */
+    // public function refresh(): JsonResponse
+    // {
+    //     $data = $this->authService->refresh();
+
+    //     if ($data) {
+    //         $cookie = $this->addTokenToCookie($data['token']);
+
+    //         // --> comment it if you want to use Postman for testing to be able to take it and put it in the Authorization header in Postman
+    //         unset($data['token']);
+
+    //         return $this->successResponse($data, 'Token refreshed successfully')
+    //             ->withCookie($cookie);
+    //     }
+
+
+
+    //     // $token = $this->authService->refresh();
+
+    //     // if ($token) {
+
+    //     //     $cookie = $this->addTokenToCookie($token);
+    //     //     return $this->successResponse([
+    //     //         'token' => $token,
+    //     //         'token_type' => 'bearer',
+    //     //     ])->withCookie($cookie);
+    //     // }
+
+    //     return $this->errorResponse('Failed to refresh token', 401);
+    // }
+
     public function refresh(): JsonResponse
     {
         $token = $this->authService->refresh();
