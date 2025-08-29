@@ -26,8 +26,18 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(url);
     }
 
-    // Otherwise, continue with the request
-    return NextResponse.next();
+    // clone the request headers
+    const requestHeaders = new Headers(request.headers);
+
+    // Add the Authorization header with the token from httpOnly cookie
+    requestHeaders.set('Authorization', `Bearer ${token}`);
+
+    // Return the request with modified headers
+    return NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    });
 }
 
 // Specify which paths this middleware should run on
