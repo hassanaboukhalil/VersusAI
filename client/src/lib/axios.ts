@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { getUser, removeUser, setUser } from './auth';
+import { removeUser } from './auth';
 
 const BASE_URL = `http://localhost:8000/api/v1`;
 
@@ -29,14 +29,6 @@ const api = axios.create({
 // Response interceptor to handle token refresh
 api.interceptors.response.use(
     (response) => {
-        // // Check if server sent a new token
-        // const newToken = response.headers['new-token'];
-        // if (newToken) {
-        //     const user = getUser();
-        //     if (user) {
-        //         setUser({ ...user, token: newToken });
-        //     }
-        // }
         return response;
     },
     async (error: AxiosError) => {
@@ -71,7 +63,7 @@ api.interceptors.response.use(
             } catch (refreshError) {
                 // Refresh failed, logout user
                 removeUser();
-                window.location.href = '/login';
+                window.location.href = '/';
                 return Promise.reject(refreshError);
                 // console.log(refreshError);
             }
