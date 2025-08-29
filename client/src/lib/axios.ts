@@ -15,15 +15,16 @@ const api = axios.create({
     // withXSRFToken: true,
 });
 
-if (typeof window !== 'undefined') {
-    api.interceptors.request.use((config) => {
-        const user = getUser();
-        if (user?.token) {
-            config.headers.Authorization = `Bearer ${user.token}`;
-        }
-        return config;
-    });
-}
+// --> add the token to the headers from here if you don't want to use the middleware.ts for that
+// if (typeof window !== 'undefined') {
+//     api.interceptors.request.use((config) => {
+//         const user = getUser();
+//         if (user?.token) {
+//             config.headers.Authorization = `Bearer ${user.token}`;
+//         }
+//         return config;
+//     });
+// }
 
 // Response interceptor to handle token refresh
 api.interceptors.response.use(
