@@ -122,7 +122,7 @@ return [
     */
 
     'refresh_ttl' => env('JWT_REFRESH_TTL', 20160), // 14 days for refresh token
-    // 'refresh_ttl' => env('JWT_REFRESH_TTL', 2), // for testing
+    // 'refresh_ttl' => env('JWT_REFRESH_TTL', 3), // for testing
 
 
     /*
