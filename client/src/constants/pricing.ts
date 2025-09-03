@@ -1,3 +1,4 @@
+// > used in the  ---> Landing Page (index page) only <---
 export const PRICING_PLANS = [
     {
         name: 'Basic',
@@ -5,6 +6,8 @@ export const PRICING_PLANS = [
         features: ['Explore battles', 'Vote on AI responses', 'View leaderboard'],
         excludedFeatures: ['Create battles', 'Comment on results'],
         cta: 'Get Started',
+        disabled: false,
+        link: '/login',
     },
     {
         name: 'Premium',
@@ -17,9 +20,34 @@ export const PRICING_PLANS = [
             'Comment on results',
         ],
         excludedFeatures: [],
-        cta: 'Go Pro',
+        cta: 'Go Premium',
+        disabled: false,
+        link: '/login',
     },
 ];
+
+// export const PRICING_PLANS = [
+//     {
+//         name: 'Basic',
+//         price: 0,
+//         features: ['Explore battles', 'Vote on AI responses', 'View leaderboard'],
+//         excludedFeatures: ['Create battles', 'Comment on results'],
+//         cta: 'Get Started',
+//     },
+//     {
+//         name: 'Premium',
+//         price: 10,
+//         features: [
+//             'Explore battles',
+//             'Vote on AI responses',
+//             'View leaderboard',
+//             'Create battles',
+//             'Comment on results',
+//         ],
+//         excludedFeatures: [],
+//         cta: 'Go Pro',
+//     },
+// ];
 
 // export const PRICING_PLANS = [
 //     {
