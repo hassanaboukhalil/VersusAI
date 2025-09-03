@@ -101,7 +101,8 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL', 60),
+    'ttl' => env('JWT_TTL', 60 * 24), // Keep access token short: 1 day
+    // 'ttl' => env('JWT_TTL', 1), // for testing
 
     /*
     |--------------------------------------------------------------------------
@@ -120,7 +121,9 @@ return [
     |
     */
 
-    'refresh_ttl' => env('JWT_REFRESH_TTL', 20160),
+    'refresh_ttl' => env('JWT_REFRESH_TTL', 20160), // 14 days for refresh token
+    // 'refresh_ttl' => env('JWT_REFRESH_TTL', 3), // for testing
+
 
     /*
     |--------------------------------------------------------------------------

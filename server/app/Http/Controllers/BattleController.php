@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Battle;
 use App\Services\BattleService;
 use Illuminate\Http\Request;
 
@@ -18,6 +19,36 @@ class BattleController extends Controller
             'Battles retrieved successfully.'
         );
     }
+
+    // public function index(Request $r)
+    // {
+    //     $battles = Battle::query()
+    //         // ------- dynamic filters -------
+    //         ->when($r->search,  fn($q, $v) => $q->where('title', 'like', "%$v%"))
+    //         ->when($r->ai_model_id, fn($q, $v) =>
+    //         $q->where(function ($q) use ($v) {
+    //             $q->where('ai_model_1_id', $v)
+    //                 ->orWhere('ai_model_2_id', $v);
+    //         }))
+    //         ->when($r->category_id, fn($q, $v) => $q->where('category_id', $v))
+    //         // ------- popularity metric -------
+    //         ->withCount('votes')          // adds votes_count
+    //         ->when(
+    //             $r->sort === 'popular',
+    //             fn($q) => $q->orderByDesc('votes_count')
+    //         )
+    //         ->when(
+    //             $r->sort !== 'popular',
+    //             fn($q) => $q->latest()
+    //         )  // recent
+    //         // ------- pagination -------
+    //         ->cursorPaginate($r->size ?? 20);
+
+    //     return $this->successResponse(
+    //         $battles,
+    //         'Battles retrieved successfully'
+    //     );
+    // }
 
     public function create(Request $request)
     {

@@ -8,5 +8,5 @@ export interface User {
     bio?: string | null;
     profile_picture_url?: string | null;
     bg_picture_url?: string | null;
-    token: string;
+    token?: string | null;
 }

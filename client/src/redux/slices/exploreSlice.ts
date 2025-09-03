@@ -4,6 +4,7 @@ import { Battle } from '../../types/battle';
 interface ExploreState {
     battles: Battle[];
     loading: boolean;
+    sortBy: string;
     filters: {
         search: string;
         battleType: string;
@@ -15,6 +16,7 @@ interface ExploreState {
 const initialState: ExploreState = {
     battles: [],
     loading: false,
+    sortBy: 'Most Recent',
     filters: {
         search: '',
         battleType: '',
@@ -43,6 +45,9 @@ const exploreSlice = createSlice({
         ) {
             state.filters[action.payload.key] = action.payload.value;
         },
+        setSortBy(state, action: PayloadAction<string>) {
+            state.sortBy = action.payload;
+        },
         resetFilters(state) {
             state.filters = initialState.filters;
         },
@@ -55,5 +60,6 @@ export const {
     fetchBattlesFailure,
     setFilter,
     resetFilters,
+    setSortBy,
 } = exploreSlice.actions;
 export default exploreSlice.reducer;

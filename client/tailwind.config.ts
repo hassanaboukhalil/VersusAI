@@ -4,6 +4,9 @@ const config: Config = {
     content: ['./src/**/*.{js,ts,jsx,tsx}'],
     theme: {
         extend: {
+            fontFamily: {
+                sans: ['var(--font-inter)'],
+            },
             colors: {
                 primary: '#DEFE01',
                 secondary: '#6B46C1',

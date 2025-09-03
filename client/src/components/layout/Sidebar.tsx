@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 import Logo from './Logo';
 import { AUTH_NAV_ITEMS, PUBLIC_NAV_ITEMS } from '../../constants/navigation';
 import { useEffect, useState } from 'react';
-import { isLoggedIn } from '../../lib/auth';
+import { getUser } from '../../lib/auth';
 
 interface SidebarProps {
     open: boolean;
@@ -18,9 +18,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const loggedIn = isLoggedIn();
+            const user = getUser();
+            const loggedIn = !!user;
             setIsUserLoggedIn(loggedIn);
-            setNavItems(loggedIn ? AUTH_NAV_ITEMS : PUBLIC_NAV_ITEMS);
+            setNavItems(isUserLoggedIn ? AUTH_NAV_ITEMS : PUBLIC_NAV_ITEMS);
         }
     }, []);
 

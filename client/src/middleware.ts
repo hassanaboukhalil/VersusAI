@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
         path.startsWith('/pricing');
 
     // Get the token from the cookies
-    const token = request.cookies.get('auth_token')?.value;
+    const token = request.cookies.get('token')?.value;
 
     // Check if the user is logged in (token exists)
     const isLoggedIn = !!token;
@@ -22,12 +22,22 @@ export function middleware(request: NextRequest) {
     if (isPrivatePath && !isLoggedIn) {
         // Store the original URL to redirect back after login
         const url = new URL('/login', request.url);
-        url.searchParams.set('redirect', request.nextUrl.pathname);
+        // url.searchParams.set('redirect', request.nextUrl.pathname);
         return NextResponse.redirect(url);
     }
 
-    // Otherwise, continue with the request
-    return NextResponse.next();
+    // clone the request headers
+    const requestHeaders = new Headers(request.headers);
+
+    // Add the Authorization header with the token from httpOnly cookie
+    requestHeaders.set('Authorization', `Bearer ${token}`);
+
+    // Return the request with modified headers
+    return NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    });
 }
 
 // Specify which paths this middleware should run on

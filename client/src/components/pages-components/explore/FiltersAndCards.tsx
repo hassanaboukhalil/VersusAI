@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
     fetchBattlesStart,
     fetchBattlesSuccess,
     fetchBattlesFailure,
     setFilter,
+    setSortBy,
 } from '../../../redux/slices/exploreSlice';
 import { selectFilteredBattles } from '../../../redux/selectors/exploreSelectors';
 import api from '../../../lib/axios';
@@ -14,19 +15,56 @@ import { Input } from '../../../components/ui/input';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 
+interface AIModel {
+    id: number;
+    provider_name: string;
+    model_name: string;
+    logo_url: string;
+    votes_count: number;
+}
+
+// interface FormattedAIModel {
+//     value: string;
+//     label: string;
+//     logo: string;
+//     votes: number;
+// }
+
 const FiltersAndCards = () => {
+    const [model, setModel] = useState('');
+    const [aiModels, setAiModels] = useState<AIModel[]>([]);
     const dispatch = useDispatch();
     const battles = useSelector(selectFilteredBattles);
     const loading = useSelector((state: RootState) => state.explore.loading);
 
+    // Fetch AI models
+    useEffect(() => {
+        api.get('/ai-models')
+            .then((res) => {
+                if (res.data.status === 'success' && Array.isArray(res.data.data)) {
+                    setAiModels(res.data.data as AIModel[]);
+                }
+            })
+            .catch((error) => console.error('Failed to fetch AI models:', error));
+    }, []);
+
+    // Fetch battles
     useEffect(() => {
         dispatch(fetchBattlesStart());
         api.get('/battles')
             .then((res) => {
-                dispatch(fetchBattlesSuccess(res.data.data));
+                const battlesData = Array.isArray(res.data.data) ? res.data.data : [];
+                dispatch(fetchBattlesSuccess(battlesData));
+                console.log(battlesData);
             })
             .catch(() => dispatch(fetchBattlesFailure()));
     }, [dispatch]);
+
+    const handleModelChange = (value: string) => {
+        setModel(value);
+        dispatch(setFilter({ key: 'aiName', value: value === 'Select AI Model' ? '' : value }));
+    };
+
     return (
         <>
             {/* Filters */}
@@ -34,7 +72,7 @@ const FiltersAndCards = () => {
                 <Input
                     type="text"
                     name="search"
-                    placeholder="search"
+                    placeholder="Search battles..."
                     className="w-[25rem]"
                     onChange={(e) => dispatch(setFilter({ key: 'search', value: e.target.value }))}
                 />
@@ -57,41 +95,29 @@ const FiltersAndCards = () => {
                     <option>Text Translation</option>
                     <option>Debate Challenge</option>
                 </select>
+
                 <select
                     className="bg-white rounded-md px-4 py-2 text-black"
-                    aria-label="Filter by date"
+                    aria-label="Sort by"
                     onChange={(e) => {
                         const value = e.target.value;
-                        dispatch(
-                            setFilter({
-                                key: 'dateRange',
-                                value: value === 'Date' ? '' : value,
-                            })
-                        );
+                        dispatch(setSortBy(value.toLowerCase()));
                     }}
                 >
-                    <option>Date</option>
-                    <option>Today</option>
-                    <option>This week</option>
-                    <option>This month</option>
+                    <option>Most Recent</option>
+                    <option>Most Popular</option>
                 </select>
                 <select
                     className="bg-white rounded-md px-4 py-2 text-black"
-                    aria-label="Filter by AI model"
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        dispatch(
-                            setFilter({
-                                key: 'aiName',
-                                value: value === 'AI Name Model' ? '' : value,
-                            })
-                        );
-                    }}
+                    value={model}
+                    onChange={(e) => handleModelChange(e.target.value)}
                 >
-                    <option>AI Model Name</option>
-                    <option>GPT-4</option>
-                    <option>Claude 3</option>
-                    <option>Gemini</option>
+                    <option value="">Select AI Model</option>
+                    {aiModels.map((aiModel) => (
+                        <option key={aiModel.model_name} value={aiModel.id}>
+                            {aiModel.model_name}
+                        </option>
+                    ))}
                 </select>
             </div>
 
@@ -103,4 +129,5 @@ const FiltersAndCards = () => {
         </>
     );
 };
+
 export default FiltersAndCards;

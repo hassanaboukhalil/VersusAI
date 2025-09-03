@@ -33,7 +33,7 @@ return [
     'exposed_headers' => [],
 
     // Whether to allow cookies/auth credentials:
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 
     // How long (in seconds) to cache a preflight response:
     'max_age' => 0,

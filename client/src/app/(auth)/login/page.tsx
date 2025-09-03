@@ -8,7 +8,7 @@ import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { setUser } from '../../../lib/auth';
+import { login, setUser } from '../../../lib/auth';
 
 // Client component that uses useSearchParams
 function LoginContent() {
@@ -35,14 +35,13 @@ function LoginContent() {
         setLoading(true);
 
         try {
-            const res = await api.post('/login', formData);
+            // const res = await api.post('/login', formData);
+            const res = await login(formData.email, formData.password);
 
-            if (res.data.success) {
-                const user = res.data.data;
-                setUser(user);
+            if (res) {
                 router.push(redirectPath);
             } else {
-                toast.error(res.data.message);
+                toast.error('Login failed');
             }
         } catch (error) {
             const message = 'Login failed';
