@@ -18,7 +18,7 @@ export interface NavItem {
     icon?: React.ElementType; // optional: icons for logged-in nav
 }
 
-export const AUTH_NAV_ITEMS: NavItem[] = [
+export const PRIVATE_NAV_ITEMS: NavItem[] = [
     { label: 'Explore', href: '/explore', icon: Home },
     // { label: 'Profile', href: '/profile', icon: User },
     // { label: 'Chat with Neuronix', href: '/chat', icon: MessageCircle },
@@ -29,7 +29,7 @@ export const AUTH_NAV_ITEMS: NavItem[] = [
 ];
 
 export const PUBLIC_NAV_ITEMS: NavItem[] = [
-    { label: 'Home', href: '#Home' },
+    { label: 'Home', href: '#home' },
     { label: 'Features', href: '#features' },
     { label: 'Pricing', href: '#pricing' },
     { label: 'Contact', href: '#contact' },
