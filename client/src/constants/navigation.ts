@@ -10,6 +10,9 @@ import {
     // DollarSign,
     // Mail,
     // Info,
+    Sparkles,
+    Mail,
+    Search,
 } from 'lucide-react';
 
 export interface NavItem {
@@ -19,7 +22,7 @@ export interface NavItem {
 }
 
 export const PRIVATE_NAV_ITEMS: NavItem[] = [
-    { label: 'Explore', href: '/explore', icon: Home },
+    { label: 'Explore', href: '/explore', icon: Search },
     // { label: 'Profile', href: '/profile', icon: User },
     // { label: 'Chat with Neuronix', href: '/chat', icon: MessageCircle },
     { label: 'Upgrade Plan', href: '/pricing', icon: Crown },
@@ -29,8 +32,8 @@ export const PRIVATE_NAV_ITEMS: NavItem[] = [
 ];
 
 export const PUBLIC_NAV_ITEMS: NavItem[] = [
-    { label: 'Home', href: '#home' },
-    { label: 'Features', href: '#features' },
-    { label: 'Pricing', href: '#pricing' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Home', href: '#home', icon: Home },
+    { label: 'Features', href: '#features', icon: Sparkles },
+    { label: 'Pricing', href: '#pricing', icon: Crown },
+    { label: 'Contact', href: '#contact', icon: Mail },
 ];
