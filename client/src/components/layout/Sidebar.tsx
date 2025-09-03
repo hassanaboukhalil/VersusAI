@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { X } from 'lucide-react';
 import Logo from './Logo';
-import { AUTH_NAV_ITEMS, PUBLIC_NAV_ITEMS } from '../../constants/navigation';
+import { PRIVATE_NAV_ITEMS, PUBLIC_NAV_ITEMS } from '../../constants/navigation';
 import { useEffect, useState } from 'react';
 import { getUser } from '../../lib/auth';
 
@@ -17,13 +17,10 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
     const [navItems, setNavItems] = useState(PUBLIC_NAV_ITEMS);
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const user = getUser();
-            const loggedIn = !!user;
-            setIsUserLoggedIn(loggedIn);
-            setNavItems(isUserLoggedIn ? AUTH_NAV_ITEMS : PUBLIC_NAV_ITEMS);
-        }
-    }, []);
+        const user = getUser();
+        setIsUserLoggedIn(!!user);
+        setNavItems(isUserLoggedIn ? PRIVATE_NAV_ITEMS : PUBLIC_NAV_ITEMS);
+    }, [isUserLoggedIn, navItems]);
 
     const handleLogout = () => {
         if (typeof window === 'undefined') return;

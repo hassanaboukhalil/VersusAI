@@ -88,6 +88,15 @@ export function setPremium(isPremium: boolean) {
     return isPremium;
 }
 
+export function isUserPremium() {
+    if (typeof window === 'undefined') return;
+
+    const user = getUser();
+    if (!user) return;
+
+    return user?.is_premium;
+}
+
 export function removeUser() {
     if (typeof window === 'undefined') return;
     localStorage.removeItem(STORAGE_KEYS.USER);

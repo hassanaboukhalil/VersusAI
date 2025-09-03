@@ -2,6 +2,8 @@
 
 import { Check, X } from 'lucide-react';
 import CheckoutButton from '../pages-components/pricing/CheckoutButton';
+import { Button } from '../ui/button';
+import { useRouter } from 'next/navigation';
 
 export interface PricingPlan {
     name: string;
@@ -9,6 +11,8 @@ export interface PricingPlan {
     cta: string;
     features: string[];
     excludedFeatures: string[];
+    disabled: boolean;
+    link: string;
 }
 
 interface PricingCardPremiumps {
@@ -16,6 +20,7 @@ interface PricingCardPremiumps {
 }
 
 export const PricingCard = ({ plan }: PricingCardPremiumps) => {
+    const router = useRouter();
     return (
         <div className="bg-dark-white rounded-xl p-6 flex flex-col items-start shadow-md border border-white/10 w-72">
             <h3 className="text-3xl text-primary font-semibold">{plan.name}</h3>
@@ -23,14 +28,17 @@ export const PricingCard = ({ plan }: PricingCardPremiumps) => {
                 ${plan.price}
                 <span className="text-lg font-medium text-gray-400">/Month</span>
             </div>
-            {/* <Button
-                variant="default"
-                className={`px-6 py-2 mt-4 mb-6 w-full ${isLoaded && isPremium && plan.name === 'Premium' ? 'bg-green-600' : 'bg-primary'}`}
-                disabled={isLoaded && isPremium && plan.name === 'Premium'}
-            >
-                {buttonText}
-            </Button> */}
-            <CheckoutButton />
+            {plan.link ? (
+                <Button
+                    type="submit"
+                    className="w-full bg-primary text-black hover:opacity-90"
+                    onClick={() => router.push(plan.link)}
+                >
+                    {plan.cta}
+                </Button>
+            ) : (
+                <CheckoutButton buttonText={plan.cta} disabled={plan.disabled || false} />
+            )}
             <ul className="space-y-3 w-full my-6">
                 {plan.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-6 text-sm">

@@ -12,6 +12,8 @@ export function middleware(request: NextRequest) {
         path.startsWith('/profile') ||
         path.startsWith('/pricing');
 
+    const isPublicPath = path === '/' || path === '/login' || path === '/signup';
+
     // Get the token from the cookies
     const token = request.cookies.get('token')?.value;
 
@@ -24,6 +26,12 @@ export function middleware(request: NextRequest) {
         const url = new URL('/login', request.url);
         // url.searchParams.set('redirect', request.nextUrl.pathname);
         return NextResponse.redirect(url);
+    }
+
+    console.log('Path: ', request.nextUrl.pathname);
+
+    if (isLoggedIn && isPublicPath) {
+        return NextResponse.redirect(new URL('/explore', request.url));
     }
 
     // clone the request headers
@@ -44,6 +52,9 @@ export function middleware(request: NextRequest) {
 export const config = {
     matcher: [
         // Add matcher patterns for paths that should go through this middleware
+        '/',
+        '/login',
+        '/signup',
         '/explore/:path*',
         '/battles/:path*',
         '/profile/:path*',

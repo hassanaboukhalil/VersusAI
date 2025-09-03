@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 // const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
-const CheckoutButton = () => {
+const CheckoutButton = ({ buttonText, disabled }: { buttonText: string; disabled: boolean }) => {
     const [loading, setLoading] = useState(false);
     // const router = useRouter();
 
@@ -42,8 +42,9 @@ const CheckoutButton = () => {
             isLoading={loading}
             loadingText="Please wait..."
             onClick={handleClick}
+            disabled={disabled}
         >
-            Subscribe Now
+            {buttonText}
         </Button>
     );
 };
