@@ -1,6 +1,8 @@
-import { PRICING_PLANS } from '../../../constants/pricing';
+// > The pricing section in the ---> Landing Page (index page) <---
+
 import Section from '../../../components/layout/Section';
 import { PricingCard } from '../../global/PricingCard';
+import { PRICING_PLANS } from '../../../constants/pricing';
 
 const Pricing = () => {
     return (
