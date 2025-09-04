@@ -8,11 +8,20 @@ use Illuminate\Http\Request;
 
 class BattleController extends Controller
 {
+    private readonly BattleService $battleService;
+
+    public function __construct(BattleService $battleService)
+    {
+        $this->battleService = $battleService;
+    }
+
     public function getAllBattles()
     {
-        $battle_service = new BattleService();
+        // $battle_service = new BattleService();
 
-        $battles = $battle_service->getAllBattles();
+        // $battles = $battle_service->getAllBattles();
+
+        $battles = $this->battleService->getAllBattles();
 
         return $this->successResponse(
             $battles,
