@@ -42,7 +42,7 @@ Route::group(['prefix' => 'v1'], function () {
 
 
             Route::get('/ai-models', [AIModelController::class, 'index']);
-            Route::get('/battles', [BattleController::class, 'getAllBattles']);
+            Route::get('/battles/{user_id?}', [BattleController::class, 'getAllBattles']);
 
             // Route::get('/battles', [BattleController::class, 'index']);
 
