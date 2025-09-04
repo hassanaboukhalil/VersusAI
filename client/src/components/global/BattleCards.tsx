@@ -1,7 +1,7 @@
 'use client';
 
 import BattleCard from './BattleCard';
-import { Battle } from '../../../types/battle';
+import { Battle } from '../../types/battle';
 
 const BattleCards = ({ battles }: { battles: Battle[] }) => {
     return (
