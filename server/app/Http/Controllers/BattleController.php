@@ -17,10 +17,6 @@ class BattleController extends Controller
 
     public function getAllBattles()
     {
-        // $battle_service = new BattleService();
-
-        // $battles = $battle_service->getAllBattles();
-
         $battles = $this->battleService->getAllBattles();
 
         return $this->successResponse(
@@ -62,8 +58,7 @@ class BattleController extends Controller
     public function create(Request $request)
     {
         try {
-            $battle_service = new BattleService();
-            $battle = $battle_service->createBattle($request);
+            $battle = $this->battleService->createBattle($request);
 
             if ($battle) {
                 return $this->successResponse(
@@ -88,8 +83,7 @@ class BattleController extends Controller
 
     public function get(int $id)
     {
-        $battle_service = new BattleService();
-        $battle = $battle_service->getBattle($id);
+        $battle = $this->battleService->getBattle($id);
 
         if ($battle) {
             return $this->successResponse($battle);
@@ -100,8 +94,7 @@ class BattleController extends Controller
 
     public function end($id)
     {
-        $battle_service = new BattleService();
-        $result = $battle_service->endBattle($id);
+        $result = $this->battleService->endBattle($id);
 
         if ($result) {
             return $this->successResponse(['id' => $id, 'is_active' => false], 'Battle has been ended.');
