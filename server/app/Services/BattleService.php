@@ -13,13 +13,15 @@ use Illuminate\Support\Facades\Auth;
 
 class BattleService
 {
-    public function getAllBattles($user_id = null): array
+    public function getAllBattles($username = null): array
     {
         $all_battles = Battle::where('is_active', false);
-        if ($user_id) {
-            $all_battles = $all_battles->where('user_id', $user_id);
-        }
+
         $all_battles = $all_battles->with('user', 'category', 'ai_model_1', 'ai_model_2', 'votes')->orderBy('created_at', 'desc')->get();
+
+        if ($username) {
+            $all_battles = $all_battles->where('user.username', $username);
+        }
 
         $battles = [];
 
