@@ -15,9 +15,9 @@ class BattleController extends Controller
         $this->battleService = $battleService;
     }
 
-    public function getAllBattles($user_id = null)
+    public function getAllBattles($username = null)
     {
-        $battles = $this->battleService->getAllBattles($user_id);
+        $battles = $this->battleService->getAllBattles($username);
 
         return $this->successResponse(
             $battles,
