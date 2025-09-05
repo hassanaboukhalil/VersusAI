@@ -1,29 +1,47 @@
+import { Skeleton } from './Skeleton';
+
 // Loading animation
 const shimmer =
     'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
 
 export function CardSkeleton() {
     return (
-        <div className={`${shimmer} relative overflow-hidden rounded-xl bg-gray-100 p-2 shadow-sm`}>
-            <div className="flex p-4">
-                <div className="h-5 w-5 rounded-md bg-gray-200" />
-                <div className="ml-2 h-6 w-16 rounded-md bg-gray-200 text-sm font-medium" />
-            </div>
-            <div className="flex items-center justify-center truncate rounded-xl bg-white px-4 py-8">
-                <div className="h-7 w-20 rounded-md bg-gray-200" />
-            </div>
-        </div>
+        <div
+            className={`${shimmer} relative overflow-hidden rounded-xl bg-muted p-2 shadow-sm w-full h-[350px]`}
+        />
+        // <div className={`${shimmer} relative overflow-hidden rounded-xl bg-gray-100 p-2 shadow-sm`}>
+        //     <div className="flex p-4">
+        //         <div className="h-5 w-5 rounded-md bg-gray-200" />
+        //         <div className="ml-2 h-6 w-16 rounded-md bg-gray-200 text-sm font-medium" />
+        //     </div>
+        //     <div className="flex items-center justify-center truncate rounded-xl bg-white px-4 py-8">
+        //         <div className="h-7 w-20 rounded-md bg-gray-200" />
+        //     </div>
+        // </div>
     );
 }
 
 export function CardsSkeleton() {
     return (
-        <>
-            <CardSkeleton />
-            <CardSkeleton />
-            <CardSkeleton />
-            <CardSkeleton />
-        </>
+        // <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        //     {/* <CardSkeleton />
+        //     <CardSkeleton />
+        //     <CardSkeleton /> */}
+        //     {/* <CardSkeleton /> */}
+        //     <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        //     <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        //     <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        // </div>
+        // <>
+        //     <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        //     <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        //     <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        // </>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Skeleton className="h-80 md:h-95 w-full bg-dark-white" />
+            <Skeleton className="h-80 md:h-95 w-full bg-dark-white" />
+            <Skeleton className="h-80 md:h-95 w-full bg-dark-white" />
+        </div>
     );
 }
 
