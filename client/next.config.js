@@ -26,7 +26,17 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    /* config options here */
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'http',
+                hostname: process.env.NEXT_PUBLIC_BACKEND_HOSTNAME || 'localhost',
+                port: process.env.NEXT_PUBLIC_BACKEND_PORT || '8000',
+                pathname: '/storage/**',
+                search: '',
+            },
+        ],
+    },
 };
 
 module.exports = nextConfig;
