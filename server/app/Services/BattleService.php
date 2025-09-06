@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Vote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class BattleService
 {
@@ -51,7 +52,10 @@ class BattleService
                 'user_id' => $battle->user_id,
                 'user_first_name' => $battle->user->first_name,
                 'user_last_name' => $battle->user->last_name,
-                'user_profile_pic_url' => $battle->user->profile_picture_url,
+                // 'user_profile_pic_url' => $battle->user->profile_picture_url,
+                // 'user_cover_pic_url' => $battle->user->bg_picture_url,
+                'user_profile_pic_url' => Storage::url($battle->user->profile_picture_url),
+                'user_cover_pic_url' => Storage::url($battle->user->bg_picture_url),
                 'created_at' => $battle->created_at->format('j/n/Y'),
             ];
         }
