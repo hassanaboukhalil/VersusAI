@@ -36,6 +36,7 @@ Route::group(['prefix' => 'v1'], function () {
             // User info route
             // Route::get('/user', [AuthController::class, 'user']);
             Route::get('/user', [UserController::class, 'index']);
+            Route::post('/update-user-data', [UserController::class, 'updateUserData']);
             Route::get('/logout', [AuthController::class, 'logout']);
             // Route::get('me', [AuthController::class, 'me'])->name('me');
             Route::get('me', [AuthController::class, 'me']);
