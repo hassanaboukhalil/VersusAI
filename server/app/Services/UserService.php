@@ -20,23 +20,39 @@ class UserService
 
     public function updateUserData(Request $request)
     {
-        $user = User::find($request->user_id);
+        $user_id = $request->user_id;
+        $first_name = $request->first_name;
+        $last_name = $request->last_name;
+        $username = $request->username;
+        $bio = $request->bio;
 
-        if ($user) {
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->username = $request->username;
-            $user->bio = $request->bio;
-            $user->save();
+        $user = User::find($user_id);
 
-            return [
-                'id' => $user->id,
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'username' => $user->username,
-                'bio' => $user->bio,
-            ];
+        if (!$user) {
+            return null;
         }
+
+        if ($user->username != $username) {
+            $isUsernameTaken = User::where('username', $username) ? true : false;
+
+            if ($isUsernameTaken) {
+                return 'Username is taken';
+            }
+        }
+
+        $user->first_name = $first_name;
+        $user->last_name = $last_name;
+        $user->username = $username;
+        $user->bio = $bio;
+        $user->save();
+
+        return [
+            'id' => $user->id,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'username' => $user->username,
+            'bio' => $user->bio,
+        ];
 
         return null;
     }
