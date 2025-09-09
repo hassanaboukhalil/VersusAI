@@ -7,6 +7,8 @@ use App\Services\AuthService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isArray;
+
 class UserController extends Controller
 {
     private AuthService $authService;
@@ -37,10 +39,14 @@ class UserController extends Controller
     {
         $result = $this->userService->updateUserData($request);
 
-        if ($result) {
-            return $this->successResponse(['data' => $result], 'User data has been updated.');
+        if (!$result) {
+            return $this->errorResponse('Something went wrong, try again later');
         }
 
-        return $this->errorResponse('Something went wrong, try again later');
+        if (!isArray($result)) {
+            return $this->errorResponse($result);
+        }
+
+        return $this->successResponse($result, 'User data has been updated.');
     }
 }
