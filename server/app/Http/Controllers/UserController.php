@@ -35,6 +35,21 @@ class UserController extends Controller
         }
     }
 
+    public function getUserByUsername($username)
+    {
+        try {
+            $user = $this->userService->getUserByUsername($username);
+
+            if (!$user) {
+                return $this->errorResponse('User not found', 404);
+            }
+
+            return $this->successResponse($user, 'User retrieved successfully');
+        } catch (\Exception $e) {
+            return $this->errorResponse('Something went Wrong', 500);
+        }
+    }
+
     public function updateUserData(Request $request)
     {
         $result = $this->userService->updateUserData($request);
