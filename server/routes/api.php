@@ -44,7 +44,7 @@ Route::group(['prefix' => 'v1'], function () {
 
 
             Route::get('/ai-models', [AIModelController::class, 'index']);
-            Route::get('/battles/{username}', [BattleController::class, 'getAllBattles']);
+            Route::get('/battles/{username?}', [BattleController::class, 'getAllBattles']);
 
             // Route::get('/battles', [BattleController::class, 'index']);
 
