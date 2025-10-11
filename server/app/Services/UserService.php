@@ -56,4 +56,15 @@ class UserService
 
         return null;
     }
+
+    public function getUserByUsername($username)
+    {
+        $user = User::where('username', $username)->first();
+
+        if (!$user) {
+            return null;
+        }
+
+        return $user;
+    }
 }
