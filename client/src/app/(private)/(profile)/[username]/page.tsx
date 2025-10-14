@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import api from '../../../../lib/axios';
 import Section from '../../../../components/layout/Section';
@@ -13,17 +13,33 @@ import { Button } from '../../../../components/ui/button';
 const ProfilePage = () => {
     const { username } = useParams();
     const [battles, setBattles] = useState<Battle[] | null>(null);
+    const [userNotFound, setUserNotFound] = useState(false);
+    // const router = useRouter();
 
     useEffect(() => {
-        api.get(`/battles/${username}`)
+        // checking if the user is found
+        api.get(`/user/${username}`)
             .then((res) => {
                 if (res.data.success) {
-                    setBattles(res.data.data);
-                    console.log(res.data.data);
+                    api.get(`/battles/${username}`)
+                        .then((res) => {
+                            if (res.data.success) {
+                                setBattles(res.data.data);
+                                console.log(res.data.data);
+                            }
+                        })
+                        .catch((error) => console.error('Failed to fetch battles: ', error));
                 }
             })
-            .catch((error) => console.error('Failed to fetch battles: ', error));
+            .catch(() => {
+                console.log('User not found');
+                setUserNotFound(true);
+            });
     }, []);
+
+    if (userNotFound) {
+        notFound();
+    }
 
     return (
         <Section className="bg-background min-h-screen py-12 items-center">
