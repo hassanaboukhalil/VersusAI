@@ -8,19 +8,36 @@ import BattleCards from '../../../../components/global/BattleCards';
 import { CardsSkeleton } from '../../../../components/ui/Skeletons';
 import Image from 'next/image';
 import { Battle } from '../../../../types/battle';
-import { Button } from '../../../../components/ui/button';
+import { Dialog, DialogTrigger } from '../../../../components/ui/dialog';
+import EditProfileDialog from '../../../../components/pages-components/profile/EditProfileDialog';
 
 const ProfilePage = () => {
     const { username } = useParams();
+    const [user, setUser] = useState({
+        firstName: '',
+        lastName: '',
+        username: '',
+        bio: '',
+    });
     const [battles, setBattles] = useState<Battle[] | null>(null);
     const [userNotFound, setUserNotFound] = useState(false);
-    // const router = useRouter();
+    const [isEditProfileDialogOpen, SetIsEditProfileDialogOpen] = useState(false);
 
     useEffect(() => {
         // checking if the user is found
         api.get(`/user/${username}`)
             .then((res) => {
                 if (res.data.success) {
+                    // setting the user data
+                    setUser({
+                        ...user,
+                        firstName: res.data.data.first_name,
+                        lastName: res.data.data.last_name,
+                        username: res.data.data.username,
+                        bio: res.data.data.bio,
+                    });
+
+                    // getting the battles created by this user
                     api.get(`/battles/${username}`)
                         .then((res) => {
                             if (res.data.success) {
@@ -65,7 +82,18 @@ const ProfilePage = () => {
                             height={224}
                             alt="profile image"
                         />
-                        <Button variant="outline">Edit Profile</Button>
+
+                        <Dialog
+                            open={isEditProfileDialogOpen}
+                            onOpenChange={SetIsEditProfileDialogOpen}
+                        >
+                            <DialogTrigger className="border border-[#DEFE01] bg-background shadow-xs hover:bg-accent hover:text-accent-foreground size-fit leading-0 cursor-pointer h-9 px-4 py-2 rounded-md">
+                                Edit Profile
+                            </DialogTrigger>
+                            <EditProfileDialog
+                                onSuccess={() => SetIsEditProfileDialogOpen(false)}
+                            />
+                        </Dialog>
                     </div>
                 )}
 
@@ -79,7 +107,7 @@ const ProfilePage = () => {
                                 {battles[0]?.user_first_name} {battles[0]?.user_last_name}
                             </h1>
                             <p className="text-sm text-gray-500">@{username}</p>
-                            <p className="text-medium pt-2">This is the bio</p>
+                            <p className="text-medium pt-2">{user.bio}</p>
                         </>
                     )}
                 </div>
