@@ -32,6 +32,7 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
             if (response.data.success) {
                 const user = response.data.data;
                 setUser(user);
+                window.location.reload();
                 onSuccess();
             } else {
                 toast.error('Failed to update user data');
