@@ -32,12 +32,10 @@ class UserService
             return null;
         }
 
-        if ($user->username != $username) {
-            $isUsernameTaken = User::where('username', $username) ? true : false;
+        $isUsernameTaken = User::where('username', $username)->exists();
 
-            if ($isUsernameTaken) {
-                return 'Username is taken';
-            }
+        if ($isUsernameTaken) {
+            return null;
         }
 
         $user->first_name = $first_name;
@@ -53,8 +51,6 @@ class UserService
             'username' => $user->username,
             'bio' => $user->bio,
         ];
-
-        return null;
     }
 
     public function getUserByUsername($username)
