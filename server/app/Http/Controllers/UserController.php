@@ -20,10 +20,26 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function index(Request $request)
+    // public function index(Request $request)
+    // {
+    //     try {
+    //         $user = $this->authService->me($request);
+
+    //         if ($user) {
+    //             return $this->successResponse($user, 'User retrieved successfully');
+    //         }
+
+    //         return $this->errorResponse('User not authenticated', 401);
+    //     } catch (\Exception $e) {
+    //         return $this->errorResponse('Failed to retrieve user', 500);
+    //     }
+    // }
+
+
+    public function me(Request $request)
     {
         try {
-            $user = $this->authService->me();
+            $user = $this->authService->me($request);
 
             if ($user) {
                 return $this->successResponse($user, 'User retrieved successfully');
