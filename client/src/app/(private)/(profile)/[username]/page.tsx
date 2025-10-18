@@ -22,6 +22,7 @@ const ProfilePage = () => {
     const [battles, setBattles] = useState<Battle[] | null>(null);
     const [userNotFound, setUserNotFound] = useState(false);
     const [isEditProfileDialogOpen, SetIsEditProfileDialogOpen] = useState(false);
+    const [isMe, setIsMe] = useState(false);
 
     useEffect(() => {
         // checking if the user is found
@@ -54,6 +55,23 @@ const ProfilePage = () => {
             });
     }, []);
 
+    // checking if the user is visiting their own profile
+    useEffect(() => {
+        if (user.username) {
+            api.post('/user/me', {
+                username: user.username,
+            })
+                .then((res) => {
+                    if (res.data.success) {
+                        setIsMe(true);
+                    }
+                })
+                .catch(() => {
+                    console.log('Failed to fetch user');
+                });
+        }
+    }, [user.username]);
+
     if (userNotFound) {
         notFound();
     }
@@ -83,17 +101,19 @@ const ProfilePage = () => {
                             alt="profile image"
                         />
 
-                        <Dialog
-                            open={isEditProfileDialogOpen}
-                            onOpenChange={SetIsEditProfileDialogOpen}
-                        >
-                            <DialogTrigger className="border border-[#DEFE01] bg-background shadow-xs hover:bg-accent hover:text-accent-foreground size-fit leading-0 cursor-pointer h-9 px-4 py-2 rounded-md">
-                                Edit Profile
-                            </DialogTrigger>
-                            <EditProfileDialog
-                                onSuccess={() => SetIsEditProfileDialogOpen(false)}
-                            />
-                        </Dialog>
+                        {isMe && (
+                            <Dialog
+                                open={isEditProfileDialogOpen}
+                                onOpenChange={SetIsEditProfileDialogOpen}
+                            >
+                                <DialogTrigger className="border border-[#DEFE01] bg-background shadow-xs hover:bg-accent hover:text-accent-foreground size-fit leading-0 cursor-pointer h-9 px-4 py-2 rounded-md">
+                                    Edit Profile
+                                </DialogTrigger>
+                                <EditProfileDialog
+                                    onSuccess={() => SetIsEditProfileDialogOpen(false)}
+                                />
+                            </Dialog>
+                        )}
                     </div>
                 )}
 
