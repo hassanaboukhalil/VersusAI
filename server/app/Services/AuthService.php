@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
 
 class AuthService
 {
@@ -67,11 +68,11 @@ class AuthService
         return ['message' => 'Logged out successfully'];
     }
 
-    public function me(): Authenticatable
+    public function me(Request $request): Authenticatable
     {
         $user = Auth::user();
 
-        if (! $user) {
+        if (!$user || $user->username !== $request->username) {
             throw new AuthenticationException('User not authenticated');
         }
 
@@ -118,6 +119,8 @@ class AuthService
             'profile_picture_url' => $user->profile_picture_url,
             'bg_picture_url' => $user->bg_picture_url,
             'token' => $token,
+            // 'str_with_uuid_1' => Str::uuid(),
+            // 'str_with_uuid_2' => Str::uuid()
         ];
     }
 
