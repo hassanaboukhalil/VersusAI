@@ -129,14 +129,12 @@ const ProfilePage = () => {
 
                 {/* name, username and bio */}
                 <div className="mt-8">
-                    {!battles ? (
-                        ''
-                    ) : (
+                    {user && (
                         <>
                             <h1 className="text-2xl font-bold">
-                                {battles[0]?.user_first_name} {battles[0]?.user_last_name}
+                                {user.firstName} {user.lastName}
                             </h1>
-                            <p className="text-sm text-gray-500">@{username}</p>
+                            <p className="text-sm text-gray-500">@{user.username}</p>
                             <p className="text-medium pt-2">{user.bio}</p>
                         </>
                     )}
