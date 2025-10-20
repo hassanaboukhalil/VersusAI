@@ -97,8 +97,9 @@ const ProfilePage = () => {
                 />
             )}
 
-            {/* Profile picture and Edit button if available */}
+            {/* Profile picture, Edit button if available and battles */}
             <div className="w-full px-4">
+                {/* Profile picture and Edit button if available */}
                 {user.profilePictureUrl != '' && (
                     <div className="flex items-end justify-between w-full h-12">
                         <Image
@@ -141,6 +142,7 @@ const ProfilePage = () => {
                     )}
                 </div>
 
+                {/* Battles */}
                 <div className="mt-8">
                     {!battles ? <CardsSkeleton /> : <BattleCards battles={battles} />}
                 </div>
