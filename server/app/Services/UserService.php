@@ -8,6 +8,7 @@ use App\Traits\ResponseTrait;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -61,6 +62,20 @@ class UserService
             return null;
         }
 
-        return $user;
+        return $this->getUserData($user);
+    }
+
+
+    private function getUserData($user)
+    {
+        return [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'username' => $user->username,
+            'email' => $user->email,
+            'bio' => $user->bio,
+            'profile_picture_url' => Storage::url($user->profile_picture_url),
+            'bg_picture_url' => Storage::url($user->bg_picture_url),
+        ];
     }
 }
