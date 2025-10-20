@@ -18,6 +18,8 @@ const ProfilePage = () => {
         lastName: '',
         username: '',
         bio: '',
+        profilePictureUrl: '',
+        bgPictureUrl: '',
     });
     const [battles, setBattles] = useState<Battle[] | null>(null);
     const [userNotFound, setUserNotFound] = useState(false);
@@ -36,6 +38,8 @@ const ProfilePage = () => {
                         lastName: res.data.data.last_name,
                         username: res.data.data.username,
                         bio: res.data.data.bio,
+                        profilePictureUrl: res.data.data.profile_picture_url,
+                        bgPictureUrl: res.data.data.bg_picture_url,
                     });
 
                     // getting the battles created by this user
@@ -79,22 +83,27 @@ const ProfilePage = () => {
     return (
         <Section className="bg-background min-h-screen py-12 items-center">
             <h1 className="text-white text-3xl font-bold mb-8">Profile Page</h1>
-            {Array.isArray(battles) && battles[0]?.user_cover_pic_url && (
+
+            {/* Cover/background photo */}
+            {user.bgPictureUrl != '' && (
                 <Image
                     className="w-full h-75"
-                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${battles[0].user_cover_pic_url}`}
+                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${user.bgPictureUrl}`}
+                    // src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${battles[0].user_cover_pic_url}`}
                     // src={`http://localhost:8000/${battles[0].user_cover_pic_url}`}
                     width={626}
                     height={352}
                     alt="cover image"
                 />
             )}
+
+            {/* Profile picture and Edit button if available */}
             <div className="w-full px-4">
-                {Array.isArray(battles) && battles[0]?.user_profile_pic_url && (
+                {user.profilePictureUrl != '' && (
                     <div className="flex items-end justify-between w-full h-12">
                         <Image
                             className="rounded-full z-10 w-36 h-36 border border-black"
-                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${battles[0].user_profile_pic_url}`}
+                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${user.profilePictureUrl}`}
                             // src={`http://localhost:8000/${battles[0].user_cover_pic_url}`}
                             width={224}
                             height={224}
