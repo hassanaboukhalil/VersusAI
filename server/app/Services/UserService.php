@@ -42,6 +42,9 @@ class UserService
         // Handle profile picture upload
         $this->handleProfilePictureUpload($request, $user);
 
+        // Handle background picture upload
+        $this->handleBgPictureUpload($request, $user);
+
         $user->first_name = $first_name;
         $user->last_name = $last_name;
         $user->username = $username;
@@ -54,7 +57,8 @@ class UserService
             'last_name' => $user->last_name,
             'username' => $user->username,
             'bio' => $user->bio,
-            'profile_picture_url' => Storage::url($user->profile_picture_url)
+            'profile_picture_url' => Storage::url($user->profile_picture_url),
+            'bg_picture_url' => Storage::url($user->bg_picture_url)
         ];
     }
 
@@ -114,6 +118,40 @@ class UserService
 
             // Save the relative path in the database
             $user->profile_picture_url = $profile_path;
+        }
+    }
+
+    private function handleBgPictureUpload($request, $user)
+    {
+        if ($request->hasFile('bg_picture')) {
+            $request->validate([
+                'bg_picture' => [
+                    'required',
+                    'image',
+                    'mimes:jpeg,png,jpg',
+                    'max:5120', // 5MB max size
+                ]
+            ]);
+
+            // Delete old bg picture if it exists and is not the default
+            if (
+                $user->bg_picture_url &&
+                $user->bg_picture_url !== 'images/covers/9f3bb1b7-6365-47dc-ae74-2350955444ca.jpeg' &&
+                Storage::disk('public')->exists($user->bg_picture_url)
+            ) {
+                Storage::disk('public')->delete($user->bg_picture_url);
+            }
+
+            // Generate a unique filename using UUID
+            $bg_picture = $request->file('bg_picture');
+            $bg_picture_extension = $bg_picture->getClientOriginalExtension();
+            $bg_picture_filename = Str::uuid() . '.' . $bg_picture_extension;
+
+            // Store the file in the public disk under images/covers directory
+            $bg_picture_path = $bg_picture->storeAs('images/covers', $bg_picture_filename, 'public');
+
+            // Save the relative path in the database
+            $user->bg_picture_url = $bg_picture_path;
         }
     }
 }
