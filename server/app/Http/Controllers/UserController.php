@@ -68,16 +68,20 @@ class UserController extends Controller
 
     public function updateUserData(Request $request)
     {
-        $result = $this->userService->updateUserData($request);
+        try {
+            $result = $this->userService->updateUserData($request);
 
-        if (!$result) {
-            return $this->errorResponse('Something went wrong, try again later');
+            if (!$result) {
+                return $this->errorResponse('Something went wrong, try again later');
+            }
+
+            if (!isArray($result)) {
+                return $this->errorResponse($result);
+            }
+
+            return $this->successResponse($result, 'User data has been updated.');
+        } catch (\Exception $e) {
+            return $this->errorResponse('Something went wrong');
         }
-
-        if (!isArray($result)) {
-            return $this->errorResponse($result);
-        }
-
-        return $this->successResponse($result, 'User data has been updated.');
     }
 }
