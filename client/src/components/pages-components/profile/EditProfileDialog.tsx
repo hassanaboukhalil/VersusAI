@@ -9,6 +9,8 @@ import api from '../../../lib/axios';
 import { getUser, setUser } from '../../../lib/auth';
 import { toast } from 'sonner';
 import Image from 'next/image';
+import { ImageUp } from 'lucide-react';
+import Tooltip from '../../global/Tooltip';
 
 const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const user = getUser();
@@ -51,13 +53,20 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
             </DialogHeader>
 
             <div className="space-y-6">
-                <Image
-                    className="w-full h-75"
-                    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${user?.bg_picture_url}`}
-                    width={626}
-                    height={352}
-                    alt="cover image"
-                />
+                <div className="relative flex-center">
+                    <Image
+                        className="w-full h-75"
+                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${user?.bg_picture_url}`}
+                        width={626}
+                        height={352}
+                        alt="cover image"
+                    />
+                    <div className="flex-center p-2.5 absolute cursor-pointer">
+                        <div className="w-full h-full absolute bg-[#2C3139] opacity-80 rounded-full" />
+                        <ImageUp className="z-10" color="white" />
+                        <Tooltip text="Add Photo" />
+                    </div>
+                </div>
 
                 <div className="flex items-end justify-between w-full h-12">
                     <Image
