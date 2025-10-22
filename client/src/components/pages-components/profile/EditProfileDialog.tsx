@@ -9,8 +9,7 @@ import api from '../../../lib/axios';
 import { getUser, setUser } from '../../../lib/auth';
 import { toast } from 'sonner';
 import Image from 'next/image';
-import { ImageUp } from 'lucide-react';
-import Tooltip from '../../global/Tooltip';
+import UploadPhotoIcon from './UploadPhotoIcon';
 
 const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const user = getUser();
@@ -61,21 +60,21 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                         height={352}
                         alt="cover image"
                     />
-                    <div className="flex-center p-2.5 absolute cursor-pointer">
-                        <div className="w-full h-full absolute bg-[#2C3139] opacity-80 rounded-full" />
-                        <ImageUp className="z-10" color="white" />
-                        <Tooltip text="Add Photo" />
-                    </div>
+
+                    <UploadPhotoIcon tooltipText="Add Photo" />
                 </div>
 
                 <div className="flex items-end justify-between w-full h-12">
-                    <Image
-                        className="rounded-full z-10 w-36 h-36 border border-black"
-                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${user?.profile_picture_url}`}
-                        width={224}
-                        height={224}
-                        alt="profile image"
-                    />
+                    <div className="relative flex-center">
+                        <Image
+                            className="rounded-full z-10 w-36 h-36 border border-black"
+                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${user?.profile_picture_url}`}
+                            width={224}
+                            height={224}
+                            alt="profile image"
+                        />
+                        <UploadPhotoIcon tooltipText="Add Photo" />
+                    </div>
                 </div>
 
                 <div>
