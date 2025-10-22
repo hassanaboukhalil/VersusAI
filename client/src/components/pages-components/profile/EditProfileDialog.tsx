@@ -19,6 +19,8 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
         lastName: user?.last_name ? user?.last_name : '',
         username: user?.username ? user?.username : '',
         bio: user?.bio ? user?.bio : '',
+        profilePicture: null as File | null,
+        bgPicture: null as File | null,
     });
 
     const handleSubmit = async () => {
@@ -52,10 +54,10 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
             </DialogHeader>
 
             <div className="space-y-6">
-                <div className="relative flex-center">
+                {/* <div className="relative flex-center">
                     <Image
                         className="w-full h-75"
-                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${user?.bg_picture_url}`}
+                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${user?.bg_photo_url}`}
                         width={626}
                         height={352}
                         alt="cover image"
@@ -75,7 +77,7 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                         />
                         <UploadPhotoIcon tooltipText="Add Photo" />
                     </div>
-                </div>
+                </div> */}
 
                 <div>
                     <label className="text-lg block">First Name</label>
@@ -115,6 +117,20 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                         placeholder="Your Bio"
                         className="mt-1"
                     />
+                </div>
+
+                <div>
+                    <label className="text-lg block" htmlFor="profile_photo">
+                        Profile Photo
+                    </label>
+                    <Input type="file" className="mt-1" id="profile_photo" />
+                </div>
+
+                <div>
+                    <label className="text-lg block" htmlFor="cover_photo">
+                        Cover Photo
+                    </label>
+                    <Input type="file" id="cover_photo" className="mt-1" />
                 </div>
 
                 <Button
