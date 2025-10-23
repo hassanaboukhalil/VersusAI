@@ -35,14 +35,16 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['middleware' => 'auth:api'], function () {
             // User info route
             // Route::get('/user', [AuthController::class, 'user']);
-            Route::get('/user', [UserController::class, 'index']);
+            // Route::get('/user', [UserController::class, 'index']);
+            Route::post('/user/me', [UserController::class, 'me']);
+            Route::get('/user/{username}', [UserController::class, 'getUserByUsername']);
+            Route::post('/update-user-data', [UserController::class, 'updateUserData']);
             Route::get('/logout', [AuthController::class, 'logout']);
             // Route::get('me', [AuthController::class, 'me'])->name('me');
-            Route::get('me', [AuthController::class, 'me']);
 
 
             Route::get('/ai-models', [AIModelController::class, 'index']);
-            Route::get('/battles', [BattleController::class, 'getAllBattles']);
+            Route::get('/battles/{username?}', [BattleController::class, 'getAllBattles']);
 
             // Route::get('/battles', [BattleController::class, 'index']);
 

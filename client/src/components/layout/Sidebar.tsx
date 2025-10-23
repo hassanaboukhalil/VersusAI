@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { X } from 'lucide-react';
+import { X, User } from 'lucide-react';
 import Logo from './Logo';
 import { PRIVATE_NAV_ITEMS, PUBLIC_NAV_ITEMS } from '../../constants/navigation';
 import { useEffect, useState } from 'react';
@@ -20,7 +20,17 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         const user = getUser();
         setIsUserLoggedIn(!!user);
         setNavItems(isUserLoggedIn ? PRIVATE_NAV_ITEMS : PUBLIC_NAV_ITEMS);
-    }, [isUserLoggedIn, navItems]);
+        if (
+            isUserLoggedIn &&
+            user &&
+            PRIVATE_NAV_ITEMS.find((item) => item.label === 'Profile') === undefined
+        ) {
+            setNavItems([
+                ...PRIVATE_NAV_ITEMS,
+                { label: 'Profile', href: `/${user?.username}`, icon: User },
+            ]);
+        }
+    }, [isUserLoggedIn]);
 
     const handleLogout = () => {
         if (typeof window === 'undefined') return;

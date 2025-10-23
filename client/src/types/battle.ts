@@ -51,5 +51,6 @@ export interface Battle {
     user_first_name?: string;
     user_last_name?: string;
     user_profile_pic_url?: string;
+    user_cover_pic_url?: string;
     created_at?: string;
 }

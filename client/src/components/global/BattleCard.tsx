@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import { Button } from '../../ui/button';
-import { Battle } from '../../../types/battle';
+import { Button } from '../ui/button';
+import { Battle } from '../../types/battle';
 import Link from 'next/link';
 
 const BattleCard = ({ battle }: { battle: Battle }) => {

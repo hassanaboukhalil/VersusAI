@@ -10,7 +10,7 @@ import {
 } from '../../../redux/slices/exploreSlice';
 import { selectFilteredBattles } from '../../../redux/selectors/exploreSelectors';
 import api from '../../../lib/axios';
-import BattleCards from './BattleCards';
+import BattleCards from '../../global/BattleCards';
 import { Input } from '../../../components/ui/input';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';

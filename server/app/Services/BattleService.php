@@ -10,12 +10,19 @@ use App\Models\Category;
 use App\Models\Vote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class BattleService
 {
-    public function getAllBattles(): array
+    public function getAllBattles($username = null): array
     {
-        $all_battles = Battle::where('is_active', false)->with('user', 'category', 'ai_model_1', 'ai_model_2', 'votes')->orderBy('created_at', 'desc')->get();
+        $all_battles = Battle::where('is_active', false);
+
+        $all_battles = $all_battles->with('user', 'category', 'ai_model_1', 'ai_model_2', 'votes')->orderBy('created_at', 'desc')->get();
+
+        if ($username) {
+            $all_battles = $all_battles->where('user.username', $username);
+        }
 
         $battles = [];
 
@@ -42,9 +49,13 @@ class BattleService
                 'ai_model_2_name' => $battle->ai_model_2->model_name,
                 'votes_ai_model_1' => $votes_ai_model_1,
                 'votes_ai_model_2' => $votes_ai_model_2,
+                'user_id' => $battle->user_id,
                 'user_first_name' => $battle->user->first_name,
                 'user_last_name' => $battle->user->last_name,
-                'user_profile_pic_url' => $battle->user->profile_picture_url,
+                // 'user_profile_pic_url' => $battle->user->profile_picture_url,
+                // 'user_cover_pic_url' => $battle->user->bg_picture_url,
+                'user_profile_pic_url' => Storage::url($battle->user->profile_picture_url),
+                'user_cover_pic_url' => Storage::url($battle->user->bg_picture_url),
                 'created_at' => $battle->created_at->format('j/n/Y'),
             ];
         }

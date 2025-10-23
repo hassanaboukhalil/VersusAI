@@ -10,7 +10,9 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
 
 class AuthService
 {
@@ -24,6 +26,8 @@ class AuthService
             'username' => $request['username'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
+            'profile_picture_url' => 'images/profiles/615c5093-d25d-4ec4-99b9-dabd0af7feef.jpeg',
+            'bg_picture_url' => 'images/covers/9f3bb1b7-6365-47dc-ae74-2350955444ca.jpeg',
         ]);
 
         $credentials = [
@@ -67,11 +71,11 @@ class AuthService
         return ['message' => 'Logged out successfully'];
     }
 
-    public function me(): Authenticatable
+    public function me(Request $request): Authenticatable
     {
         $user = Auth::user();
 
-        if (! $user) {
+        if (!$user || $user->username !== $request->username) {
             throw new AuthenticationException('User not authenticated');
         }
 
@@ -115,9 +119,11 @@ class AuthService
             'email' => $user->email,
             'is_premium' => $user->is_premium,
             'bio' => $user->bio,
-            'profile_picture_url' => $user->profile_picture_url,
-            'bg_picture_url' => $user->bg_picture_url,
+            'profile_picture_url' => Storage::url($user->profile_picture_url),
+            'bg_picture_url' => Storage::url($user->bg_picture_url),
             'token' => $token,
+            // 'str_with_uuid_1' => Str::uuid(),
+            // 'str_with_uuid_2' => Str::uuid()
         ];
     }
 

@@ -36,7 +36,13 @@ export async function login(email: string, password: string) {
     }
 }
 
-export async function signup(userData: any) {
+export async function signup(userData: {
+    first_name: string;
+    last_name: string;
+    username: string;
+    email: string;
+    password: string;
+}) {
     try {
         // Get CSRF token before authentication
         // await getCsrfToken();

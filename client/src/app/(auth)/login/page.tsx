@@ -2,13 +2,14 @@
 
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import api from '../../../lib/axios';
+// import api from '../../../lib/axios';
 import Logo from '../../../components/layout/Logo';
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { login, setUser } from '../../../lib/auth';
+// import { login, setUser } from '../../../lib/auth';
+import { login } from '../../../lib/auth';
 
 // Client component that uses useSearchParams
 function LoginContent() {
