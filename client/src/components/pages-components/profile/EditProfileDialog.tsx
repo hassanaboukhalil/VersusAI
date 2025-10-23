@@ -19,8 +19,8 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
         lastName: user?.last_name ? user?.last_name : '',
         username: user?.username ? user?.username : '',
         bio: user?.bio ? user?.bio : '',
-        profilePicture: null as File | null,
-        bgPicture: null as File | null,
+        // profilePicture: null as File | null,
+        // bgPicture: null as File | null,
     });
 
     const profilePictureRef = useRef<HTMLInputElement>(null);
@@ -28,6 +28,35 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
 
     const handleSubmit = async () => {
         try {
+            const profilePicture = profilePictureRef.current?.files?.[0];
+            const bgPicture = bgPictureRef.current?.files?.[0];
+
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+            if (profilePicture && !allowedTypes.includes(profilePicture.type)) {
+                toast.error('Profile picture must be a JPEG, PNG, or JPG file');
+                return;
+            }
+
+            if (bgPicture && !allowedTypes.includes(bgPicture.type)) {
+                toast.error('Background picture must be a JPEG, PNG, or JPG file');
+                return;
+            }
+
+            // Check file sizes (2MB for profile, 5MB for background)
+            const MAX_PROFILE_SIZE = 2 * 1024 * 1024; // 2MB
+            const MAX_BG_SIZE = 5 * 1024 * 1024; // 5MB
+
+            if (profilePicture && profilePicture.size > MAX_PROFILE_SIZE) {
+                toast.error('Profile picture must be less than 2MB');
+                return;
+            }
+
+            if (bgPicture && bgPicture.size > MAX_BG_SIZE) {
+                toast.error('Background picture must be less than 5MB');
+                return;
+            }
+
             // create a FormData object for mutipart/form-data
             const formData = new FormData();
 
@@ -50,7 +79,7 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
 
             const response = await api.post('/update-user-data', formData, {
                 headers: {
-                    'Content-Type': 'mulipart/form-data',
+                    'Content-Type': 'multipart/form-data',
                 },
             });
 
@@ -124,6 +153,7 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                         className="mt-1"
                         id="profile_photo"
                         ref={profilePictureRef}
+                        accept="image/jpeg,image/png,image/jpg"
                     />
                 </div>
 
@@ -131,7 +161,13 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                     <label className="text-lg block" htmlFor="cover_photo">
                         Cover Photo
                     </label>
-                    <Input type="file" className="mt-1" id="cover_photo" ref={bgPictureRef} />
+                    <Input
+                        type="file"
+                        className="mt-1"
+                        id="cover_photo"
+                        ref={bgPictureRef}
+                        accept="image/jpeg,image/png,image/jpg"
+                    />
                 </div>
 
                 <Button
