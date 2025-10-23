@@ -11,7 +11,7 @@ import BattleRounds from '../../../../components/pages-components/battle-details
 import BattleControls from '../../../../components/pages-components/battle-details/BattleControls';
 import BattleVoting from '../../../../components/pages-components/battle-details/BattleVoting';
 import BattleCharts from '../../../../components/pages-components/battle-details/BattleCharts';
-import BattleComments from '../../../../components/pages-components/battle-details/BattleComments';
+// import BattleComments from '../../../../components/pages-components/battle-details/BattleComments';
 
 const BattleDetailsPage = () => {
     const { id } = useParams();
@@ -63,7 +63,7 @@ const BattleDetailsPage = () => {
                         onUnvote={unvote}
                     />
 
-                    <BattleComments battle={battle} />
+                    {/* <BattleComments battle={battle} /> */}
                 </>
             )}
         </Section>
