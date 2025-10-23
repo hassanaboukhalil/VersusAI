@@ -24,6 +24,7 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     });
 
     const profilePictureRef = useRef<HTMLInputElement>(null);
+    const bgPictureRef = useRef<HTMLInputElement>(null);
 
     const handleSubmit = async () => {
         try {
@@ -42,20 +43,16 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 formData.append('profile_picture', profilePictureRef.current.files[0]);
             }
 
+            // Add bg picture if selected
+            if (bgPictureRef.current?.files?.[0]) {
+                formData.append('bg_picture', bgPictureRef.current.files[0]);
+            }
+
             const response = await api.post('/update-user-data', formData, {
                 headers: {
                     'Content-Type': 'mulipart/form-data',
                 },
             });
-
-            // const response = await api.post('/update-user-data', {
-            //     user_id: user?.id,
-            //     first_name: userData.firstName,
-            //     last_name: userData.lastName,
-            //     username: userData.username,
-            //     bio: userData.bio,
-            //     profile_picture: profilePictureRef.current,
-            // });
 
             if (response.data.success) {
                 const updatedUser = response.data.data;
@@ -78,31 +75,6 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
             </DialogHeader>
 
             <div className="space-y-6">
-                {/* <div className="relative flex-center">
-                    <Image
-                        className="w-full h-75"
-                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${user?.bg_photo_url}`}
-                        width={626}
-                        height={352}
-                        alt="cover image"
-                    />
-
-                    <UploadPhotoIcon tooltipText="Add Photo" />
-                </div>
-
-                <div className="flex items-end justify-between w-full h-12">
-                    <div className="relative flex-center">
-                        <Image
-                            className="rounded-full z-10 w-36 h-36 border border-black"
-                            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${user?.profile_picture_url}`}
-                            width={224}
-                            height={224}
-                            alt="profile image"
-                        />
-                        <UploadPhotoIcon tooltipText="Add Photo" />
-                    </div>
-                </div> */}
-
                 <div>
                     <label className="text-lg block">First Name</label>
                     <Input
@@ -159,7 +131,7 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                     <label className="text-lg block" htmlFor="cover_photo">
                         Cover Photo
                     </label>
-                    <Input type="file" id="cover_photo" className="mt-1" />
+                    <Input type="file" className="mt-1" id="cover_photo" ref={bgPictureRef} />
                 </div>
 
                 <Button
