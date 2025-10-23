@@ -4,17 +4,17 @@ import { DialogContent, DialogTitle } from '../../ui/dialog';
 import { DialogHeader } from '../../ui/dialog';
 import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import api from '../../../lib/axios';
 import { getUser, setUser } from '../../../lib/auth';
 import { toast } from 'sonner';
-import Image from 'next/image';
-import UploadPhotoIcon from './UploadPhotoIcon';
+// import Image from 'next/image';
+// import UploadPhotoIcon from './UploadPhotoIcon';
 
 const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const user = getUser();
 
-    const [formData, setFormData] = useState({
+    const [userData, setUserData] = useState({
         firstName: user?.first_name ? user?.first_name : '',
         lastName: user?.last_name ? user?.last_name : '',
         username: user?.username ? user?.username : '',
@@ -23,15 +23,39 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
         bgPicture: null as File | null,
     });
 
+    const profilePictureRef = useRef<HTMLInputElement>(null);
+
     const handleSubmit = async () => {
         try {
-            const response = await api.post('/update-user-data', {
-                user_id: user?.id,
-                first_name: formData.firstName,
-                last_name: formData.lastName,
-                username: formData.username,
-                bio: formData.bio,
+            // create a FormData object for mutipart/form-data
+            const formData = new FormData();
+
+            // Adding text fields
+            formData.append('user_id', user?.id?.toString() ?? '');
+            formData.append('first_name', userData.firstName);
+            formData.append('last_name', userData.lastName);
+            formData.append('username', userData.username);
+            formData.append('bio', userData.bio);
+
+            // Add profile picture if selected
+            if (profilePictureRef.current?.files?.[0]) {
+                formData.append('profile_picture', profilePictureRef.current.files[0]);
+            }
+
+            const response = await api.post('/update-user-data', formData, {
+                headers: {
+                    'Content-Type': 'mulipart/form-data',
+                },
             });
+
+            // const response = await api.post('/update-user-data', {
+            //     user_id: user?.id,
+            //     first_name: userData.firstName,
+            //     last_name: userData.lastName,
+            //     username: userData.username,
+            //     bio: userData.bio,
+            //     profile_picture: profilePictureRef.current,
+            // });
 
             if (response.data.success) {
                 const updatedUser = response.data.data;
@@ -82,8 +106,8 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 <div>
                     <label className="text-lg block">First Name</label>
                     <Input
-                        value={formData.firstName}
-                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                        value={userData.firstName}
+                        onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
                         placeholder="john"
                         className="mt-1"
                     />
@@ -92,8 +116,8 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 <div>
                     <label className="text-lg block">Last Name</label>
                     <Input
-                        value={formData.lastName}
-                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                        value={userData.lastName}
+                        onChange={(e) => setUserData({ ...userData, lastName: e.target.value })}
                         placeholder="Doe"
                         className="mt-1"
                     />
@@ -102,8 +126,8 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 <div>
                     <label className="text-lg block">Username</label>
                     <Input
-                        value={formData.username}
-                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                        value={userData.username}
+                        onChange={(e) => setUserData({ ...userData, username: e.target.value })}
                         placeholder="john_ak"
                         className="mt-1"
                     />
@@ -112,8 +136,8 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                 <div>
                     <label className="text-lg block">Bio</label>
                     <Input
-                        value={formData.bio}
-                        onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                        value={userData.bio}
+                        onChange={(e) => setUserData({ ...userData, bio: e.target.value })}
                         placeholder="Your Bio"
                         className="mt-1"
                     />
@@ -123,7 +147,12 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
                     <label className="text-lg block" htmlFor="profile_photo">
                         Profile Photo
                     </label>
-                    <Input type="file" className="mt-1" id="profile_photo" />
+                    <Input
+                        type="file"
+                        className="mt-1"
+                        id="profile_photo"
+                        ref={profilePictureRef}
+                    />
                 </div>
 
                 <div>
