@@ -8,8 +8,6 @@ import { useRef, useState } from 'react';
 import api from '../../../lib/axios';
 import { getUser, setUser } from '../../../lib/auth';
 import { toast } from 'sonner';
-// import Image from 'next/image';
-// import UploadPhotoIcon from './UploadPhotoIcon';
 
 const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const user = getUser();
@@ -26,34 +24,43 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
     const profilePictureRef = useRef<HTMLInputElement>(null);
     const bgPictureRef = useRef<HTMLInputElement>(null);
 
+    // validate image function, used to validate the profile picture and background picture before uploading
+    const validateImage = (img: File | undefined, fieldName: string, maxSize: number) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+        const SizeInMB = maxSize / (1024 * 1024);
+
+        if (img && !allowedTypes.includes(img.type)) {
+            return { valid: false, errorMessage: `${fieldName} must be a JPEG, PNG, or JPG file` };
+        }
+
+        if (img && img.size > maxSize) {
+            return { valid: false, errorMessage: `${fieldName} must be less than ${SizeInMB}MB` };
+        }
+
+        return { valid: true };
+    };
+
     const handleSubmit = async () => {
         try {
             const profilePicture = profilePictureRef.current?.files?.[0];
             const bgPicture = bgPictureRef.current?.files?.[0];
 
-            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            const profilePictureValidation = validateImage(
+                profilePicture,
+                'Profile Picture',
+                2 * 1024 * 1024
+            );
+            const bgPictureValidation = validateImage(
+                bgPicture,
+                'Background Picture',
+                5 * 1024 * 1024
+            );
 
-            if (profilePicture && !allowedTypes.includes(profilePicture.type)) {
-                toast.error('Profile picture must be a JPEG, PNG, or JPG file');
-                return;
-            }
-
-            if (bgPicture && !allowedTypes.includes(bgPicture.type)) {
-                toast.error('Background picture must be a JPEG, PNG, or JPG file');
-                return;
-            }
-
-            // Check file sizes (2MB for profile, 5MB for background)
-            const MAX_PROFILE_SIZE = 2 * 1024 * 1024; // 2MB
-            const MAX_BG_SIZE = 5 * 1024 * 1024; // 5MB
-
-            if (profilePicture && profilePicture.size > MAX_PROFILE_SIZE) {
-                toast.error('Profile picture must be less than 2MB');
-                return;
-            }
-
-            if (bgPicture && bgPicture.size > MAX_BG_SIZE) {
-                toast.error('Background picture must be less than 5MB');
+            if (!profilePictureValidation.valid || !bgPictureValidation.valid) {
+                toast.error(
+                    profilePictureValidation.errorMessage || bgPictureValidation.errorMessage
+                );
                 return;
             }
 
@@ -68,13 +75,13 @@ const EditProfileDialog = ({ onSuccess }: { onSuccess: () => void }) => {
             formData.append('bio', userData.bio);
 
             // Add profile picture if selected
-            if (profilePictureRef.current?.files?.[0]) {
-                formData.append('profile_picture', profilePictureRef.current.files[0]);
+            if (profilePicture) {
+                formData.append('profile_picture', profilePicture);
             }
 
             // Add bg picture if selected
-            if (bgPictureRef.current?.files?.[0]) {
-                formData.append('bg_picture', bgPictureRef.current.files[0]);
+            if (bgPicture) {
+                formData.append('bg_picture', bgPicture);
             }
 
             const response = await api.post('/update-user-data', formData, {
